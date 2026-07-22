@@ -1,0 +1,17 @@
+{
+  "case": "children",
+  "description": "A child-friendly cast with a toy that must not appear before scene two.",
+  "input": {
+    "characters": [
+      {"id": "an", "name": "安安", "introducedIn": "01", "appearance": {"age": "child", "hair": "two-buns"}, "defaultOutfit": "yellow-overalls", "palette": ["#E5B84A"]},
+      {"id": "le", "name": "乐乐", "introducedIn": "03", "appearance": {"age": "child", "hair": "short"}, "defaultOutfit": "mint-sweater", "palette": ["#8CB9A3"]}
+    ],
+    "props": [{"id": "kite", "name": "纸鸢", "introducedIn": "02", "palette": ["#D96459", "#E5B84A"]}],
+    "scenes": [
+      {"id": "01", "characters": ["an"], "props": [], "setting": {"location": "park", "timeOfDay": "morning", "palette": ["#B8D8C0"]}},
+      {"id": "02", "characters": ["an"], "characterStates": {"an": {"props": ["kite"]}}, "props": ["kite"]},
+      {"id": "03", "characters": ["an", "le"], "props": ["kite"]}
+    ]
+  },
+  "expect": {"sceneCount": 3, "firstKiteScene": "02"}
+}

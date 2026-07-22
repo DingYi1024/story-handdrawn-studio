@@ -1,0 +1,19 @@
+{
+  "case": "science",
+  "description": "A science explainer keeps presenter, sample, and microscope introductions explicit.",
+  "input": {
+    "characters": [
+      {"id": "presenter", "name": "讲解员", "introducedIn": "01", "defaultOutfit": "white-lab-coat", "palette": ["#F1F0EA", "#4B6578"]}
+    ],
+    "props": [
+      {"id": "leaf", "name": "叶片", "introducedIn": "01"},
+      {"id": "microscope", "name": "显微镜", "introducedIn": "02", "palette": ["#596A73"]}
+    ],
+    "scenes": [
+      {"id": "01", "characters": ["presenter"], "props": ["leaf"], "setting": {"location": "lab", "timeOfDay": "day", "palette": ["#E7EFE8"]}},
+      {"id": "02", "characters": ["presenter"], "props": ["leaf", "microscope"]},
+      {"id": "03", "characters": [], "props": [], "palette": ["#9EC7A1"], "dependsOn": ["02"]}
+    ]
+  },
+  "expect": {"sceneCount": 3, "diagramCharacters": []}
+}

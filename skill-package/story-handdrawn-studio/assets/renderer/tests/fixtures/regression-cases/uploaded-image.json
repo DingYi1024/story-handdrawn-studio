@@ -1,0 +1,16 @@
+{
+  "case": "uploaded-image",
+  "description": "Uploaded-page identifiers are plain metadata; no binary fixture is required.",
+  "input": {
+    "source": {"kind": "uploaded-pages", "manifest": ["page-001", "page-002"]},
+    "characters": [
+      {"id": "reader", "name": "读者", "introducedIn": "page-001", "defaultOutfit": "brown-sweater", "palette": ["#98745D"]}
+    ],
+    "props": [],
+    "scenes": [
+      {"id": "page-001", "sourceImageId": "page-001", "characters": ["reader"], "props": [], "setting": {"location": "reading-room", "timeOfDay": "day", "palette": ["#EFE7D7"]}},
+      {"id": "page-002", "sourceImageId": "page-002", "characters": [], "props": []}
+    ]
+  },
+  "expect": {"sceneCount": 2, "secondPageCharacters": []}
+}

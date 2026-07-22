@@ -1,0 +1,29 @@
+{
+  "case": "long-story",
+  "description": "Twelve compact beats exercise a longer continuity chain.",
+  "input": {
+    "characters": [
+      {"id": "traveler", "name": "旅人", "introducedIn": "01", "defaultOutfit": "green-jacket", "palette": ["#63795B"]},
+      {"id": "keeper", "name": "守塔人", "introducedIn": "07", "defaultOutfit": "navy-coat", "palette": ["#36475B"]}
+    ],
+    "props": [
+      {"id": "map", "name": "地图", "introducedIn": "02", "owner": "traveler"},
+      {"id": "lantern", "name": "提灯", "introducedIn": "06", "owner": "traveler"}
+    ],
+    "scenes": [
+      {"id": "01", "characters": ["traveler"], "props": [], "setting": {"location": "village", "timeOfDay": "dawn", "palette": ["#EAD8B0"]}},
+      {"id": "02", "characters": ["traveler"], "props": ["map"]},
+      {"id": "03", "characters": ["traveler"], "props": ["map"], "setting": {"location": "forest"}},
+      {"id": "04", "characters": [], "props": [], "setting": {"timeOfDay": "noon"}},
+      {"id": "05", "characters": ["traveler"], "props": []},
+      {"id": "06", "characters": ["traveler"], "props": ["lantern"], "setting": {"timeOfDay": "dusk"}},
+      {"id": "07", "characters": ["traveler", "keeper"], "props": ["lantern"], "setting": {"location": "lighthouse"}},
+      {"id": "08", "characters": ["keeper"], "props": []},
+      {"id": "09", "characters": [], "props": [], "setting": {"timeOfDay": "night", "palette": ["#27384B"]}},
+      {"id": "10", "characters": ["traveler", "keeper"], "props": ["lantern"]},
+      {"id": "11", "characters": ["traveler"], "props": ["map"], "setting": {"location": "hill", "timeOfDay": "dawn"}},
+      {"id": "12", "characters": ["traveler"], "props": []}
+    ]
+  },
+  "expect": {"sceneCount": 12, "firstKeeperScene": "07"}
+}

@@ -14,7 +14,7 @@ import {
 import {basename, dirname, extname, isAbsolute, relative, resolve} from 'node:path';
 import {safeSlug} from './story-text.mjs';
 
-export const PROJECT_SCHEMA_VERSION = 1;
+export const PROJECT_SCHEMA_VERSION = 2;
 
 export const assertProjectId = (value) => {
   const id = String(value || '');
@@ -63,8 +63,16 @@ export const getProjectPaths = (
     prompts: resolveInside(project, 'prompts'),
     output: resolveInside(project, 'output'),
     logs: resolveInside(project, 'logs'),
+    revisions: resolveInside(project, 'revisions'),
+    qa: resolveInside(project, 'qa'),
+    audio: resolveInside(project, 'audio'),
     storyboardPlan: resolveInside(project, 'storyboard.generated.json'),
     storyboard: resolveInside(project, 'storyboard.json'),
+    director: resolveInside(project, 'director.generated.json'),
+    continuitySpec: resolveInside(project, 'continuity.spec.json'),
+    continuityLedger: resolveInside(project, 'continuity.ledger.json'),
+    audioOptions: resolveInside(project, 'audio-options.json'),
+    audioManifest: resolveInside(project, 'audio-manifest.json'),
     codexManifest: resolveInside(project, 'codex-image-jobs.json'),
     uploadedManifest: resolveInside(project, 'uploaded-pages.json'),
     renderProps: resolveInside(project, 'render-props.json'),
@@ -107,6 +115,9 @@ export const createProject = ({
   mkdirSync(paths.prompts, {recursive: true});
   mkdirSync(paths.output, {recursive: true});
   mkdirSync(paths.logs, {recursive: true});
+  mkdirSync(paths.revisions, {recursive: true});
+  mkdirSync(paths.qa, {recursive: true});
+  mkdirSync(paths.audio, {recursive: true});
   mkdirSync(paths.publicAssets, {recursive: true});
 
   let source;
@@ -142,6 +153,12 @@ export const createProject = ({
     schema_version: PROJECT_SCHEMA_VERSION,
     project_id: paths.id,
     status: 'created',
+    current_revision: 0,
+    production: null,
+    pending_jobs: [],
+    pending_scenes: [],
+    qa: {},
+    audio: {status: 'disabled'},
     updated_at: now,
     last_error: null,
     history: [{at: now, status: 'created', message: 'Project created'}],
@@ -175,6 +192,39 @@ export const updateProjectState = (paths, status, message, error = null, metadat
   if (status !== 'failed') delete next.resume_from;
   atomicWriteJson(paths.state, next);
   return next;
+};
+
+export const archiveProjectRevision = (paths, revision, reason = '') => {
+  const number = Number(revision);
+  if (!Number.isInteger(number) || number < 1) throw new Error('revision must be a positive integer');
+  const directory = resolveInside(paths.revisions, `r${number}`);
+  if (existsSync(directory)) throw new Error(`Revision archive already exists: ${directory}`);
+  mkdirSync(directory, {recursive: true});
+  const candidates = {
+    'project.json': paths.config,
+    'state.json': paths.state,
+    'storyboard.json': paths.storyboard,
+    'storyboard.generated.json': paths.storyboardPlan,
+    'director.generated.json': paths.director,
+    'continuity.spec.json': paths.continuitySpec,
+    'continuity.ledger.json': paths.continuityLedger,
+    'codex-image-jobs.json': paths.codexManifest,
+    'audio-manifest.json': paths.audioManifest,
+    'audio-options.json': paths.audioOptions,
+  };
+  const files = [];
+  for (const [name, source] of Object.entries(candidates)) {
+    if (!source || !existsSync(source)) continue;
+    copyFileSync(source, resolveInside(directory, name));
+    files.push(name);
+  }
+  atomicWriteJson(resolveInside(directory, 'revision.json'), {
+    revision: number,
+    archived_at: new Date().toISOString(),
+    reason: String(reason || ''),
+    files,
+  });
+  return {revision: number, directory, files};
 };
 
 export const listProjects = (repoRoot, projectsRoot = null, publicDir = null) => {

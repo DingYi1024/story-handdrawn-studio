@@ -1,0 +1,18 @@
+{
+  "case": "emotional",
+  "description": "Restrained emotional beats include an environment-only pause.",
+  "input": {
+    "characters": [
+      {"id": "mother", "name": "母亲", "introducedIn": "01", "defaultOutfit": "grey-knit", "palette": ["#85817B"]},
+      {"id": "daughter", "name": "女儿", "introducedIn": "03", "defaultOutfit": "rose-scarf", "palette": ["#B87878"]}
+    ],
+    "props": [{"id": "letter", "name": "旧信", "introducedIn": "01", "owner": "mother"}],
+    "scenes": [
+      {"id": "01", "characters": ["mother"], "props": ["letter"], "setting": {"location": "kitchen", "timeOfDay": "rainy-afternoon", "palette": ["#B8B4AC"]}},
+      {"id": "02", "characters": [], "props": ["letter"]},
+      {"id": "03", "characters": ["mother", "daughter"], "props": ["letter"]},
+      {"id": "04", "characters": ["daughter"], "props": []}
+    ]
+  },
+  "expect": {"sceneCount": 4, "pauseCharacters": []}
+}

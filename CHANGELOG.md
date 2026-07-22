@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-22
+
+### Added
+
+- An automatic `produce` director that persists a requested target and advances plan, assets, preview, final render, and QA until completion or a truthful external image-job boundary.
+- Scene-specific `revise` retakes with immutable revision asset names, archived prior metadata, dependency impact propagation, and resumable production.
+- Versioned continuity specifications and compiled ledgers for explicit per-scene cast, outfit, palette, props, setting, dependency tracking, and no accidental character carry-over.
+- Machine video QA for geometry, FPS, duration, nonblank opening artwork, generated-story monochrome opening, later color, blank timeline frames, duplicate-frame hints, saved sample frames, and JSON reports.
+- Optional supplied voiceover/BGM/SFX and OpenAI speech synthesis, measured narration timing, conservative FFmpeg mixing, loudness control, AAC muxing, and picture-stream preservation.
+- Ten continuity regression fixtures covering single character, dialogue, long story, children, emotion, science, landscape, uploaded images, page flips, and mid-story recovery.
+- A portable QA report and frame evidence for the complete 27.7-second showcase video.
+
+### Changed
+
+- Preview and final states are now written only after their machine QA passes.
+- The mature Skill routes natural-language requests through `produce`, services every returned image job, and continues to the requested video instead of stopping at planning.
+- Project state schema now records production target, revision, pending scenes/jobs, continuity version, QA results, and audio status.
+
+### Security
+
+- Revision outputs use new paths instead of overwriting accepted masters; continuity validation rejects unknown, premature, or implicitly carried entities.
+- Audio and QA paths remain project-contained, optional external speech requires an explicit API key, and audio stays disabled by default.
+
 ## [0.3.3] - 2026-07-22
 
 ### Fixed

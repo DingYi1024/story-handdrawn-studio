@@ -48,6 +48,21 @@ export const parseRatio = (ratio) => {
   return width / height;
 };
 
+/** Largest exact-ratio, even-pixel preview canvas at or below maxWidth. */
+export const calculatePreviewCanvas = (canvas, maxWidth) => {
+  const limit = Math.min(Number(maxWidth), Number(canvas?.width));
+  if (!Number.isInteger(limit) || limit < 2 || !Number.isInteger(canvas?.width) || !Number.isInteger(canvas?.height)) {
+    throw new Error('Preview canvas requires integer source dimensions and maxWidth');
+  }
+  for (let width = limit - (limit % 2); width >= 2; width -= 2) {
+    const height = width * canvas.height / canvas.width;
+    if (Number.isInteger(height) && height > 0 && height % 2 === 0) {
+      return {width, height, scale: width / canvas.width};
+    }
+  }
+  throw new Error(`Could not derive an even preview canvas for ${canvas.width}x${canvas.height}`);
+};
+
 export const createSettings = (presetName = 'portrait', overrides = {}) => {
   const resolvedName = aliases[presetName] || presetName;
   const canvas = PRESETS[resolvedName];
@@ -92,6 +107,17 @@ export const createSettings = (presetName = 'portrait', overrides = {}) => {
       final_crf: 18,
       preview_crf: 23,
       concurrency: 1,
+    },
+    audio: {
+      enabled: false,
+      provider: 'none',
+      model: 'tts-1-hd',
+      voice: 'alloy',
+      format: 'mp3',
+      voiceover_volume: 1,
+      bgm_volume: 0.14,
+      sfx_volume: 0.35,
+      narration_tail_seconds: 0.45,
     },
   };
   const settings = deepMerge(base, overrides);
@@ -172,6 +198,25 @@ export const validateSettings = (settings) => {
     errors.push('render.concurrency must be between 1 and 16');
   }
 
+  const audio = settings?.audio;
+  if (audio !== undefined) {
+    if (typeof audio.enabled !== 'boolean') errors.push('audio.enabled must be boolean');
+    if (!['none', 'openai', 'files'].includes(audio.provider)) {
+      errors.push('audio.provider must be none, openai, or files');
+    }
+    if (!['mp3', 'wav', 'aac', 'flac', 'opus'].includes(audio.format)) {
+      errors.push('audio.format must be mp3, wav, aac, flac, or opus');
+    }
+    for (const key of ['voiceover_volume', 'bgm_volume', 'sfx_volume']) {
+      if (!Number.isFinite(audio[key]) || audio[key] < 0 || audio[key] > 2) {
+        errors.push(`audio.${key} must be between 0 and 2`);
+      }
+    }
+    if (!Number.isFinite(audio.narration_tail_seconds) || audio.narration_tail_seconds < 0 || audio.narration_tail_seconds > 5) {
+      errors.push('audio.narration_tail_seconds must be between 0 and 5');
+    }
+  }
+
   if (errors.length) throw new Error(`Invalid project settings:\n- ${errors.join('\n- ')}`);
   return settings;
 };
@@ -181,4 +226,3 @@ export const mergeSettings = (settings, overrides) => {
   validateSettings(merged);
   return merged;
 };
-

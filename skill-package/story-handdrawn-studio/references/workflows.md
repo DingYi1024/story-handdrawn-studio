@@ -1,56 +1,75 @@
 # Workflow Reference
 
-Read this file when executing Studio actions, handling generated-image jobs, or diagnosing a paused project. Use the wrapper for every command:
+Use the wrapper for every action:
 
 ```bash
 python <SKILL_DIR>/scripts/run_story_video.py COMMAND [OPTIONS]
 ```
 
-## Commands and stable states
+## Commands
 
 | Command | Purpose | Stable result |
 | --- | --- | --- |
-| `setup` | Prepare the current versioned runtime and diagnose tools | healthy environment |
-| `where` | Show Skill, runtime, data root, source and version | no mutation |
-| `create` | Copy text or ordered images into a unique project | `created` |
-| `plan` | Split a story and prepare prompts/jobs | `awaiting_assets` or `assets_ready` |
-| `ingest` | Convert ordered images to aligned layers | `assets_ready` |
-| `import` | Verify and derive generated masters | `assets_ready` |
-| `validate` | Validate the active or planned storyboard | no mutation |
-| `render` | Render preview or final MP4 | `preview_ready` or `completed` |
-| `resume` | Continue from the last stable state | next truthful state |
-| `status` | Print configuration, history and absolute paths | no mutation |
-| `list` | List saved projects | no mutation |
-| `doctor` | Check runtime dependencies and references | no mutation |
+| `setup` | Prepare locked runtime dependencies and diagnose tools | healthy environment |
+| `produce` | Create/continue an automatic plan → assets → preview → final loop | requested target or explicit image jobs |
+| `create` | Copy text/images into an isolated project | `created` |
+| `plan` / `ingest` / `import` | Manual preparation stages | `awaiting_assets` / `assets_ready` |
+| `revise` | Archive the current revision and prepare scene retakes | `awaiting_assets` |
+| `continuity` | Inspect/apply the continuity specification and impact report | current state preserved |
+| `audio` | Plan, prepare, mix, or disable optional audio | audio sidecars / mixed final |
+| `render` | Render and machine-check preview/final | `preview_ready` / `completed` |
+| `qa` | Re-run machine video QA without rendering | report plus sampled frames |
+| `resume` | Continue the saved production target | next truthful state |
+| `regress` | Compile all ten continuity regression cases | pass/fail summary |
+| `status` / `list` / `validate` / `doctor` | Inspect project or environment | no unintended content mutation |
 
-## Text story
+## Automatic production
 
-Prefer inline text when the story is already in the conversation:
+Story already present in the conversation:
 
 ```bash
-python <SKILL_DIR>/scripts/run_story_video.py create --id paper-summer --title "纸上的夏天" --text "完整故事原文" --preset vertical
-python <SKILL_DIR>/scripts/run_story_video.py plan --project paper-summer
+python <SKILL_DIR>/scripts/run_story_video.py produce --id paper-summer --title "纸上的夏天" \
+  --text "完整故事原文" --preset vertical --to preview
 ```
 
-For long input, save it to a UTF-8 text file and use `--input /absolute/story.txt`. Read the resulting `codex-image-jobs.json`; generate all jobs in manifest order, including the character reference, to each exact `output_master`. Then:
+Ordered images:
 
 ```bash
+python <SKILL_DIR>/scripts/run_story_video.py produce --id travel-diary --title "旅行手账" \
+  --image /absolute/01.jpg --image /absolute/02.jpg --preset portrait --to final
+```
+
+For a story, `produce` normally pauses once with structured `generate_images` jobs. For each job:
+
+1. Read the entire prompt and every reference image.
+2. Use the available image-generation capability to create one master.
+3. Save/copy the result to `output_master` exactly.
+4. Confirm the file exists and can be decoded.
+5. Process the next job in order; the character reference comes first.
+
+Then continue the same target:
+
+```bash
+python <SKILL_DIR>/scripts/run_story_video.py produce --project paper-summer --to preview
+```
+
+Do not stop after only one scene, do not invent placeholder masters, and do not modify state by hand.
+
+Use `--generator api` only when the user explicitly selects direct API image generation and `OPENAI_API_KEY` is present. The normal Agent route is `codex`, where the Agent services the returned image jobs.
+
+## Manual stages
+
+Manual commands remain available for debugging and custom automation:
+
+```bash
+python <SKILL_DIR>/scripts/run_story_video.py create --id paper-summer --title "纸上的夏天" --input /absolute/story.txt --preset vertical
+python <SKILL_DIR>/scripts/run_story_video.py plan --project paper-summer
 python <SKILL_DIR>/scripts/run_story_video.py import --project paper-summer
 python <SKILL_DIR>/scripts/run_story_video.py render --project paper-summer --quality preview
 python <SKILL_DIR>/scripts/run_story_video.py render --project paper-summer --quality final
 ```
 
-Use `plan --generator api` only after the user explicitly selects API generation and the environment contains `OPENAI_API_KEY`.
-
-## Ordered images
-
-```bash
-python <SKILL_DIR>/scripts/run_story_video.py create --id travel-diary --title "旅行手账" --image /absolute/01.jpg --image /absolute/02.jpg --preset portrait
-python <SKILL_DIR>/scripts/run_story_video.py ingest --project travel-diary
-python <SKILL_DIR>/scripts/run_story_video.py render --project travel-diary --quality preview
-```
-
-Add `--transition page-flip` during `create` only when the user wants intact-page turning. Direct cut is the default and can split composite pages into caption/art layers.
+`render` includes QA. A QA failure leaves the project resumable and points to `qa/QUALITY/report.json` and sampled frames.
 
 ## Presets
 
@@ -61,26 +80,26 @@ Add `--transition page-flip` during `create` only when the user wants intact-pag
 | `square` | 1:1 | 1080×1080 | square social post |
 | `landscape` | 16:9 | 1920×1080 | widescreen video |
 
-## Recovery logic
+Add `--transition page-flip` only for intact uploaded-page turning. Direct cut is the normal story reveal.
 
-Inspect `status --project ID --json` before manual repair. Usually run `resume --project ID`:
+## Recovery
 
-- `created` → plan a text story or ingest images.
-- `awaiting_assets` → inspect missing image jobs; generate them before import.
-- `assets_ready` → render preview.
-- `preview_ready` → perform preview QA, then render final when requested.
-- `failed` → read `last_error` and `resume_from`; correct the cause, then resume.
-- `completed` → verify final file and report it.
+Run `status --project ID --json`, then normally repeat `produce --project ID --to TARGET`:
 
-Do not fabricate missing masters or manually set state to a later stage.
+- `created`: plan story or ingest images.
+- `awaiting_assets`: generate only listed missing masters.
+- `assets_ready`: render preview.
+- `preview_ready`: render final when requested.
+- `failed`: read `last_error` and `resume_from`, fix the cause, continue.
+- `completed`: verify final path and QA report; do not rerender without a reason.
 
-## Output locations
+## Output
 
-The wrapper reports absolute paths. With the default data root:
+Default data locations:
 
 - Project: `~/.story-handdrawn-studio/projects/ID/`
-- Preview: `~/.story-handdrawn-studio/projects/ID/output/preview.mp4`
-- Final: `~/.story-handdrawn-studio/projects/ID/output/final.mp4`
-- Assets: `~/.story-handdrawn-studio/public/projects/ID/assets/`
-
-Default output is silent H.264 video with a broadly compatible 4:2:0 pixel format.
+- Preview/final: `projects/ID/output/preview.mp4` and `final.mp4`
+- QA: `projects/ID/qa/preview|final/report.json`
+- Revisions: `projects/ID/revisions/rN/`
+- Audio sidecars: `projects/ID/audio-options.json` and `audio-manifest.json`
+- Render assets: `~/.story-handdrawn-studio/public/projects/ID/assets/`

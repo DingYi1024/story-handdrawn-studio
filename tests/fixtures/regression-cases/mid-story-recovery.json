@@ -1,0 +1,31 @@
+{
+  "case": "mid-story-recovery",
+  "description": "Changing an outfit mid-story invalidates its inheritor but stops at an explicit reset.",
+  "input": {
+    "characters": [
+      {"id": "runner", "name": "跑者", "introducedIn": "01", "defaultOutfit": "grey-tracksuit", "palette": ["#777777"]}
+    ],
+    "props": [],
+    "scenes": [
+      {"id": "01", "characters": ["runner"], "props": [], "setting": {"location": "track", "timeOfDay": "morning", "palette": ["#DCE1DF"]}},
+      {"id": "02", "characters": ["runner"], "props": []},
+      {"id": "03", "characters": ["runner"], "props": []},
+      {"id": "04", "characters": ["runner"], "characterStates": {"runner": {"outfit": "blue-raincoat", "palette": ["#587A98"]}}, "props": [], "setting": {"timeOfDay": "rainy-afternoon"}},
+      {"id": "05", "characters": ["runner"], "props": []}
+    ]
+  },
+  "modifiedInput": {
+    "characters": [
+      {"id": "runner", "name": "跑者", "introducedIn": "01", "defaultOutfit": "grey-tracksuit", "palette": ["#777777"]}
+    ],
+    "props": [],
+    "scenes": [
+      {"id": "01", "characters": ["runner"], "props": [], "setting": {"location": "track", "timeOfDay": "morning", "palette": ["#DCE1DF"]}},
+      {"id": "02", "characters": ["runner"], "characterStates": {"runner": {"outfit": "orange-windbreaker"}}, "props": []},
+      {"id": "03", "characters": ["runner"], "props": []},
+      {"id": "04", "characters": ["runner"], "characterStates": {"runner": {"outfit": "blue-raincoat", "palette": ["#587A98"]}}, "props": [], "setting": {"timeOfDay": "rainy-afternoon"}},
+      {"id": "05", "characters": ["runner"], "props": []}
+    ]
+  },
+  "expect": {"sceneCount": 5, "impactedSceneIds": ["02", "03"], "unaffectedSceneIds": ["01", "04", "05"]}
+}

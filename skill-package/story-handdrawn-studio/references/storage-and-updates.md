@@ -18,6 +18,8 @@ Set `STORY_HANDDRAWN_STUDIO_HOME` to an absolute path before invoking the wrappe
 
 The installed Skill contains a clean bundled renderer template. On first use of each release, the launcher copies it to `runtimes/VERSION` and installs locked dependencies there. Project data is never stored in that runtime.
 
+Each project also keeps versioned director/continuity sidecars, revision archives, QA reports and optional audio manifests. Back up the whole project plus its matching `public/projects/ID` assets.
+
 ## Upgrade contract
 
 Update by replacing the installed `story-handdrawn-studio` Skill folder with the new release. Do not delete `~/.story-handdrawn-studio/`. The next invocation creates a new versioned runtime and continues using existing projects and assets.

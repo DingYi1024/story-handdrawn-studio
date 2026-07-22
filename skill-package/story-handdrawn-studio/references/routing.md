@@ -14,13 +14,15 @@ If the user already supplied content, skip the introduction and start. Ask at mo
 
 | User intent or evidence | Action |
 | --- | --- |
-| Gives story/article/script text | `create --text`, then `plan` |
-| Gives a text-file path | `create --input`, then `plan` |
-| Gives ordered image paths | `create --image ...`, then `ingest` |
-| Says “继续/接着/恢复” with a known project | `status`, then `resume` |
+| Gives story/article/script text | `produce --text ... --to preview` (or the requested target) |
+| Gives a text-file path | `produce --input ... --to preview` |
+| Gives ordered image paths | `produce --image ... --to preview` |
+| Says “继续/接着/恢复” with a known project | `status`, then continue saved `produce` target |
 | Asks what exists or how far it is | `list` or `status`; do not mutate |
-| Requests preview | validate active assets, then preview render |
-| Approves preview or requests final | final render, then final QA |
+| Requests preview | `produce --project ID --to preview`; service returned image jobs |
+| Approves preview or requests final | `produce --project ID --to final` |
+| Gives feedback on one scene | `revise`, generate retake jobs, continue `produce` |
+| Requests narration/music/SFX | plan/prepare audio, then produce final |
 | Reports an error | `status` plus `doctor` when environment-related |
 | Wants another ratio/style/timing | inspect project settings before editing or recreating |
 | Wants a new feature in the Skill | use the customization route below |
@@ -37,8 +39,8 @@ Recommend only the next action supported by state:
 | `planning` / `ingesting` | processing | wait for command result |
 | `awaiting_assets` | image plan ready, masters incomplete | generate missing jobs |
 | `assets_ready` | storyboard and assets valid | render preview |
-| `preview_ready` | review copy exists | run preview QA; offer final |
-| `completed` | final exists | deliver path; offer optional extensions |
+| `preview_ready` | review copy and QA report exist | offer final or scene revision |
+| `completed` | final and QA report exist | deliver path; offer opt-in audio or revisions |
 | `failed` | an operation stopped safely | explain exact error and resume point |
 
 Do not present a generic feature menu after each step. Tailor the next suggestion to the project.
