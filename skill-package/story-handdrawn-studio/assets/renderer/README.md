@@ -57,27 +57,32 @@ Claude Code 也支持通过插件市场安装：
 - 首帧直接显示黑白画稿，再叠加文字，最后由左到右揭示彩色插画；没有纯白过渡
 - `revise` 指定镜头局部重做，旧版本归档，新素材不覆盖已验收母图
 - 角色、服装、道具、场景、时间、配色连续性账本；当前镜头人物必须显式声明，不会串场
-- 自动视频 QA：首帧、黑白/彩色时序、尺寸、帧率、时长、黑白空帧和疑似重复帧
+- 自动视频 QA：首帧、黑白/彩色时序、尺寸、帧率、时长、音频流、黑白空帧和疑似重复帧
 - 可选 OpenAI 旁白或自备旁白/BGM/音效，按真实音频时长校准镜头并混音为 AAC
-- `cut` 直切与 `page-flip` 卷页转场
+- `cut` 直切与 `page-flip` 卷页转场；卷页下方直接露出下一幕黑白图，结束后才写字、上色
 - 3:4、9:16、1:1、16:9 四种动态画布
 - Codex Image2 任务清单与显式选择的 OpenAI API 工作流
 - 自然语言意图路由、首次引导、状态导航与预览/正式片机器质检
 - 项目锁、原子状态文件、严格素材校验、失败后恢复
 - Skill 外持久数据、版本化运行时与不覆盖作品的升级契约
-- 10 类连续性回归案例、720 宽预览和原尺寸 H.264 成片（默认静音）
+- 10 类连续性回归案例，以及带原创音乐、环境音和翻页音效的完整有声示范片
 
 ## 完整案例：《会发芽的纸条》
 
 [![《会发芽的纸条》完整动态预览](examples/case-sprouting-note/animated-preview.gif)](examples/case-sprouting-note/final.mp4)
 
-一个可直接播放、验证和重新渲染的 9:16 案例：4 幕、27.7 秒、同一角色贯穿，完整展示 `黑白画稿 → 文字 → 彩色插画` 的揭示过程。
+上方 GIF 只展示画面；点击它即可打开带声音的正式 MP4。案例为 9:16、4 幕、27.5 秒，同一角色贯穿，完整展示 `黑白画稿 → 文字 → 彩色插画`、三次卷页转场，以及原创背景音乐、雨声、浇水声、鸟鸣和同步翻页声。
+
+三次卷页转场特写：
+
+[![三次卷页转场特写](examples/case-sprouting-note/transition-preview.gif)](examples/case-sprouting-note/final.mp4)
 
 - [播放或下载 1080×1920 正式 MP4](examples/case-sprouting-note/final.mp4)
 - [通过 Raw 地址直接打开 MP4](https://raw.githubusercontent.com/DingYi1024/story-handdrawn-studio/main/examples/case-sprouting-note/final.mp4)
 - [查看案例说明与复现命令](examples/case-sprouting-note/README.md)
 - [查看故事板 JSON](examples/case-sprouting-note/storyboard.json)
 - [查看机器 QA 报告](examples/case-sprouting-note/qa-report.json)
+- [查看音频配置与原创音源](examples/case-sprouting-note/audio-options.json)
 - [查看角色与分镜素材](public/examples/case-sprouting-note/)
 
 ## 环境

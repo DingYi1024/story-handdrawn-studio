@@ -11,6 +11,7 @@ type LayerWipeProps = {
   treatment?: 'bw' | 'detail' | 'color';
   layout?: Storyboard['project']['layout'];
   visibleFromStart?: boolean;
+  frameOffset?: number;
 };
 
 const treatmentFilter = {
@@ -28,8 +29,9 @@ export const LayerWipe: React.FC<LayerWipeProps> = ({
   treatment = 'color',
   layout,
   visibleFromStart = false,
+  frameOffset = 0,
 }) => {
-  const frame = useCurrentFrame();
+  const frame = Math.max(0, useCurrentFrame() - frameOffset);
   const {width, height} = useVideoConfig();
   const progress = visibleFromStart
     ? 1

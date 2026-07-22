@@ -42,7 +42,8 @@ Read [references/workflows.md](references/workflows.md) whenever executing produ
 ## Visual contract
 
 - Direct-cut story scenes show the black-and-white illustration on frame zero, reveal text over that drawing, then reveal color. There is no blank white opening phase.
-- Page-flip works preserve each complete uploaded page and original composition.
+- Page-flip story scenes reveal the next monochrome drawing underneath the curling page, hold it through the end of the flip, then reveal text and color; never cover the incoming scene with a blank white transition plate.
+- Page-flip uploaded-page works preserve each complete page and original composition.
 - Captions remain in the upper safe region; illustrations use contained framing without cover-cropping.
 - Recurring identity, face, hair, age, proportions, outfit palette, props, location, time, and drawing language follow the compiled continuity ledger.
 - A previous scene is an identity/style reference only. Never copy its cast into the current scene unless the current scene explicitly lists those characters.
@@ -54,7 +55,7 @@ Read [references/workflows.md](references/workflows.md) whenever executing produ
 
 ## Optional audio contract
 
-Keep silent output as the default. When audio is requested, use narration text rather than line-broken captions, synthesize or copy tracks, measure real durations, extend scene timing when needed, mix with conservative volumes, and rerun visual QA on the muxed MP4. Clearly disclose when OpenAI speech sends narration text to an external API.
+Keep silent output as the default. When audio is requested, use narration text rather than line-broken captions, synthesize or copy tracks, measure real durations, extend scene timing when needed, mix with conservative volumes, and rerun visual QA on the muxed MP4 with an audio stream required. Clearly disclose when OpenAI speech sends narration text to an external API.
 
 ## Truthful delivery
 

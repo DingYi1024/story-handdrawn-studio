@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-07-22
+
+### Added
+
+- A rebuilt 27.5-second showcase with original procedurally generated music, rain, seed chimes, watering, birds, and frame-aligned page-turn effects.
+- Reproducible showcase audio sources/configuration, a dedicated three-transition GIF, and audio-stream assertions in video QA.
+
+### Fixed
+
+- Page-flip scenes now expose the incoming monochrome drawing instead of an outer white plate, hold the drawing until the flip completes, then begin text and color reveals.
+- AAC muxing now emits a standard 48 kHz stereo stream.
+
+### Changed
+
+- The complete example, preview, final MP4, QA frames/report, cover, and animated previews were regenerated as an audio-enabled delivery.
+
 ## [0.5.0] - 2026-07-22
 
 ### Added

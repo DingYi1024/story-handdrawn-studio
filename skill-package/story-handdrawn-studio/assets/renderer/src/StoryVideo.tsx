@@ -14,9 +14,10 @@ const PageFlipScene: React.FC<{
   scene: SceneData;
   durationInFrames: number;
   transitionFrames: number;
+  incomingTransitionFrames: number;
   isLast: boolean;
   project: Storyboard['project'];
-}> = ({scene, durationInFrames, transitionFrames, isLast, project}) => {
+}> = ({scene, durationInFrames, transitionFrames, incomingTransitionFrames, isLast, project}) => {
   const frame = useCurrentFrame();
   const {width, height} = useVideoConfig();
   const flipProgress = isLast
@@ -64,7 +65,7 @@ const PageFlipScene: React.FC<{
   ].join(' ');
 
   return (
-    <AbsoluteFill style={{backgroundColor: '#fff', overflow: 'hidden'}}>
+    <AbsoluteFill style={{backgroundColor: 'transparent', overflow: 'hidden'}}>
       <svg
         width="0"
         height="0"
@@ -87,7 +88,12 @@ const PageFlipScene: React.FC<{
           backgroundColor: '#fff',
         }}
       >
-        <Scene scene={scene} project={project} />
+        <Scene
+          scene={scene}
+          project={project}
+          startDelayFrames={incomingTransitionFrames}
+          endReserveFrames={isLast ? 0 : transitionFrames}
+        />
       </AbsoluteFill>
       {!isLast && flipProgress > 0 ? (
         <AbsoluteFill
@@ -100,7 +106,12 @@ const PageFlipScene: React.FC<{
             opacity: 0.3 + curlStrength * 0.32,
           }}
         >
-          <Scene scene={scene} project={project} />
+          <Scene
+            scene={scene}
+            project={project}
+            startDelayFrames={incomingTransitionFrames}
+            endReserveFrames={transitionFrames}
+          />
         </AbsoluteFill>
       ) : null}
       {!isLast && flipProgress > 0 ? (
@@ -217,6 +228,7 @@ const PageFlipStoryVideo: React.FC<{value: Storyboard}> = ({value}) => {
               scene={scene}
               durationInFrames={durationInFrames}
               transitionFrames={transitionFrames}
+              incomingTransitionFrames={index === 0 ? 0 : transitionFrames}
               isLast={index === value.scenes.length - 1}
               project={value.project}
             />

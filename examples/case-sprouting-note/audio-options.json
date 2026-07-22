@@ -1,0 +1,73 @@
+{
+  "enabled": true,
+  "tts": {
+    "enabled": false,
+    "provider": "openai"
+  },
+  "bgm": {
+    "path": "audio/sources/gentle-growth.m4a",
+    "volume": 1,
+    "loop": false
+  },
+  "sfx": [
+    {
+      "id": "rain-at-bus-stop",
+      "scene_id": "01",
+      "offset_sec": 0,
+      "path": "audio/sources/rain.m4a",
+      "volume": 0.62
+    },
+    {
+      "id": "page-turn-01",
+      "scene_id": "01",
+      "offset_sec": 6.333333,
+      "path": "audio/sources/page-turn.m4a",
+      "volume": 0.95
+    },
+    {
+      "id": "three-seeds",
+      "scene_id": "02",
+      "offset_sec": 1.65,
+      "path": "audio/sources/seed-chime.m4a",
+      "volume": 0.52
+    },
+    {
+      "id": "page-turn-02",
+      "scene_id": "02",
+      "offset_sec": 6.533333,
+      "path": "audio/sources/page-turn.m4a",
+      "volume": 0.95
+    },
+    {
+      "id": "watering",
+      "scene_id": "03",
+      "offset_sec": 2.05,
+      "path": "audio/sources/watering.m4a",
+      "volume": 0.64
+    },
+    {
+      "id": "page-turn-03",
+      "scene_id": "03",
+      "offset_sec": 6.633333,
+      "path": "audio/sources/page-turn.m4a",
+      "volume": 0.95
+    },
+    {
+      "id": "morning-birds",
+      "scene_id": "04",
+      "offset_sec": 0.45,
+      "path": "audio/sources/morning-birds.m4a",
+      "volume": 0.58
+    }
+  ],
+  "mix": {
+    "voiceover_volume": 1,
+    "bgm_volume": 0.3,
+    "sfx_volume": 0.78,
+    "target_lufs": -16,
+    "true_peak_db": -1.5,
+    "loudness_range": 9,
+    "limiter": 0.95,
+    "audio_bitrate": "192k"
+  }
+}

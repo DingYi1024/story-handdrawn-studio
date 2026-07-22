@@ -41,14 +41,41 @@ const patternedColor = (width, height, phase = 0) => {
   return buffer;
 };
 
-test('normalizes ffprobe metadata and rational frame rates', () => {
+test('normalizes video and audio ffprobe metadata and rational frame rates', () => {
   assert.equal(parseFrameRate('30000/1001').toFixed(3), '29.970');
   assert.equal(parseFrameRate('0/0'), null);
   assert.deepEqual(normalizeProbe({streams: [{
     codec_type: 'video', width: 1080, height: 1440, avg_frame_rate: '30/1', duration: '4.5', nb_frames: '135',
+  }, {
+    codec_type: 'audio', codec_name: 'aac', sample_rate: '48000', channels: 2,
   }]}), {
     width: 1080, height: 1440, fps: 30, durationSec: 4.5, frameCount: 135, codec: null, pixelFormat: null,
+    audioStreams: [{codec: 'aac', sampleRate: 48000, channels: 2}],
   });
+});
+
+test('report can require an audio stream', () => {
+  const metadata = {width: 320, height: 240, fps: 10, durationSec: 2, audioStreams: []};
+  const plan = createVisualQaPlan(metadata, {timelineSamples: 3});
+  const samples = plan.samples.map((sample) => ({
+    ...sample,
+    ...analyzeRgbFrame(patternedMono(8, 8), 8, 8),
+  }));
+  const report = createVisualQaReport({
+    metadata,
+    plan,
+    samples,
+    expected: {
+      width: 320,
+      height: 240,
+      fps: 10,
+      durationSec: 2,
+      hasAudio: true,
+      colorAfterTitle: false,
+    },
+  });
+  assert.equal(report.passed, false);
+  assert.equal(report.checks.find(({id}) => id === 'audio_stream').status, 'fail');
 });
 
 test('builds a deterministic first/title/timeline sampling plan', () => {
