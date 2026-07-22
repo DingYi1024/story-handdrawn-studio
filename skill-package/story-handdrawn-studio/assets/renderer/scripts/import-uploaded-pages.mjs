@@ -351,7 +351,7 @@ for (let index = 0; index < inputs.length; index += 1) {
     layers: paperFlip
       ? ['color']
       : hasCaption
-        ? ['text', 'bw_full', 'color']
+        ? ['bw_full', 'text', 'color']
         : ['bw_full', 'color'],
     color_hint: null,
     detail_hint: null,

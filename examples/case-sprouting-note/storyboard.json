@@ -8,7 +8,10 @@
     "derive_bw": "local",
     "enable_detail": false,
     "gen_size": 1024,
-    "export_size": [1080, 1920],
+    "export_size": [
+      1080,
+      1920
+    ],
     "ratio": "9:16",
     "width": 1080,
     "height": 1920,
@@ -42,7 +45,11 @@
       "narration": "加班回家的夜里，小满在公交站捡到一只被雨淋湿的纸袋。",
       "visual": "雨夜公交站，小满弯腰拾起纸袋。",
       "shot": "story_beat",
-      "layers": ["text", "bw_full", "color"],
+      "layers": [
+        "bw_full",
+        "text",
+        "color"
+      ],
       "color_hint": "灰蓝雨线、芥末黄开衫、砖红色包，保留大量纯白",
       "detail_hint": null,
       "assets": {
@@ -59,7 +66,11 @@
       "narration": "她把纸袋带回家，里面只有三颗向日葵种子和一张空白纸条。",
       "visual": "深夜室内，小满打开纸袋看见三颗种子。",
       "shot": "story_beat",
-      "layers": ["text", "bw_full", "color"],
+      "layers": [
+        "bw_full",
+        "text",
+        "color"
+      ],
       "color_hint": "暖黄灯光、鼠尾草绿台灯、木色桌面，保留大量纯白",
       "detail_hint": null,
       "assets": {
@@ -76,7 +87,11 @@
       "narration": "纸条上写着：请替我看看它们开花。她认真照料了九十天。",
       "visual": "阳台上，小满给三个不同生长阶段的花盆浇水。",
       "shot": "story_beat",
-      "layers": ["text", "bw_full", "color"],
+      "layers": [
+        "bw_full",
+        "text",
+        "color"
+      ],
       "color_hint": "鼠尾草绿幼苗、暖黄晨光、浅棕花盆，保留大量纯白",
       "detail_hint": null,
       "assets": {
@@ -93,7 +108,11 @@
       "narration": "九十天后，阳台亮起三朵小太阳。小满第一次觉得，这座陌生的城市也在等她回家。",
       "visual": "清晨阳台，三朵向日葵盛开，小满安静微笑。",
       "shot": "story_beat",
-      "layers": ["text", "bw_full", "color"],
+      "layers": [
+        "bw_full",
+        "text",
+        "color"
+      ],
       "color_hint": "向日葵暖黄、叶片鼠尾草绿、远处低饱和城市，保留大量纯白",
       "detail_hint": null,
       "assets": {

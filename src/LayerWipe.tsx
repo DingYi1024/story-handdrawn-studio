@@ -10,6 +10,7 @@ type LayerWipeProps = {
   zIndex: number;
   treatment?: 'bw' | 'detail' | 'color';
   layout?: Storyboard['project']['layout'];
+  visibleFromStart?: boolean;
 };
 
 const treatmentFilter = {
@@ -26,13 +27,16 @@ export const LayerWipe: React.FC<LayerWipeProps> = ({
   zIndex,
   treatment = 'color',
   layout,
+  visibleFromStart = false,
 }) => {
   const frame = useCurrentFrame();
   const {width, height} = useVideoConfig();
-  const progress = revealProgress(frame, startFrame, durationFrames);
-  // Product rule: every drawing plate is revealed left-to-right. Keeping one
-  // mask direction across bw/detail/color prevents the composition from
-  // appearing to jump when a new plate takes over.
+  const progress = visibleFromStart
+    ? 1
+    : revealProgress(frame, startFrame, durationFrames);
+  // The BW base plate is already present on the first frame. Later detail and
+  // color plates keep one left-to-right mask direction so the drawing never
+  // jumps or passes through a blank page.
   const clipPath = `inset(0 ${100 - progress * 100}% 0 0)`;
 
   return (

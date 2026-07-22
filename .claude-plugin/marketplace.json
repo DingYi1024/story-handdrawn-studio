@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "把中文故事或有序图片制作成可续做、可质检的多画幅手绘动画",
-    "version": "0.3.2"
+    "version": "0.3.3"
   },
   "plugins": [
     {
@@ -13,7 +13,7 @@
       "description": "从故事或有序图片创建、续做、质检并渲染手绘动画视频。",
       "source": "./",
       "strict": false,
-      "version": "0.3.2",
+      "version": "0.3.3",
       "category": "content-creation",
       "keywords": ["story-video", "hand-drawn", "remotion", "image-generation", "chinese"],
       "skills": ["./skill-package/story-handdrawn-studio"]

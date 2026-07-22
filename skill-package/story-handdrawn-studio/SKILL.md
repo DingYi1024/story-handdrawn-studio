@@ -46,7 +46,7 @@ Read [references/workflows.md](references/workflows.md) only when executing comm
 ## Visual contract
 
 - Keep captions readable in the upper safe area and illustrations fully contained without cover-cropping.
-- For direct cuts, reveal `text → bw_full → color` from left to right.
+- For direct cuts, show `bw_full` on the first frame, reveal `text` over it, then reveal `color` from left to right. Never use a blank white opening phase.
 - For page flips, preserve the complete uploaded page and its original composition.
 - Keep recurring characters consistent through the character reference, job references, and character lock.
 - Use a clean white diary-comic surface, uneven black felt-tip outlines, sparse props, ample negative space, and restrained wax-crayon color unless the user specifies another style.
