@@ -1,86 +1,68 @@
 ---
 name: story-handdrawn-studio
-description: Convert Chinese story copy or ordered local images into a hand-drawn diary-comic animation with handwritten captions, left-to-right black-and-white-to-color reveals, optional page-flip transitions, safe uncropped framing, and a silent Remotion picture track.
+description: Turn Chinese stories, articles, scripts, diary entries, comic pages, or ordered local images into hand-drawn silent videos. Use for new story-video creation, 3:4/9:16/1:1/16:9 adaptation, storyboard and image generation, page-flip animation, preview/final rendering, project status, interrupted-job recovery, visual-quality checks, or customization of the hand-drawn video workflow.
 ---
 
 # Story Handdrawn Studio
 
-Use the project renderer through this Skill's `scripts/run_story_video.py`. Set `STORY_HANDDRAWN_STUDIO_PROJECT` when the project is not the current working directory. The wrapper must not rely on an author-specific absolute path.
+Act as the user's hand-drawn video producer. Accept natural-language requests, select the next safe workflow action, operate the bundled Studio, and explain results in user-facing terms. Do not make the user memorize commands.
 
-## Workflow
-
-1. Accept inline Chinese story text, a UTF-8 text file, or ordered local images.
-2. Preserve the user's wording. For text input, keep one complete sentence as one beat by default and split only long compound sentences at natural narrative turns.
-3. For uploaded composite pages, automatically crop the handwritten caption and illustration, then derive an aligned black-and-white plate locally.
-4. In direct-cut mode, keep the order `text → bw_full → color`; reveal every stage from left to right.
-5. In page-flip mode, preserve the untouched uploaded master and show it statically before curling the page from the bottom-right corner. Do not add caption, black-and-white, or recoloring stages. Retain a faded version of the source page on the paper underside.
-6. Keep all illustration marks inside the white safe border. Use contained framing and never `cover` cropping.
-7. Produce a silent MP4. Voiceover and optional BGM are post-production tasks.
-8. Report the scene count, duration, output path, and whether the result is plan-only, preview, or final.
-
-## Uploaded images
-
-Preview:
+Resolve `SKILL_DIR` as the directory containing this file. Run Studio through:
 
 ```bash
-python3 scripts/run_story_video.py \
-  --images /absolute/01.jpg /absolute/02.jpg \
-  --title "故事标题" \
-  --mode preview \
-  --transition cut
+python <SKILL_DIR>/scripts/run_story_video.py COMMAND [OPTIONS]
 ```
 
-Final direct-cut render:
+The launcher stores user projects outside the installed Skill, under `~/.story-handdrawn-studio/` by default. Never write a user's work into `assets/renderer`. Never require a separate repository.
 
-```bash
-python3 scripts/run_story_video.py \
-  --images /absolute/01.jpg /absolute/02.jpg \
-  --title "故事标题" \
-  --mode full \
-  --transition cut \
-  --page-duration 4.4
-```
+## Route the request
 
-Final page-flip render:
+First infer what the user is trying to do from the current conversation and existing project state. Do not re-ask for information already provided.
 
-```bash
-python3 scripts/run_story_video.py \
-  --images /absolute/01.jpg /absolute/02.jpg \
-  --title "故事标题" \
-  --mode full \
-  --transition page-flip \
-  --transition-sec 0.7
-```
+- For a first-use or “how does this work?” request, give the short onboarding from [references/routing.md](references/routing.md).
+- For a new text story, create one project and plan it.
+- For ordered images, create one project and ingest the images in the supplied order.
+- For “continue”, “resume”, or an interrupted task, inspect status and resume from the last stable state.
+- For “how far is it?”, list or inspect projects without changing them.
+- For preview or final output, validate assets, render, and perform the matching quality check.
+- For failures, run diagnosis before changing files or retrying.
+- For product or visual customization, read the customization route in [references/routing.md](references/routing.md) before editing the renderer.
 
-Use `--layout auto|composite|full` to control how uploaded pages are interpreted.
+When multiple actions are possible, perform the single next action that most directly advances the current work. Afterward, offer the next useful action based on actual state—not a fixed menu.
 
-## Story text
+## Operating contract
 
-Plan without generating images:
+1. Run `setup` on first use or when diagnosis reports missing dependencies. It installs locked dependencies into a versioned runtime and checks Node, FFmpeg, FFprobe, Remotion, and reference assets.
+2. Give every work a unique project ID. Never mix sources, prompts, assets, storyboards, or output between projects.
+3. Default to `portrait` (3:4). Select `vertical` for 9:16 short video, `square` for 1:1, and `landscape` for 16:9. Use an explicit user choice when present.
+4. For text, preserve the user's wording, create a scene plan, then generate every job in the manifest. Save each generated master to its exact `output_master` path before import.
+5. For images, preserve source order and originals. Detect layout and derive render layers from copied project sources.
+6. Render a preview first unless the user explicitly asks for final-only output. Never report a final render before the output file exists.
+7. Use `resume` after interruption. If assets are missing, stay in `awaiting_assets`, name the missing jobs, and continue only after they exist.
+8. Report project title/ID, current stage, aspect ratio, scene count and duration when known, plus a clickable absolute preview or final path.
 
-```bash
-python3 scripts/run_story_video.py --input /absolute/story.txt --title "故事标题" --mode plan
-```
+Read [references/workflows.md](references/workflows.md) only when executing commands or image jobs. Read [references/quality.md](references/quality.md) for preview/final acceptance. Read [references/storage-and-updates.md](references/storage-and-updates.md) for paths, privacy, migration, or upgrades.
 
-Prepare Codex Image2 jobs, then import and render:
+## Visual contract
 
-```bash
-python3 scripts/run_story_video.py --input /absolute/story.txt --title "故事标题" --mode generate
-python3 scripts/run_story_video.py --mode import
-python3 scripts/run_story_video.py --mode render
-```
+- Keep captions readable in the upper safe area and illustrations fully contained without cover-cropping.
+- For direct cuts, reveal `text → bw_full → color` from left to right.
+- For page flips, preserve the complete uploaded page and its original composition.
+- Keep recurring characters consistent through the character reference, job references, and character lock.
+- Use a clean white diary-comic surface, uneven black felt-tip outlines, sparse props, ample negative space, and restrained wax-crayon color unless the user specifies another style.
+- Produce a silent H.264 picture track. Treat narration, music, subtitles, and sound design as opt-in extensions.
 
-Use `--generator codex` by default. Use `--generator api` only when the user explicitly selects the API fallback and `OPENAI_API_KEY` is available. Use `--force` only when the user explicitly wants an existing generated batch replaced.
+## Image generation
 
-For time jumps, ambiguous pronouns, medical scenes, or age-sensitive characters, provide a JSON visual plan keyed by two-digit scene id through `--visual-plan`.
+Prefer the available image-generation capability. For every job in `codex-image-jobs.json`:
 
-## Output contract
+1. Read its `prompt` and all `references`.
+2. Generate one master that obeys composition, identity, text, and continuity constraints.
+3. Save or copy the result to `output_master` exactly.
+4. Verify the file exists and is readable before moving to the next job.
 
-- Text-story final: `<project>/out/picture_silent.mp4`
-- Text-story preview: `<project>/out/picture_silent-preview.mp4`
-- Uploaded-image final: `<project>/out/uploaded_picture_silent.mp4`
-- Uploaded-image preview: `<project>/out/uploaded_picture_silent-preview.mp4`
-- Resolution: final 1080×1440; preview 720×960
-- Codec/audio: H.264, silent
+Do not activate a storyboard until every job—including the character reference—exists. Use the OpenAI API route only when explicitly selected and `OPENAI_API_KEY` is available.
 
-Do not run a separate validation or test command unless the user explicitly requests it.
+## Truthful completion
+
+Treat Studio state and filesystem evidence as authoritative. A project is complete only when state is `completed`, the final MP4 exists, and the final quality checks pass. If a step fails, report the precise failure and the resumable next action.

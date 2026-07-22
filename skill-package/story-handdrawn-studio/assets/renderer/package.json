@@ -1,0 +1,49 @@
+{
+  "name": "story-handdrawn-studio",
+  "version": "0.3.0",
+  "description": "Customizable studio for turning Chinese stories or ordered images into hand-drawn Remotion videos.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DingYi1024/story-handdrawn-studio.git"
+  },
+  "homepage": "https://github.com/DingYi1024/story-handdrawn-studio#readme",
+  "bugs": {
+    "url": "https://github.com/DingYi1024/story-handdrawn-studio/issues"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "build": "remotion bundle src/index.ts build",
+    "test": "node --test \"tests/*.test.mjs\"",
+    "studio": "node scripts/studio.mjs",
+    "story": "node scripts/story-to-video.mjs",
+    "import:codex": "node scripts/import-codex-images.mjs",
+    "import:uploaded": "node scripts/import-uploaded-pages.mjs",
+    "render": "npm run check:assets:text && remotion render src/index.ts PictureSilent out/picture_silent.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --muted --concurrency=1",
+    "render:preview": "npm run check:assets:text && remotion render src/index.ts PictureSilent out/picture_silent-preview.mp4 --codec=h264 --crf=23 --pixel-format=yuv420p --muted --scale=0.6666666666666666 --concurrency=1",
+    "render:uploaded": "npm run check:assets:uploaded && remotion render src/index.ts UploadedPictureSilent out/uploaded_picture_silent.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --muted --concurrency=1",
+    "render:uploaded:preview": "npm run check:assets:uploaded && remotion render src/index.ts UploadedPictureSilent out/uploaded_picture_silent-preview.mp4 --codec=h264 --crf=23 --pixel-format=yuv420p --muted --scale=0.6666666666666666 --concurrency=1",
+    "check": "npm run test && npm run check:types && npm run check:storyboard",
+    "check:types": "tsc --noEmit",
+    "check:storyboard": "node scripts/validate-storyboard.mjs --skip-assets storyboard.json storyboard.uploaded.json",
+    "check:assets": "node scripts/validate-storyboard.mjs storyboard.json storyboard.uploaded.json",
+    "check:assets:text": "node scripts/validate-storyboard.mjs storyboard.json",
+    "check:assets:uploaded": "node scripts/validate-storyboard.mjs storyboard.uploaded.json"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.487",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "remotion": "4.0.487"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.11",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "typescript": "5.9.3"
+  }
+}

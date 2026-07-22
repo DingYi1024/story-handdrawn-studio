@@ -1,4 +1,7 @@
 interface:
-  display_name: "手绘故事工作室"
-  short_description: "把中文故事动态拆成手绘分镜并生成可后期配音的静音动画成片"
-  default_prompt: "使用 $story-handdrawn-studio 把这段故事生成可后期配音的手绘动画。"
+  display_name: "手绘故事视频"
+  short_description: "从故事或有序图片创建、续做并质检多画幅手绘动画"
+  brand_color: "#D97757"
+  default_prompt: "使用 $story-handdrawn-studio 把这段故事制作成手绘动画，先建立独立项目并输出预览。"
+policy:
+  allow_implicit_invocation: true

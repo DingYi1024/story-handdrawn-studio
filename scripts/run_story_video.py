@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 def default_project() -> Path:
-    """Find the project without relying on the original author's machine path."""
+    """Find the project without relying on machine-specific paths."""
     configured = os.environ.get("STORY_HANDDRAWN_STUDIO_PROJECT")
     if configured:
         return Path(configured).expanduser().resolve()
