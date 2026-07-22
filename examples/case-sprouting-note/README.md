@@ -2,7 +2,11 @@
 
 这是 Story Handdrawn Studio 的完整 9:16 案例，演示同一角色在四幕故事中的身份一致性，以及字体字幕、黑白线稿和彩色插画的分层揭示。
 
-![案例封面](cover.png)
+下面是完整 27.7 秒成片的低分辨率动态预览；点击图片可打开 1080×1920 正式 MP4。
+
+[![完整动态预览](animated-preview.gif)](final.mp4)
+
+[直接打开正式 MP4](final.mp4)
 
 ## 故事
 
@@ -19,6 +23,7 @@
 - `preview.mp4`：720×1280 审片版
 - `final.mp4`：1080×1920 H.264 正式片
 - `cover.png`：从正式片末幕提取的案例封面
+- `animated-preview.gif`：README 内可直接观看的完整动态预览
 
 ## 本地复现
 

@@ -64,11 +64,12 @@ Claude Code 也支持通过插件市场安装：
 
 ## 完整案例：《会发芽的纸条》
 
-[![《会发芽的纸条》案例封面](examples/case-sprouting-note/cover.png)](examples/case-sprouting-note/final.mp4)
+[![《会发芽的纸条》完整动态预览](examples/case-sprouting-note/animated-preview.gif)](examples/case-sprouting-note/final.mp4)
 
 一个可直接播放、验证和重新渲染的 9:16 案例：4 幕、27.7 秒、同一角色贯穿，完整展示 `文字 → 黑白画稿 → 彩色插画` 的揭示过程。
 
-- [播放 1080×1920 正式片](examples/case-sprouting-note/final.mp4)
+- [播放或下载 1080×1920 正式 MP4](examples/case-sprouting-note/final.mp4)
+- [通过 Raw 地址直接打开 MP4](https://raw.githubusercontent.com/DingYi1024/story-handdrawn-studio/main/examples/case-sprouting-note/final.mp4)
 - [查看案例说明与复现命令](examples/case-sprouting-note/README.md)
 - [查看故事板 JSON](examples/case-sprouting-note/storyboard.json)
 - [查看角色与分镜素材](public/examples/case-sprouting-note/)
