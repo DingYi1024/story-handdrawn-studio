@@ -28,7 +28,7 @@ const validStoryboard = () => ({
     text: '一句话。',
     visual: 'scene',
     shot: 'story_beat',
-    layers: ['text', 'bw_full', 'color'],
+    layers: ['bw_full', 'text', 'color'],
     color_hint: null,
     detail_hint: null,
     assets: {text_image: null, bw: 'assets/bw.svg', detail: null, color: 'assets/color.svg'},
@@ -58,3 +58,9 @@ test('validator rejects mismatched ratios and asset traversal', () => {
   assert.ok(result.errors.some((error) => error.includes('escapes the public directory')));
 });
 
+test('validator rejects text-first scenes that can open on a blank page', () => {
+  const storyboard = validStoryboard();
+  storyboard.scenes[0].layers = ['text', 'bw_full', 'color'];
+  const result = validateStoryboardObject(storyboard);
+  assert.ok(result.errors.some((error) => error.includes('bw_full must appear before text')));
+});

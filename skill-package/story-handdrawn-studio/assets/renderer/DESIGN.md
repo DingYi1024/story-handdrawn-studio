@@ -9,8 +9,8 @@
 
 ## Motion
 
-- Direct cut: `text → bw_full → optional detail → color`.
-- Every drawing plate reveals from left to right with one consistent mask direction.
+- Direct cut: show `bw_full` on frame zero, reveal `text` over it, then reveal optional `detail` and `color`.
+- The base BW plate never wipes in. Later drawing plates reveal from left to right with one consistent mask direction.
 - Page flip overlaps adjacent pages by the configured transition duration and preserves the page master.
 - Motion must remain deterministic from frame number and project configuration.
 

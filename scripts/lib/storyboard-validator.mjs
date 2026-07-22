@@ -114,6 +114,8 @@ export const validateStoryboardObject = (
 
     const hasText = scene.layers.includes('text');
     const illustrated = scene.layers.includes('bw_full');
+    const bwIndex = scene.layers.indexOf('bw_full');
+    const textIndex = scene.layers.indexOf('text');
     const colorIndex = scene.layers.indexOf('color');
     if ((scene.text || scene.assets.text_image) && !hasText) {
       errors.push(`${label}: text content requires a text layer`);
@@ -121,8 +123,14 @@ export const validateStoryboardObject = (
     if (illustrated && (!scene.assets.bw || !scene.assets.color)) {
       errors.push(`${label}: illustrated scenes require bw and color assets`);
     }
-    if (illustrated && scene.layers.indexOf('bw_full') > colorIndex) {
+    if (illustrated && bwIndex > colorIndex) {
       errors.push(`${label}: bw_full must appear before color`);
+    }
+    if (illustrated && hasText && bwIndex > textIndex) {
+      errors.push(`${label}: bw_full must appear before text to prevent blank opening frames`);
+    }
+    if (hasText && textIndex > colorIndex) {
+      errors.push(`${label}: text must appear before color`);
     }
     if (!scene.assets.color || colorIndex < 0) {
       errors.push(`${label}: a color layer and asset are required`);
@@ -189,4 +197,3 @@ export const validateStoryboardFile = (path, options = {}) => {
     return {errors: [`invalid JSON: ${error.message}`], summary: null};
   }
 };
-

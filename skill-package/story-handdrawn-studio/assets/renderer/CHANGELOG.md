@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-07-22
+
+### Fixed
+
+- Direct-cut scenes now show the complete monochrome illustration on frame zero, reveal captions over it, and reveal color last, eliminating the blank white opening phase.
+- Story generation, image ingestion, storyboard validation, Skill guidance, and the published showcase now enforce the same `bw_full → text → color` contract.
+
 ## [0.3.2] - 2026-07-22
 
 ### Added

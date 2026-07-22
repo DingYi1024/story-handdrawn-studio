@@ -1,109 +1,128 @@
 {
   "storyboard": {
-  "schema_version": 2,
-  "project": {
-    "id": "sprouting-note",
-    "title": "会发芽的纸条",
-    "mode": "speed",
-    "images_per_scene": 1,
-    "derive_bw": "local",
-    "enable_detail": false,
-    "gen_size": 1024,
-    "export_size": [1080, 1920],
-    "ratio": "9:16",
-    "width": 1080,
-    "height": 1920,
-    "fps": 30,
-    "transition": "cut",
-    "transition_sec": 0.7,
-    "style_lock": "minimalist Chinese diary comic, pure white background, uneven black felt-tip pen outlines, naive wobbly proportions, rough black crayon scribbles, sparse props, abundant negative space, selective muted wax-crayon color",
-    "character_lock": "小满，26岁中国女性，短而微卷的黑色波波头和轻薄刘海，圆脸；芥末黄针织开衫、白色内搭、灰蓝色及踝长裙、米白帆布鞋、砖红色帆布单肩包；所有场景保持身份、发型、年龄、服装配色和身体比例一致",
-    "caption": {
-      "max_chars_per_line": 15,
-      "max_lines": 3
-    },
-    "layout": {
-      "caption_top_ratio": 0.06,
-      "caption_height_ratio": 0.2,
-      "illustration_top_ratio": 0.265,
-      "side_margin_ratio": 0.0685,
-      "bottom_margin_ratio": 0.03
-    },
-    "audio": {
-      "voiceover": "post",
-      "bgm": "optional_bed_only",
-      "bgm_follows_text": false
-    }
-  },
-  "scenes": [
-    {
-      "id": "01",
-      "duration_sec": 6.4,
-      "text": "加班回家的夜里，\n小满在公交站捡到一只\n被雨淋湿的纸袋。",
-      "narration": "加班回家的夜里，小满在公交站捡到一只被雨淋湿的纸袋。",
-      "visual": "雨夜公交站，小满弯腰拾起纸袋。",
-      "shot": "story_beat",
-      "layers": ["text", "bw_full", "color"],
-      "color_hint": "灰蓝雨线、芥末黄开衫、砖红色包，保留大量纯白",
-      "detail_hint": null,
-      "assets": {
-        "text_image": null,
-        "bw": "examples/case-sprouting-note/01_bw.png",
-        "detail": null,
-        "color": "examples/case-sprouting-note/01_color.png"
+    "schema_version": 2,
+    "project": {
+      "id": "sprouting-note",
+      "title": "会发芽的纸条",
+      "mode": "speed",
+      "images_per_scene": 1,
+      "derive_bw": "local",
+      "enable_detail": false,
+      "gen_size": 1024,
+      "export_size": [
+        1080,
+        1920
+      ],
+      "ratio": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "fps": 30,
+      "transition": "cut",
+      "transition_sec": 0.7,
+      "style_lock": "minimalist Chinese diary comic, pure white background, uneven black felt-tip pen outlines, naive wobbly proportions, rough black crayon scribbles, sparse props, abundant negative space, selective muted wax-crayon color",
+      "character_lock": "小满，26岁中国女性，短而微卷的黑色波波头和轻薄刘海，圆脸；芥末黄针织开衫、白色内搭、灰蓝色及踝长裙、米白帆布鞋、砖红色帆布单肩包；所有场景保持身份、发型、年龄、服装配色和身体比例一致",
+      "caption": {
+        "max_chars_per_line": 15,
+        "max_lines": 3
+      },
+      "layout": {
+        "caption_top_ratio": 0.06,
+        "caption_height_ratio": 0.2,
+        "illustration_top_ratio": 0.265,
+        "side_margin_ratio": 0.0685,
+        "bottom_margin_ratio": 0.03
+      },
+      "audio": {
+        "voiceover": "post",
+        "bgm": "optional_bed_only",
+        "bgm_follows_text": false
       }
     },
-    {
-      "id": "02",
-      "duration_sec": 6.8,
-      "text": "她把纸袋带回家。\n里面只有三颗向日葵种子，\n和一张空白纸条。",
-      "narration": "她把纸袋带回家，里面只有三颗向日葵种子和一张空白纸条。",
-      "visual": "深夜室内，小满打开纸袋看见三颗种子。",
-      "shot": "story_beat",
-      "layers": ["text", "bw_full", "color"],
-      "color_hint": "暖黄灯光、鼠尾草绿台灯、木色桌面，保留大量纯白",
-      "detail_hint": null,
-      "assets": {
-        "text_image": null,
-        "bw": "examples/case-sprouting-note/02_bw.png",
-        "detail": null,
-        "color": "examples/case-sprouting-note/02_color.png"
+    "scenes": [
+      {
+        "id": "01",
+        "duration_sec": 6.4,
+        "text": "加班回家的夜里，\n小满在公交站捡到一只\n被雨淋湿的纸袋。",
+        "narration": "加班回家的夜里，小满在公交站捡到一只被雨淋湿的纸袋。",
+        "visual": "雨夜公交站，小满弯腰拾起纸袋。",
+        "shot": "story_beat",
+        "layers": [
+          "bw_full",
+          "text",
+          "color"
+        ],
+        "color_hint": "灰蓝雨线、芥末黄开衫、砖红色包，保留大量纯白",
+        "detail_hint": null,
+        "assets": {
+          "text_image": null,
+          "bw": "examples/case-sprouting-note/01_bw.png",
+          "detail": null,
+          "color": "examples/case-sprouting-note/01_color.png"
+        }
+      },
+      {
+        "id": "02",
+        "duration_sec": 6.8,
+        "text": "她把纸袋带回家。\n里面只有三颗向日葵种子，\n和一张空白纸条。",
+        "narration": "她把纸袋带回家，里面只有三颗向日葵种子和一张空白纸条。",
+        "visual": "深夜室内，小满打开纸袋看见三颗种子。",
+        "shot": "story_beat",
+        "layers": [
+          "bw_full",
+          "text",
+          "color"
+        ],
+        "color_hint": "暖黄灯光、鼠尾草绿台灯、木色桌面，保留大量纯白",
+        "detail_hint": null,
+        "assets": {
+          "text_image": null,
+          "bw": "examples/case-sprouting-note/02_bw.png",
+          "detail": null,
+          "color": "examples/case-sprouting-note/02_color.png"
+        }
+      },
+      {
+        "id": "03",
+        "duration_sec": 6.9,
+        "text": "纸条上写着：\n“请替我看看它们开花。”\n她认真照料了九十天。",
+        "narration": "纸条上写着：请替我看看它们开花。她认真照料了九十天。",
+        "visual": "阳台上，小满给三个不同生长阶段的花盆浇水。",
+        "shot": "story_beat",
+        "layers": [
+          "bw_full",
+          "text",
+          "color"
+        ],
+        "color_hint": "鼠尾草绿幼苗、暖黄晨光、浅棕花盆，保留大量纯白",
+        "detail_hint": null,
+        "assets": {
+          "text_image": null,
+          "bw": "examples/case-sprouting-note/03_bw.png",
+          "detail": null,
+          "color": "examples/case-sprouting-note/03_color.png"
+        }
+      },
+      {
+        "id": "04",
+        "duration_sec": 7.6,
+        "text": "阳台亮起三朵小太阳。\n小满第一次觉得，\n这座城市也在等她回家。",
+        "narration": "九十天后，阳台亮起三朵小太阳。小满第一次觉得，这座陌生的城市也在等她回家。",
+        "visual": "清晨阳台，三朵向日葵盛开，小满安静微笑。",
+        "shot": "story_beat",
+        "layers": [
+          "bw_full",
+          "text",
+          "color"
+        ],
+        "color_hint": "向日葵暖黄、叶片鼠尾草绿、远处低饱和城市，保留大量纯白",
+        "detail_hint": null,
+        "assets": {
+          "text_image": null,
+          "bw": "examples/case-sprouting-note/04_bw.png",
+          "detail": null,
+          "color": "examples/case-sprouting-note/04_color.png"
+        }
       }
-    },
-    {
-      "id": "03",
-      "duration_sec": 6.9,
-      "text": "纸条上写着：\n“请替我看看它们开花。”\n她认真照料了九十天。",
-      "narration": "纸条上写着：请替我看看它们开花。她认真照料了九十天。",
-      "visual": "阳台上，小满给三个不同生长阶段的花盆浇水。",
-      "shot": "story_beat",
-      "layers": ["text", "bw_full", "color"],
-      "color_hint": "鼠尾草绿幼苗、暖黄晨光、浅棕花盆，保留大量纯白",
-      "detail_hint": null,
-      "assets": {
-        "text_image": null,
-        "bw": "examples/case-sprouting-note/03_bw.png",
-        "detail": null,
-        "color": "examples/case-sprouting-note/03_color.png"
-      }
-    },
-    {
-      "id": "04",
-      "duration_sec": 7.6,
-      "text": "阳台亮起三朵小太阳。\n小满第一次觉得，\n这座城市也在等她回家。",
-      "narration": "九十天后，阳台亮起三朵小太阳。小满第一次觉得，这座陌生的城市也在等她回家。",
-      "visual": "清晨阳台，三朵向日葵盛开，小满安静微笑。",
-      "shot": "story_beat",
-      "layers": ["text", "bw_full", "color"],
-      "color_hint": "向日葵暖黄、叶片鼠尾草绿、远处低饱和城市，保留大量纯白",
-      "detail_hint": null,
-      "assets": {
-        "text_image": null,
-        "bw": "examples/case-sprouting-note/04_bw.png",
-        "detail": null,
-        "color": "examples/case-sprouting-note/04_color.png"
-      }
-    }
-  ]
-}
+    ]
+  }
 }

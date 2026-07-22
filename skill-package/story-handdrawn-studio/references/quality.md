@@ -12,12 +12,12 @@ Check:
 - no stretched, cover-cropped, clipped, or missing artwork;
 - caption line count, legibility, safe margins, and correct wording;
 - scene order and reasonable reading time;
-- reveal order is `text → bw_full → color` in direct-cut mode;
+- direct-cut scenes show `bw_full` from frame zero, then reveal `text`, then reveal `color`;
 - page-flip mode retains the complete uploaded page;
 - characters retain face, hair, age, clothing colors, and proportions;
 - no unintended text, watermark, extra people, or premature narrative elements;
 - white background and restrained palette remain visually consistent;
-- transitions have no black frames, blank frames, or abrupt layout jumps.
+- transitions and scene openings have no black frames, blank white frames, or abrupt layout jumps.
 
 If one frame fails, fix the underlying storyboard, asset, timing, or renderer rule and produce a new preview. Do not approve by description alone.
 

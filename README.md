@@ -53,7 +53,7 @@ Claude Code 也支持通过插件市场安装：
 
 - 中文故事自动分镜，保留原文并按阅读速度计算镜头时长
 - 有序图片自动去重、版式检测、无损包含和黑白层派生
-- `文字 → 黑白画稿 → 彩色插画` 左到右揭示
+- 首帧直接显示黑白画稿，再叠加文字，最后由左到右揭示彩色插画；没有纯白过渡
 - `cut` 直切与 `page-flip` 卷页转场
 - 3:4、9:16、1:1、16:9 四种动态画布
 - Codex Image2 任务清单与显式选择的 OpenAI API 工作流
@@ -66,7 +66,7 @@ Claude Code 也支持通过插件市场安装：
 
 [![《会发芽的纸条》完整动态预览](examples/case-sprouting-note/animated-preview.gif)](examples/case-sprouting-note/final.mp4)
 
-一个可直接播放、验证和重新渲染的 9:16 案例：4 幕、27.7 秒、同一角色贯穿，完整展示 `文字 → 黑白画稿 → 彩色插画` 的揭示过程。
+一个可直接播放、验证和重新渲染的 9:16 案例：4 幕、27.7 秒、同一角色贯穿，完整展示 `黑白画稿 → 文字 → 彩色插画` 的揭示过程。
 
 - [播放或下载 1080×1920 正式 MP4](examples/case-sprouting-note/final.mp4)
 - [通过 Raw 地址直接打开 MP4](https://raw.githubusercontent.com/DingYi1024/story-handdrawn-studio/main/examples/case-sprouting-note/final.mp4)

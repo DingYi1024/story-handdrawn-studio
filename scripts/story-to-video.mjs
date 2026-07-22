@@ -406,7 +406,7 @@ Constraints: non-graphic, emotionally restrained family storytelling; no visible
     narration: text,
     visual: `根据文案绘制一个单一、清楚、可画的白底日记漫画场景：${text}`,
     shot: 'story_beat',
-    layers: ['text', 'bw_full', 'color'],
+    layers: ['bw_full', 'text', 'color'],
     color_hint: `仅使用低饱和蜡笔色（${(settings?.visual?.palette || ['鼠尾草绿', '灰蓝', '浅棕', '砖红', '暖黄']).join('、')}），保留大量纯白`,
     detail_hint: null,
     assets: {

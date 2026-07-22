@@ -5,6 +5,7 @@ import {
   useVideoConfig,
 } from 'remotion';
 import {LayerWipe} from './LayerWipe';
+import {sceneRevealTiming} from './scene-timing.mjs';
 import {TextWipe} from './TextWipe';
 import type {SceneData, Storyboard} from './types';
 
@@ -14,9 +15,9 @@ export const Scene: React.FC<{
 }> = ({scene, project}) => {
   const {fps} = useVideoConfig();
   const total = Math.round(scene.duration_sec * fps);
-  const at = (ratio: number) => Math.round(total * ratio);
   const has = (layer: string) => scene.layers.includes(layer as never);
   const speedMode = !has('detail');
+  const timing = sceneRevealTiming(total, speedMode);
   const staticColor = has('color') && !has('bw_full') && !has('detail');
   const fullUploadedPage =
     scene.shot === 'full_uploaded_page' && scene.assets.color;
@@ -42,19 +43,20 @@ export const Scene: React.FC<{
       {has('bw_full') && scene.assets.bw ? (
         <LayerWipe
           src={scene.assets.bw}
-          startFrame={at(speedMode ? 0.18 : 0.16)}
-          durationFrames={at(speedMode ? 0.4 : 0.32)}
+          startFrame={timing.bwVisibleFromFrame}
+          durationFrames={1}
           zIndex={10}
           treatment="bw"
           layout={project.layout}
+          visibleFromStart
         />
       ) : null}
 
       {has('detail') && scene.assets.detail ? (
         <LayerWipe
           src={scene.assets.detail}
-          startFrame={at(0.48)}
-          durationFrames={at(0.17)}
+          startFrame={timing.detailStartFrame}
+          durationFrames={timing.detailDurationFrames}
           zIndex={20}
           treatment="detail"
           layout={project.layout}
@@ -64,19 +66,20 @@ export const Scene: React.FC<{
       {has('color') && scene.assets.color ? (
         <LayerWipe
           src={scene.assets.color}
-          startFrame={staticColor ? 0 : at(speedMode ? 0.52 : 0.65)}
-          durationFrames={staticColor ? 1 : at(speedMode ? 0.36 : 0.23)}
+          startFrame={staticColor ? 0 : timing.colorStartFrame}
+          durationFrames={staticColor ? 1 : timing.colorDurationFrames}
           zIndex={30}
           treatment="color"
           layout={project.layout}
+          visibleFromStart={staticColor}
         />
       ) : null}
 
       <TextWipe
         text={scene.text}
         textAsset={scene.assets.text_image}
-        startFrame={0}
-        durationFrames={at(speedMode ? 0.22 : 0.16)}
+        startFrame={timing.textStartFrame}
+        durationFrames={timing.textDurationFrames}
         project={project}
       />
 
