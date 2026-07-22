@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createSettings, mergeSettings, parseRatio, PRESETS} from '../scripts/lib/presets.mjs';
+import {calculatePreviewCanvas, createSettings, mergeSettings, parseRatio, PRESETS} from '../scripts/lib/presets.mjs';
 
 test('all built-in presets have matching even dimensions', () => {
   for (const name of Object.keys(PRESETS)) {
@@ -29,3 +29,9 @@ test('invalid dimensions and transitions are rejected', () => {
   );
 });
 
+test('preview canvases preserve exact ratios with even H.264 dimensions', () => {
+  assert.deepEqual(calculatePreviewCanvas(PRESETS.portrait, 720), {width: 720, height: 960, scale: 2 / 3});
+  assert.deepEqual(calculatePreviewCanvas(PRESETS.vertical, 720), {width: 720, height: 1280, scale: 2 / 3});
+  assert.deepEqual(calculatePreviewCanvas(PRESETS.square, 720), {width: 720, height: 720, scale: 2 / 3});
+  assert.deepEqual(calculatePreviewCanvas(PRESETS.landscape, 720), {width: 704, height: 396, scale: 11 / 30});
+});

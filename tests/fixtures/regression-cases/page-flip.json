@@ -1,0 +1,17 @@
+{
+  "case": "page-flip",
+  "description": "Page-flip transitions use explicit narrative dependencies without changing cast rules.",
+  "input": {
+    "transition": {"type": "page-flip", "durationSeconds": 0.55},
+    "characters": [
+      {"id": "gardener", "name": "园丁", "introducedIn": "01", "defaultOutfit": "indigo-apron", "palette": ["#536B82"]}
+    ],
+    "props": [{"id": "seedling", "name": "幼苗", "introducedIn": "02", "owner": "gardener", "palette": ["#6F8C62"]}],
+    "scenes": [
+      {"id": "01", "characters": ["gardener"], "props": [], "setting": {"location": "garden", "timeOfDay": "morning", "palette": ["#D8E0BF"]}},
+      {"id": "02", "characters": ["gardener"], "props": ["seedling"], "dependsOn": ["01"]},
+      {"id": "03", "characters": [], "props": ["seedling"], "dependsOn": ["02"]}
+    ]
+  },
+  "expect": {"sceneCount": 3, "transition": "page-flip"}
+}

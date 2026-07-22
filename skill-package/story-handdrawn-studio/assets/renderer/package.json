@@ -1,6 +1,6 @@
 {
   "name": "story-handdrawn-studio",
-  "version": "0.3.3",
+  "version": "0.5.0",
   "description": "Customizable studio for turning Chinese stories or ordered images into hand-drawn Remotion videos.",
   "license": "MIT",
   "repository": {
@@ -19,6 +19,8 @@
     "dev": "remotion studio src/index.ts",
     "build": "remotion bundle src/index.ts build",
     "test": "node --test \"tests/*.test.mjs\"",
+    "regress": "node scripts/studio.mjs regress --json",
+    "qa:case": "node scripts/qa-video.mjs examples/case-sprouting-note/final.mp4 --output examples/case-sprouting-note/qa-report.json --frames-dir examples/case-sprouting-note/qa-frames --width 1080 --height 1920 --fps 30 --duration 27.7 --duration-tolerance 0.2 --color-after 5.76 --samples 11 --portable",
     "studio": "node scripts/studio.mjs",
     "story": "node scripts/story-to-video.mjs",
     "import:codex": "node scripts/import-codex-images.mjs",

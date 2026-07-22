@@ -24,12 +24,17 @@
 - `final.mp4`：1080×1920 H.264 正式片
 - `cover.png`：从正式片末幕提取的案例封面
 - `animated-preview.gif`：README 内可直接观看的完整动态预览
+- `qa-report.json`：机器验收报告（8 项通过、1 项审片提示、0 项失败）
+- `qa-frames/`：首帧、彩色揭示点与全片时间线抽帧
 
 ## 本地复现
 
 ```bash
 npm ci
 node scripts/validate-storyboard.mjs examples/case-sprouting-note/storyboard.json
+node scripts/qa-video.mjs examples/case-sprouting-note/final.mp4 \
+  --width 1080 --height 1920 --fps 30 --duration 27.7 \
+  --color-after 5.76 --samples 11
 npx remotion render src/index.ts ProjectVideo examples/case-sprouting-note/preview.mp4 \
   --props=examples/case-sprouting-note/render-props.json \
   --public-dir=public --codec=h264 --pixel-format=yuv420p --crf=23 --scale=0.6666666667 --muted --concurrency=1
@@ -38,4 +43,4 @@ npx remotion render src/index.ts ProjectVideo examples/case-sprouting-note/final
   --public-dir=public --codec=h264 --pixel-format=yuv420p --crf=18 --muted --concurrency=1
 ```
 
-正式片为静音画面轨，可在后期增加旁白、音乐和音效。
+正式片默认是静音画面轨；v0.5 可通过 `studio.mjs audio` 加入 OpenAI 旁白或自备旁白、音乐和音效。

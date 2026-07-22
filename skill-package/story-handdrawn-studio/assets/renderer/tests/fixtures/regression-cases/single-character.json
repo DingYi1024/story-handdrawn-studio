@@ -1,0 +1,26 @@
+{
+  "case": "single-character",
+  "description": "One protagonist, an introduced prop, and an explicitly empty closing scene.",
+  "input": {
+    "schemaVersion": 1,
+    "characters": [
+      {
+        "id": "lin",
+        "name": "阿林",
+        "introducedIn": "01",
+        "appearance": {"hair": "short-black", "age": "adult"},
+        "defaultOutfit": {"top": "cream-shirt", "bottom": "charcoal-trousers"},
+        "palette": ["#E8DCC8", "#343434"]
+      }
+    ],
+    "props": [
+      {"id": "notebook", "name": "速写本", "owner": "lin", "introducedIn": "02", "palette": ["#C58F55"]}
+    ],
+    "scenes": [
+      {"id": "01", "characters": ["lin"], "props": [], "setting": {"location": "studio", "timeOfDay": "morning", "palette": ["#FFFDF7"]}},
+      {"id": "02", "characters": ["lin"], "characterStates": {"lin": {"props": ["notebook"]}}, "props": ["notebook"]},
+      {"id": "03", "characters": [], "props": [], "setting": {"timeOfDay": "evening"}}
+    ]
+  },
+  "expect": {"sceneCount": 3, "closingCharacters": []}
+}

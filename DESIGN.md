@@ -31,8 +31,18 @@ assets_ready → rendering_preview → preview_ready
 preview_ready → rendering_final → completed
 ```
 
+`produce` persists `plan|assets|preview|final` as its target and traverses these states until it reaches that target or returns real pending image jobs. `revise` archives metadata under `revisions/rN`, emits immutable `-rN` retakes, and returns to `awaiting_assets`. Preview/final states are committed only after machine QA passes.
+
 An operation failure records `failed`, `last_error`, and `resume_from`. The project lock prevents concurrent mutation, atomic JSON replacement prevents partial state, and `resume` continues from the last stable state.
+
+## Continuity
+
+`continuity.spec.json` is the editable semantic source; `continuity.ledger.json` is its deterministic compiled form. Every scene explicitly declares the current cast. Outfit, palette and setting can inherit with recorded dependencies, while presence cannot. A change computes direct and dependent scene impact before retakes are prepared.
+
+## QA
+
+Every Studio render probes its real MP4, samples deterministic first/reveal/timeline frames, validates geometry/FPS/duration and the `BW → text → color` story sequence, rejects sampled black/white blank frames, and saves a JSON report plus JPEG evidence. Similar-frame detection is a review warning unless a hard defect also exists.
 
 ## Audio
 
-The default composition is a silent picture track. Captions use `scene.text`; future narration uses `scene.narration`. Music must not drive or alter text timing unless an explicit audio module changes this contract.
+The default composition remains a silent picture track. Optional audio uses `scene.narration`, supplied tracks, or OpenAI speech; it probes real durations and may extend visual timing before render. FFmpeg mixes voiceover/BGM/SFX with loudness and limiter controls, copies the H.264 picture stream, pads audio to the exact timeline, and emits AAC. Music never changes caption reveal timing.

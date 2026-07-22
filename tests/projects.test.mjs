@@ -1,11 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync, rmSync} from 'node:fs';
+import {existsSync, mkdtempSync, rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {resolve} from 'node:path';
 import {createSettings} from '../scripts/lib/presets.mjs';
 import {
+  archiveProjectRevision,
   assertProjectId,
+  atomicWriteJson,
   createProject,
   loadProject,
   resolveInside,
@@ -38,6 +40,11 @@ test('project lifecycle is isolated and stateful', () => {
     });
     assert.equal(failed.resume_from, 'planned');
     assert.equal(failed.last_error, 'browser missing');
+    atomicWriteJson(paths.storyboard, {project: {title: 'revision one'}, scenes: []});
+    const archived = archiveProjectRevision(paths, 1, 'before first retake');
+    assert.equal(existsSync(resolve(archived.directory, 'storyboard.json')), true);
+    assert.ok(archived.files.includes('state.json'));
+    assert.throws(() => archiveProjectRevision(paths, 1), /already exists/);
     assert.throws(
       () => createProject({
         repoRoot: root,

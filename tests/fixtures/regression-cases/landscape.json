@@ -1,0 +1,16 @@
+{
+  "case": "landscape",
+  "description": "Landscape metadata coexists with the same aspect-independent continuity model.",
+  "input": {
+    "format": {"ratio": "16:9", "width": 1920, "height": 1080},
+    "characters": [
+      {"id": "cyclist", "name": "骑行者", "introducedIn": "wide-01", "defaultOutfit": "red-windbreaker", "palette": ["#B5544F"]}
+    ],
+    "props": [{"id": "bicycle", "name": "自行车", "introducedIn": "wide-01", "owner": "cyclist"}],
+    "scenes": [
+      {"id": "wide-01", "characters": ["cyclist"], "props": ["bicycle"], "setting": {"location": "coast-road", "timeOfDay": "sunrise", "palette": ["#D9B886", "#7197A7"]}},
+      {"id": "wide-02", "characters": ["cyclist"], "props": ["bicycle"], "setting": {"location": "cliff-view"}}
+    ]
+  },
+  "expect": {"sceneCount": 2, "ratio": "16:9"}
+}

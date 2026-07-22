@@ -1,68 +1,61 @@
 ---
 name: story-handdrawn-studio
-description: Turn Chinese stories, articles, scripts, diary entries, comic pages, or ordered local images into hand-drawn silent videos. Use for new story-video creation, 3:4/9:16/1:1/16:9 adaptation, storyboard and image generation, page-flip animation, preview/final rendering, project status, interrupted-job recovery, visual-quality checks, or customization of the hand-drawn video workflow.
+description: Produce, revise, resume, and machine-check complete hand-drawn videos from Chinese stories, articles, scripts, diary entries, comic pages, or ordered local images. Use for automatic story direction, storyboard and image generation, character/prop/setting continuity, scene-specific retakes, 3:4/9:16/1:1/16:9 rendering, page flips, preview/final delivery, optional OpenAI voiceover or supplied BGM/SFX, interrupted-job recovery, and finished-video QA.
 ---
 
 # Story Handdrawn Studio
 
-Act as the user's hand-drawn video producer. Accept natural-language requests, select the next safe workflow action, operate the bundled Studio, and explain results in user-facing terms. Do not make the user memorize commands.
+Act as the user's video producer, not as a command tutor. Infer the requested result, operate the bundled Studio, generate every required image, inspect machine evidence, and return a playable video path. Do not stop at a storyboard when the user asked for a preview or final.
 
-Resolve `SKILL_DIR` as the directory containing this file. Run Studio through:
+Resolve `SKILL_DIR` as this file's directory. Run all Studio commands through:
 
 ```bash
 python <SKILL_DIR>/scripts/run_story_video.py COMMAND [OPTIONS]
 ```
 
-The launcher stores user projects outside the installed Skill, under `~/.story-handdrawn-studio/` by default. Never write a user's work into `assets/renderer`. Never require a separate repository.
+The launcher keeps works under `~/.story-handdrawn-studio/`, outside the installed Skill. Never place user work in `assets/renderer` and never require a separate clone.
 
-## Route the request
+## Choose the route
 
-First infer what the user is trying to do from the current conversation and existing project state. Do not re-ask for information already provided.
+- New story or ordered images: use `produce` with the requested `--to plan|assets|preview|final`; default to `preview` when the user has not chosen.
+- “直接完成/全部做完/成片”: use `--to final` and persist through image jobs, import, render, and QA.
+- Continue or recover: inspect `status`, then use `produce --project ID --to <saved target>` or `resume`.
+- Scene feedback: use `revise --scene ID --note ...`, generate only returned retake jobs, then continue `produce`.
+- Character, outfit, prop, location, or palette consistency: prepare/apply a semantic continuity specification before generating affected scenes.
+- Voice, music, or sound effects: read [references/audio.md](references/audio.md); audio remains opt-in.
+- Status questions: use `list` or `status` without mutating the work.
+- Renderer or reusable feature changes: read the customization route in [references/routing.md](references/routing.md).
 
-- For a first-use or “how does this work?” request, give the short onboarding from [references/routing.md](references/routing.md).
-- For a new text story, create one project and plan it.
-- For ordered images, create one project and ingest the images in the supplied order.
-- For “continue”, “resume”, or an interrupted task, inspect status and resume from the last stable state.
-- For “how far is it?”, list or inspect projects without changing them.
-- For preview or final output, validate assets, render, and perform the matching quality check.
-- For failures, run diagnosis before changing files or retrying.
-- For product or visual customization, read the customization route in [references/routing.md](references/routing.md) before editing the renderer.
+Read [references/workflows.md](references/workflows.md) whenever executing production commands or image jobs. Read [references/continuity-and-revisions.md](references/continuity-and-revisions.md) for recurring entities or retakes. Read [references/quality.md](references/quality.md) before reporting a preview/final. Read [references/storage-and-updates.md](references/storage-and-updates.md) for installation, paths, privacy, backup, or upgrades.
 
-When multiple actions are possible, perform the single next action that most directly advances the current work. Afterward, offer the next useful action based on actual state—not a fixed menu.
+## Production loop
 
-## Operating contract
-
-1. Run `setup` on first use or when diagnosis reports missing dependencies. It installs locked dependencies into a versioned runtime and checks Node, FFmpeg, FFprobe, Remotion, and reference assets.
-2. Give every work a unique project ID. Never mix sources, prompts, assets, storyboards, or output between projects.
-3. Default to `portrait` (3:4). Select `vertical` for 9:16 short video, `square` for 1:1, and `landscape` for 16:9. Use an explicit user choice when present.
-4. For text, preserve the user's wording, create a scene plan, then generate every job in the manifest. Save each generated master to its exact `output_master` path before import.
-5. For images, preserve source order and originals. Detect layout and derive render layers from copied project sources.
-6. Render a preview first unless the user explicitly asks for final-only output. Never report a final render before the output file exists.
-7. Use `resume` after interruption. If assets are missing, stay in `awaiting_assets`, name the missing jobs, and continue only after they exist.
-8. Report project title/ID, current stage, aspect ratio, scene count and duration when known, plus a clickable absolute preview or final path.
-
-Read [references/workflows.md](references/workflows.md) only when executing commands or image jobs. Read [references/quality.md](references/quality.md) for preview/final acceptance. Read [references/storage-and-updates.md](references/storage-and-updates.md) for paths, privacy, migration, or upgrades.
+1. On first use, run `setup`. Re-run it only if `doctor` finds an environment problem.
+2. Give each work a unique safe ID. Preserve the supplied text and image order.
+3. Select the explicit ratio, or default to `portrait` (3:4). Use `vertical` for 9:16 short video, `square` for 1:1, and `landscape` for 16:9.
+4. For a story with recurring people/props/settings, write a semantic continuity JSON and pass `--continuity /absolute/file.json` on the first `produce` call. Every scene must explicitly list its current cast; use `[]` when nobody is present.
+5. Run `produce`. If it returns `action_required: generate_images`, process every returned job in manifest order with the available image-generation capability. Read the full `prompt` and all `references`, generate exactly one master, and save/copy it to the exact `output_master` path.
+6. Re-run the same `produce --project ID --to TARGET`. Repeat until it reaches the requested stable state. Do not activate a storyboard while any master is missing.
+7. Rendering automatically runs machine QA. If QA fails, use its report and sampled frames to fix the underlying asset, storyboard, timing, or render rule; rerender and recheck.
+8. A final is complete only when state is `completed`, `output/final.mp4` exists, and final QA has zero failures.
 
 ## Visual contract
 
-- Keep captions readable in the upper safe area and illustrations fully contained without cover-cropping.
-- For direct cuts, show `bw_full` on the first frame, reveal `text` over it, then reveal `color` from left to right. Never use a blank white opening phase.
-- For page flips, preserve the complete uploaded page and its original composition.
-- Keep recurring characters consistent through the character reference, job references, and character lock.
-- Use a clean white diary-comic surface, uneven black felt-tip outlines, sparse props, ample negative space, and restrained wax-crayon color unless the user specifies another style.
-- Produce a silent H.264 picture track. Treat narration, music, subtitles, and sound design as opt-in extensions.
+- Direct-cut story scenes show the black-and-white illustration on frame zero, reveal text over that drawing, then reveal color. There is no blank white opening phase.
+- Page-flip works preserve each complete uploaded page and original composition.
+- Captions remain in the upper safe region; illustrations use contained framing without cover-cropping.
+- Recurring identity, face, hair, age, proportions, outfit palette, props, location, time, and drawing language follow the compiled continuity ledger.
+- A previous scene is an identity/style reference only. Never copy its cast into the current scene unless the current scene explicitly lists those characters.
+- Keep sparse white diary-comic composition, uneven black outlines, negative space, and restrained wax-crayon color unless the user requests another art direction.
 
-## Image generation
+## Revision contract
 
-Prefer the available image-generation capability. For every job in `codex-image-jobs.json`:
+`revise` creates a new numbered revision, archives the prior metadata, updates only selected or continuity-dependent scenes, and gives every retake a new immutable asset stem. Never overwrite an accepted master. Generate the returned retake jobs, then continue `produce` to preview or final. Report both directly requested scenes and dependency-impacted scenes.
 
-1. Read its `prompt` and all `references`.
-2. Generate one master that obeys composition, identity, text, and continuity constraints.
-3. Save or copy the result to `output_master` exactly.
-4. Verify the file exists and is readable before moving to the next job.
+## Optional audio contract
 
-Do not activate a storyboard until every job—including the character reference—exists. Use the OpenAI API route only when explicitly selected and `OPENAI_API_KEY` is available.
+Keep silent output as the default. When audio is requested, use narration text rather than line-broken captions, synthesize or copy tracks, measure real durations, extend scene timing when needed, mix with conservative volumes, and rerun visual QA on the muxed MP4. Clearly disclose when OpenAI speech sends narration text to an external API.
 
-## Truthful completion
+## Truthful delivery
 
-Treat Studio state and filesystem evidence as authoritative. A project is complete only when state is `completed`, the final MP4 exists, and the final quality checks pass. If a step fails, report the precise failure and the resumable next action.
+Use filesystem and QA evidence as authority. Report project title/ID, requested and achieved stage, ratio, scene count/duration when known, revision, QA result, audio status, and a clickable absolute MP4 path. If external image generation or an API credential is genuinely required, return the exact pending jobs or credential requirement and the resumable command; never claim the video exists early.

@@ -1,0 +1,17 @@
+{
+  "case": "dialogue",
+  "description": "A supporting speaker enters only when the dialogue starts.",
+  "input": {
+    "characters": [
+      {"id": "mei", "name": "小梅", "introducedIn": "01", "defaultOutfit": "blue-cardigan", "palette": ["#7089A8"]},
+      {"id": "yu", "name": "小雨", "introducedIn": "02", "defaultOutfit": "ochre-coat", "palette": ["#C79748"]}
+    ],
+    "props": [],
+    "scenes": [
+      {"id": "01", "characters": ["mei"], "props": [], "setting": {"location": "bus-stop", "timeOfDay": "afternoon", "palette": ["#DCE4E8"]}},
+      {"id": "02", "characters": ["mei", "yu"], "props": []},
+      {"id": "03", "characters": ["yu"], "props": []}
+    ]
+  },
+  "expect": {"sceneCount": 3, "firstYuScene": "02"}
+}
