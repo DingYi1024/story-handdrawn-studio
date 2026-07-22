@@ -26,6 +26,7 @@ const entries = [
   'public/assets/02_color.svg',
   'public/assets/03_bw.svg',
   'public/assets/03_color.svg',
+  'public/examples/case-sprouting-note',
   'public/fonts',
   'references',
   'remotion.config.ts',

@@ -1,6 +1,6 @@
 {
   "name": "story-handdrawn-studio",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Customizable studio for turning Chinese stories or ordered images into hand-drawn Remotion videos.",
   "license": "MIT",
   "repository": {
@@ -32,7 +32,7 @@
     "render:uploaded:preview": "npm run check:assets:uploaded && remotion render src/index.ts UploadedPictureSilent out/uploaded_picture_silent-preview.mp4 --codec=h264 --crf=23 --pixel-format=yuv420p --muted --scale=0.6666666666666666 --concurrency=1",
     "check": "npm run test && npm run check:types && npm run check:storyboard",
     "check:types": "tsc --noEmit",
-    "check:storyboard": "node scripts/validate-storyboard.mjs --skip-assets storyboard.json storyboard.uploaded.json",
+    "check:storyboard": "node scripts/validate-storyboard.mjs --skip-assets storyboard.json storyboard.uploaded.json && node scripts/validate-storyboard.mjs examples/case-sprouting-note/storyboard.json",
     "check:assets": "node scripts/validate-storyboard.mjs storyboard.json storyboard.uploaded.json",
     "check:assets:text": "node scripts/validate-storyboard.mjs storyboard.json",
     "check:assets:uploaded": "node scripts/validate-storyboard.mjs storyboard.uploaded.json"

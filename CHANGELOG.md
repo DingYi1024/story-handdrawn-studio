@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-07-22
+
+### Added
+
+- A complete reproducible showcase, “The Sprouting Note”, with a four-scene storyboard, locked character reference, color and monochrome assets, preview render, final 1080×1920 video, and validation coverage.
+
 ## [0.3.0] - 2026-07-22
 
 ### Added
