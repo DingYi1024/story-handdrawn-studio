@@ -1,5 +1,5 @@
 import {cpSync, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync} from 'node:fs';
-import {basename, dirname, resolve} from 'node:path';
+import {basename, dirname, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -47,7 +47,14 @@ for (const entry of entries) {
   mkdirSync(dirname(destination), {recursive: true});
   cpSync(source, destination, {
     recursive: true,
-    filter: (path) => !['node_modules', '__pycache__', '.DS_Store'].includes(basename(path)),
+    filter: (path) => {
+      const pathFromRoot = relative(root, path).replaceAll('\\', '/');
+      const showcaseCache = pathFromRoot.startsWith('examples/case-sprouting-note/_')
+        || pathFromRoot.startsWith('examples/case-sprouting-note/audio/bgm')
+        || pathFromRoot.startsWith('examples/case-sprouting-note/audio/sfx');
+      return !showcaseCache
+        && !['node_modules', '__pycache__', '.DS_Store'].includes(basename(path));
+    },
   });
 }
 

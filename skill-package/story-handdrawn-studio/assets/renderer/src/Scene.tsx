@@ -12,9 +12,14 @@ import type {SceneData, Storyboard} from './types';
 export const Scene: React.FC<{
   scene: SceneData;
   project: Storyboard['project'];
-}> = ({scene, project}) => {
+  startDelayFrames?: number;
+  endReserveFrames?: number;
+}> = ({scene, project, startDelayFrames = 0, endReserveFrames = 0}) => {
   const {fps} = useVideoConfig();
-  const total = Math.round(scene.duration_sec * fps);
+  const total = Math.max(
+    1,
+    Math.round(scene.duration_sec * fps) - startDelayFrames - endReserveFrames,
+  );
   const has = (layer: string) => scene.layers.includes(layer as never);
   const speedMode = !has('detail');
   const timing = sceneRevealTiming(total, speedMode);
@@ -49,6 +54,7 @@ export const Scene: React.FC<{
           treatment="bw"
           layout={project.layout}
           visibleFromStart
+          frameOffset={startDelayFrames}
         />
       ) : null}
 
@@ -60,6 +66,7 @@ export const Scene: React.FC<{
           zIndex={20}
           treatment="detail"
           layout={project.layout}
+          frameOffset={startDelayFrames}
         />
       ) : null}
 
@@ -72,6 +79,7 @@ export const Scene: React.FC<{
           treatment="color"
           layout={project.layout}
           visibleFromStart={staticColor}
+          frameOffset={startDelayFrames}
         />
       ) : null}
 
@@ -81,6 +89,7 @@ export const Scene: React.FC<{
         startFrame={timing.textStartFrame}
         durationFrames={timing.textDurationFrames}
         project={project}
+        frameOffset={startDelayFrames}
       />
 
     </AbsoluteFill>

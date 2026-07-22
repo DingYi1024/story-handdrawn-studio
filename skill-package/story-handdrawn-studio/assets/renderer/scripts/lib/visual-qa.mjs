@@ -31,6 +31,13 @@ export const normalizeProbe = (probe) => {
   const stream = (probe?.streams || []).find((candidate) => candidate.codec_type === 'video')
     || probe?.streams?.[0]
     || {};
+  const audioStreams = (probe?.streams || [])
+    .filter((candidate) => candidate.codec_type === 'audio')
+    .map((candidate) => ({
+      codec: candidate.codec_name || null,
+      sampleRate: Number(candidate.sample_rate) || null,
+      channels: Number(candidate.channels) || null,
+    }));
   const duration = Number(stream.duration ?? probe?.format?.duration);
   return {
     width: Number(stream.width) || null,
@@ -40,6 +47,7 @@ export const normalizeProbe = (probe) => {
     frameCount: Number(stream.nb_frames) || null,
     codec: stream.codec_name || null,
     pixelFormat: stream.pix_fmt || null,
+    audioStreams,
   };
 };
 
@@ -223,6 +231,22 @@ export const createVisualQaReport = ({
     ),
   ];
 
+  if (expected.hasAudio !== undefined) {
+    const audioStreams = Array.isArray(metadata.audioStreams) ? metadata.audioStreams : [];
+    const hasAudio = audioStreams.length > 0;
+    const matches = hasAudio === expected.hasAudio;
+    checks.push(check(
+      'audio_stream',
+      matches ? 'pass' : 'fail',
+      'error',
+      matches
+        ? expected.hasAudio ? 'An audio stream is present' : 'No audio stream is present'
+        : expected.hasAudio ? 'The video is missing its required audio stream' : 'The video unexpectedly contains audio',
+      audioStreams,
+      expected.hasAudio ? {minimumStreams: 1} : {maximumStreams: 0},
+    ));
+  }
+
   checks.push(check(
     'first_non_blank',
     first && !first.metrics.isBlank ? 'pass' : 'fail',
@@ -332,8 +356,8 @@ const execute = (command, args, options = {}) => {
 
 export const probeVideo = (input, {ffprobe = 'ffprobe'} = {}) => {
   const raw = execute(ffprobe, [
-    '-v', 'error', '-select_streams', 'v:0',
-    '-show_entries', 'stream=codec_type,codec_name,pix_fmt,width,height,r_frame_rate,avg_frame_rate,nb_frames,duration:format=duration',
+    '-v', 'error',
+    '-show_entries', 'stream=codec_type,codec_name,pix_fmt,width,height,r_frame_rate,avg_frame_rate,nb_frames,duration,sample_rate,channels:format=duration',
     '-of', 'json', input,
   ], {encoding: 'utf8'});
   const probe = JSON.parse(raw);

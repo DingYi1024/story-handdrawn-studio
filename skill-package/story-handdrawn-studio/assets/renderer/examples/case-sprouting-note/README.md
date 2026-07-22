@@ -1,12 +1,18 @@
 # 案例：会发芽的纸条
 
-这是 Story Handdrawn Studio 的完整 9:16 案例，演示同一角色在四幕故事中的身份一致性，以及字体字幕、黑白线稿和彩色插画的分层揭示。
+这是 Story Handdrawn Studio 的完整 9:16 有声案例，演示同一角色在四幕故事中的身份一致性、`黑白图 → 文字 → 彩色图` 的幕内顺序，以及幕间卷页转场和同步音效。
 
-下面是完整 27.7 秒成片的低分辨率动态预览；点击图片可打开 1080×1920 正式 MP4。
+下面是完整 27.5 秒成片的低分辨率动态预览。GIF 格式本身没有声音；点击图片可打开带 AAC 立体声的 1080×1920 正式 MP4。
 
 [![完整动态预览](animated-preview.gif)](final.mp4)
 
 [直接打开正式 MP4](final.mp4)
+
+## 转场特写
+
+下面依次截取三次卷页。旧幕彩色图卷起时，下一幕黑白图直接从纸页下露出；卷页结束后才开始写字，随后揭示彩色图，中间没有白屏过渡。
+
+[![三次卷页转场特写](transition-preview.gif)](final.mp4)
 
 ## 故事
 
@@ -17,30 +23,43 @@
 - `story.txt`：故事原文
 - `storyboard.json`：可验证的四幕故事板
 - `render-props.json`：Remotion 案例渲染参数
+- `audio-options.json`：音乐、环境音、音效与帧级时间线配置
+- `audio/sources/`：程序化生成的原创 AAC 音源
+- `../../scripts/build-case-sprouting-note-audio.mjs`：音源复现脚本
 - `../../public/examples/case-sprouting-note/00_character_reference.png`：固定角色设定
 - `../../public/examples/case-sprouting-note/*_color.png`：ImageGen 彩色场景母图
 - `../../public/examples/case-sprouting-note/*_bw.png`：FFmpeg 本地派生黑白层
-- `preview.mp4`：720×1280 审片版
-- `final.mp4`：1080×1920 H.264 正式片
+- `preview.mp4`：720×1280 H.264 + AAC 有声审片版
+- `final.mp4`：1080×1920 H.264 + AAC 有声正式片
 - `cover.png`：从正式片末幕提取的案例封面
 - `animated-preview.gif`：README 内可直接观看的完整动态预览
-- `qa-report.json`：机器验收报告（8 项通过、1 项审片提示、0 项失败）
+- `transition-preview.gif`：三次卷页转场的短预览
+- `qa-report.json`：机器验收报告（9 项通过、1 项审片提示、0 项失败，包含音频流检查）
 - `qa-frames/`：首帧、彩色揭示点与全片时间线抽帧
 
 ## 本地复现
 
 ```bash
 npm ci
+npm run audio:case
 node scripts/validate-storyboard.mjs examples/case-sprouting-note/storyboard.json
-node scripts/qa-video.mjs examples/case-sprouting-note/final.mp4 \
-  --width 1080 --height 1920 --fps 30 --duration 27.7 \
-  --color-after 5.76 --samples 11
-npx remotion render src/index.ts ProjectVideo examples/case-sprouting-note/preview.mp4 \
+npx remotion render src/index.ts ProjectVideo examples/case-sprouting-note/_preview-silent.mp4 \
   --props=examples/case-sprouting-note/render-props.json \
   --public-dir=public --codec=h264 --pixel-format=yuv420p --crf=23 --scale=0.6666666667 --muted --concurrency=1
-npx remotion render src/index.ts ProjectVideo examples/case-sprouting-note/final.mp4 \
+node scripts/audio-project.mjs \
+  --storyboard examples/case-sprouting-note/storyboard.json \
+  --config examples/case-sprouting-note/audio-options.json --enable \
+  --video examples/case-sprouting-note/_preview-silent.mp4 \
+  --output examples/case-sprouting-note/preview.mp4
+npx remotion render src/index.ts ProjectVideo examples/case-sprouting-note/_final-silent.mp4 \
   --props=examples/case-sprouting-note/render-props.json \
   --public-dir=public --codec=h264 --pixel-format=yuv420p --crf=18 --muted --concurrency=1
+node scripts/audio-project.mjs \
+  --storyboard examples/case-sprouting-note/storyboard.json \
+  --config examples/case-sprouting-note/audio-options.json --enable \
+  --video examples/case-sprouting-note/_final-silent.mp4 \
+  --output examples/case-sprouting-note/final.mp4
+npm run qa:case
 ```
 
-正式片默认是静音画面轨；v0.5 可通过 `studio.mjs audio` 加入 OpenAI 旁白或自备旁白、音乐和音效。
+案例没有使用外部录音或第三方音乐；全部音乐和音效由仓库脚本通过 FFmpeg 程序化生成。当前版本未加旁白，重点展示无语音 API 也能交付的有声氛围片。

@@ -457,7 +457,7 @@ export const buildFfmpegMuxArgs = ({manifest, projectDir, inputVideo, outputVide
   args.push(
     '-filter_complex', filter,
     '-map', '0:v:0', '-map', '[mixed]',
-    '-c:v', 'copy', '-c:a', 'aac', '-b:a', manifest.mix.audio_bitrate,
+    '-c:v', 'copy', '-c:a', 'aac', '-ar', '48000', '-b:a', manifest.mix.audio_bitrate,
     '-t', decimal(manifest.project.duration_sec),
     '-movflags', '+faststart', resolve(outputVideo),
   );

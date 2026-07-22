@@ -8,7 +8,8 @@ const usage = `Usage:
   node scripts/qa-video.mjs VIDEO [--output report.json] [--frames-dir qa-frames]
     [--width 1080 --height 1440 --fps 30 --duration 12]
     [--duration-tolerance 0.15 --fps-tolerance 0.02]
-    [--color-after 2.5 --samples 9] [--compact] [--portable] [--no-fail-on-qa]
+    [--color-after 2.5 --samples 9] [--require-audio]
+    [--compact] [--portable] [--no-fail-on-qa]
 
 The report is always emitted as machine-readable JSON on stdout.`;
 
@@ -46,6 +47,9 @@ if (!inputArg) {
         durationSec: optionalNumber('duration'),
         fpsTolerance: optionalNumber('fps-tolerance'),
         durationToleranceSec: optionalNumber('duration-tolerance'),
+        hasAudio: args['require-audio'] === true
+          ? true
+          : args['require-audio'] === false ? false : undefined,
       };
       const outputArg = stringArg(args, 'output');
       const framesArg = stringArg(args, 'frames-dir');

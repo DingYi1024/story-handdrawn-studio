@@ -21,3 +21,6 @@ uploaded-pages.json
 .qa-data/
 .qa-skill-home/
 .qa-skill-extract*/
+examples/case-sprouting-note/_*
+examples/case-sprouting-note/audio/bgm/
+examples/case-sprouting-note/audio/sfx/

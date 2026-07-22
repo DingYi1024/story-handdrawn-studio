@@ -17,8 +17,8 @@
       "width": 1080,
       "height": 1920,
       "fps": 30,
-      "transition": "cut",
-      "transition_sec": 0.7,
+      "transition": "page-flip",
+      "transition_sec": 0.85,
       "style_lock": "minimalist Chinese diary comic, pure white background, uneven black felt-tip pen outlines, naive wobbly proportions, rough black crayon scribbles, sparse props, abundant negative space, selective muted wax-crayon color",
       "character_lock": "小满，26岁中国女性，短而微卷的黑色波波头和轻薄刘海，圆脸；芥末黄针织开衫、白色内搭、灰蓝色及踝长裙、米白帆布鞋、砖红色帆布单肩包；所有场景保持身份、发型、年龄、服装配色和身体比例一致",
       "caption": {
@@ -41,7 +41,7 @@
     "scenes": [
       {
         "id": "01",
-        "duration_sec": 6.4,
+        "duration_sec": 7.2,
         "text": "加班回家的夜里，\n小满在公交站捡到一只\n被雨淋湿的纸袋。",
         "narration": "加班回家的夜里，小满在公交站捡到一只被雨淋湿的纸袋。",
         "visual": "雨夜公交站，小满弯腰拾起纸袋。",
@@ -62,7 +62,7 @@
       },
       {
         "id": "02",
-        "duration_sec": 6.8,
+        "duration_sec": 7.4,
         "text": "她把纸袋带回家。\n里面只有三颗向日葵种子，\n和一张空白纸条。",
         "narration": "她把纸袋带回家，里面只有三颗向日葵种子和一张空白纸条。",
         "visual": "深夜室内，小满打开纸袋看见三颗种子。",
@@ -83,7 +83,7 @@
       },
       {
         "id": "03",
-        "duration_sec": 6.9,
+        "duration_sec": 7.5,
         "text": "纸条上写着：\n“请替我看看它们开花。”\n她认真照料了九十天。",
         "narration": "纸条上写着：请替我看看它们开花。她认真照料了九十天。",
         "visual": "阳台上，小满给三个不同生长阶段的花盆浇水。",
@@ -104,7 +104,7 @@
       },
       {
         "id": "04",
-        "duration_sec": 7.6,
+        "duration_sec": 8,
         "text": "阳台亮起三朵小太阳。\n小满第一次觉得，\n这座城市也在等她回家。",
         "narration": "九十天后，阳台亮起三朵小太阳。小满第一次觉得，这座陌生的城市也在等她回家。",
         "visual": "清晨阳台，三朵向日葵盛开，小满安静微笑。",

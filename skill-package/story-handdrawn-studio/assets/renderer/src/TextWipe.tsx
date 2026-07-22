@@ -9,6 +9,7 @@ type TextWipeProps = {
   startFrame: number;
   durationFrames: number;
   project: Storyboard['project'];
+  frameOffset?: number;
 };
 
 const textStyle = (fontSize: number, maxWidth: number): CSSProperties => ({
@@ -42,8 +43,9 @@ export const TextWipe: React.FC<TextWipeProps> = ({
   startFrame,
   durationFrames,
   project,
+  frameOffset = 0,
 }) => {
-  const frame = useCurrentFrame();
+  const frame = Math.max(0, useCurrentFrame() - frameOffset);
   const {width, height} = useVideoConfig();
   const progress = revealProgress(frame, startFrame, durationFrames);
   const layout = project.layout;
