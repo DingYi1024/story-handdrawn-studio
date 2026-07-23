@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-23
+
+### Added
+
+- Creative Director recommendations for six original narrative arcs and five original hand-drawn themes.
+- Optional four-way style bake-offs with controlled representative-scene prompts and explicit approval state.
+- Backward-compatible `scene.shots[]` plans with safe camera moves, focus framing, and deterministic local element effects.
+- Local rain, petal, sparkle, floating-paper, ink-breathing, pan, push, pull, tilt, and parallax motion without a video-model dependency.
+- Multi-shot cut QA that samples both sides of every internal cut and rejects blank transitions.
+- `director` commands for catalog inspection, shot replanning, style-job preparation, approval, and status.
+
+### Changed
+
+- Project schema v4 adds Creative Director settings while migrating v1–v3 projects safely.
+- The complete showcase now contains eight directed shots, local micro-animation, four motion-cut checks, sound, and page-flip checks.
+- Skill instructions now route narrative structure, style selection, multi-shot pacing, and motion through a dedicated progressive reference.
+
 ## [1.0.0] - 2026-07-23
 
 ### Added

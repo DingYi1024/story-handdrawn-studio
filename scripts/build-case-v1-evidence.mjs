@@ -45,4 +45,4 @@ writeReviewWorkspace({
   dataPath: resolve(caseDir, 'review-data.json'),
 });
 if (!semantic.passed) throw new Error('Showcase semantic QA did not pass');
-console.log(`V1 case evidence ready: ${semantic.summary.pass}/${semantic.summary.total} semantic checks passed.`);
+console.log(`V1.1 case evidence ready: ${semantic.summary.pass}/${semantic.summary.total} semantic checks passed.`);

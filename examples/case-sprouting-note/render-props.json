@@ -1,6 +1,6 @@
 {
   "storyboard": {
-    "schema_version": 2,
+    "schema_version": 4,
     "project": {
       "id": "sprouting-note",
       "title": "会发芽的纸条",
@@ -32,6 +32,14 @@
         "side_margin_ratio": 0.0685,
         "bottom_margin_ratio": 0.03
       },
+      "director": {
+        "schema_version": 1,
+        "arc": "growth_arc",
+        "theme": "warm-diary",
+        "motion_style": "calm",
+        "constraints": "strict",
+        "style_approved": true
+      },
       "audio": {
         "voiceover": "post",
         "bgm": "optional_bed_only",
@@ -41,6 +49,37 @@
     "scenes": [
       {
         "id": "01",
+        "shots": [
+          {
+            "id": "a",
+            "duration_ratio": 0.58,
+            "shot_size": "WIDE",
+            "camera_move": "push_in",
+            "focus": {
+              "x": 0.5,
+              "y": 0.58,
+              "scale": 1
+            },
+            "element_motion": [
+              "rain"
+            ]
+          },
+          {
+            "id": "b",
+            "duration_ratio": 0.42,
+            "shot_size": "CLOSE",
+            "camera_move": "static",
+            "focus": {
+              "x": 0.56,
+              "y": 0.62,
+              "scale": 1.14
+            },
+            "element_motion": [
+              "rain",
+              "paper-float"
+            ]
+          }
+        ],
         "duration_sec": 7.2,
         "text": "加班回家的夜里，\n小满在公交站捡到一只\n被雨淋湿的纸袋。",
         "narration": "加班回家的夜里，小满在公交站捡到一只被雨淋湿的纸袋。",
@@ -62,6 +101,37 @@
       },
       {
         "id": "02",
+        "shots": [
+          {
+            "id": "a",
+            "duration_ratio": 0.58,
+            "shot_size": "WIDE",
+            "camera_move": "pan_left",
+            "focus": {
+              "x": 0.5,
+              "y": 0.58,
+              "scale": 1.02
+            },
+            "element_motion": [
+              "paper-float"
+            ]
+          },
+          {
+            "id": "b",
+            "duration_ratio": 0.42,
+            "shot_size": "CLOSE",
+            "camera_move": "push_in",
+            "focus": {
+              "x": 0.54,
+              "y": 0.61,
+              "scale": 1.14
+            },
+            "element_motion": [
+              "paper-float",
+              "sparkle"
+            ]
+          }
+        ],
         "duration_sec": 7.4,
         "text": "她把纸袋带回家。\n里面只有三颗向日葵种子，\n和一张空白纸条。",
         "narration": "她把纸袋带回家，里面只有三颗向日葵种子和一张空白纸条。",
@@ -83,6 +153,37 @@
       },
       {
         "id": "03",
+        "shots": [
+          {
+            "id": "a",
+            "duration_ratio": 0.58,
+            "shot_size": "WIDE",
+            "camera_move": "parallax",
+            "focus": {
+              "x": 0.5,
+              "y": 0.58,
+              "scale": 1
+            },
+            "element_motion": [
+              "petals"
+            ]
+          },
+          {
+            "id": "b",
+            "duration_ratio": 0.42,
+            "shot_size": "CLOSE",
+            "camera_move": "static",
+            "focus": {
+              "x": 0.52,
+              "y": 0.63,
+              "scale": 1.15
+            },
+            "element_motion": [
+              "petals",
+              "ink-breathe"
+            ]
+          }
+        ],
         "duration_sec": 7.5,
         "text": "纸条上写着：\n“请替我看看它们开花。”\n她认真照料了九十天。",
         "narration": "纸条上写着：请替我看看它们开花。她认真照料了九十天。",
@@ -104,6 +205,38 @@
       },
       {
         "id": "04",
+        "shots": [
+          {
+            "id": "a",
+            "duration_ratio": 0.58,
+            "shot_size": "MEDIUM",
+            "camera_move": "push_in",
+            "focus": {
+              "x": 0.5,
+              "y": 0.58,
+              "scale": 1
+            },
+            "element_motion": [
+              "sparkle",
+              "petals"
+            ]
+          },
+          {
+            "id": "b",
+            "duration_ratio": 0.42,
+            "shot_size": "WIDE",
+            "camera_move": "pull_out",
+            "focus": {
+              "x": 0.5,
+              "y": 0.58,
+              "scale": 1.04
+            },
+            "element_motion": [
+              "sparkle",
+              "petals"
+            ]
+          }
+        ],
         "duration_sec": 8,
         "text": "阳台亮起三朵小太阳。\n小满第一次觉得，\n这座城市也在等她回家。",
         "narration": "九十天后，阳台亮起三朵小太阳。小满第一次觉得，这座陌生的城市也在等她回家。",

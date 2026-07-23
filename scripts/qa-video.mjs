@@ -13,7 +13,7 @@ const usage = `Usage:
 
 The report is always emitted as machine-readable JSON on stdout.`;
 
-const args = parseArgs(process.argv.slice(2), {repeatable: ['transition-time']});
+const args = parseArgs(process.argv.slice(2), {repeatable: ['transition-time', 'motion-cut-time']});
 if (args.help === true || args.h === true) {
   console.log(usage);
   process.exit(0);
@@ -58,6 +58,7 @@ if (!inputArg) {
         colorAfterSec: optionalNumber('color-after'),
         timelineSamples: optionalNumber('samples'),
         transitionTimes: (args['transition-time'] || []).map((value) => Number(value)),
+        motionCutTimes: (args['motion-cut-time'] || []).map((value) => Number(value)),
         framesDir: framesArg ? resolve(process.cwd(), framesArg) : undefined,
         artifactsRelativeTo: args.portable === true ? process.cwd() : undefined,
         ffmpeg: stringArg(args, 'ffmpeg', 'ffmpeg'),

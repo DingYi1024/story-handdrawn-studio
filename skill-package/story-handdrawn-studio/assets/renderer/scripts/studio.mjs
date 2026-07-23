@@ -12,6 +12,17 @@ import {
 } from './lib/audio.mjs';
 import {createAutomaticAudioPlan, materializeAutomaticAudioPlan} from './lib/audio-director.mjs';
 import {
+  applyCreativeDirectionToStoryboard,
+  applyThemeToSettings,
+  creativeDirectorCatalog,
+  createStyleBakeoffPlan,
+  HANDDRAWN_THEMES,
+  recommendNarrativeArc,
+  recommendTheme,
+  rewritePromptStyle,
+  themeStyleLock,
+} from './lib/creative-director.mjs';
+import {
   computeContinuityImpact,
   createContinuityLedger,
   stableHash,
@@ -75,6 +86,7 @@ Usage:
   node scripts/studio.mjs create --title "标题" --input story.txt [--preset portrait]
   node scripts/studio.mjs create --title "标题" --image page1.png [--image page2.png]
   node scripts/studio.mjs plan --project PROJECT [--generator auto|codex|openai|api]
+  node scripts/studio.mjs director --project PROJECT --action plan|styles|choose|status|list [OPTIONS]
   node scripts/studio.mjs revise --project PROJECT --scene 01 --note "人物表情更克制"
   node scripts/studio.mjs continuity --project PROJECT [--apply continuity.json]
   node scripts/studio.mjs audio --project PROJECT --action auto|plan|prepare|mix|disable [OPTIONS]
@@ -230,11 +242,51 @@ const statusFor = (id) => {
 
 const status = () => statusFor(requiredProject().project.id);
 
+const styleApprovalPending = (loaded) =>
+  loaded.project.settings.director?.require_style_approval === true &&
+  loaded.project.settings.director?.style_approved !== true;
+
+const styleApprovalAction = (loaded) => ({
+  project: loaded.project.id,
+  status: 'awaiting_style_choice',
+  action_required: 'approve_style',
+  next_steps: [
+    `director --project ${loaded.project.id} --action styles`,
+    `director --project ${loaded.project.id} --action choose --theme THEME_ID`,
+  ],
+});
+
+const manifestNeedsReplan = (loaded) => {
+  if (!existsSync(loaded.paths.codexManifest)) return true;
+  return readJson(loaded.paths.codexManifest).requires_replan === true;
+};
+
 const plan = async (loaded = requiredProject(), {announce = true, generatorOverride = null} = {}) => {
   if (loaded.project.source.type !== 'story') throw new Error('plan requires a story project');
+  const sourceText = readFileSync(resolveInside(loaded.paths.project, loaded.project.source.path), 'utf8');
+  const configuredDirector = loaded.project.settings.director || {};
+  const selectedArc = configuredDirector.arc && configuredDirector.arc !== 'auto'
+    ? configuredDirector.arc
+    : recommendNarrativeArc({title: loaded.project.title, sourceText});
+  const selectedTheme = configuredDirector.theme && configuredDirector.theme !== 'auto'
+    ? configuredDirector.theme
+    : recommendTheme({title: loaded.project.title, sourceText, arc: selectedArc});
+  const approvalPending = styleApprovalPending(loaded);
+  if (approvalPending) {
+    loaded.project.settings.director = {
+      ...loaded.project.settings.director,
+      arc: selectedArc,
+      recommended_theme: selectedTheme,
+    };
+  } else {
+    loaded.project.settings = applyThemeToSettings(loaded.project.settings, selectedTheme, selectedArc);
+  }
+  loaded.project.updated_at = new Date().toISOString();
+  atomicWriteJson(loaded.paths.config, loaded.project);
   const requestedGenerator = generatorOverride || stringArg(args, 'generator', loaded.state?.production?.generator || loaded.project.settings.provider?.id || 'auto');
   const provider = requestedGenerator === 'api' ? 'openai' : resolveProvider(requestedGenerator);
   const generator = provider === 'openai' ? 'api' : 'codex';
+  const planningGenerator = approvalPending ? 'api' : generator;
   const textMode = stringArg(args, 'text-mode', loaded.state?.production?.text_mode || 'font');
   if (!['codex', 'api'].includes(generator)) throw new Error('--generator must be auto, codex, openai, or api');
   await runProjectAction(loaded, 'planning', async () => {
@@ -246,24 +298,23 @@ const plan = async (loaded = requiredProject(), {announce = true, generatorOverr
       '--scope', loaded.project.id,
       '--output', loaded.paths.storyboardPlan,
       '--manifest', loaded.paths.codexManifest,
-      '--generator', generator,
+      '--generator', planningGenerator,
       '--text-mode', textMode,
       '--public-dir', publicDir,
     ];
-    if (generator === 'api') {
+    if (generator === 'api' && !approvalPending) {
       commandArgs.push('--generate', '--apply', '--apply-to', loaded.paths.storyboard);
     }
     runNode(resolve(repoRoot, 'scripts', 'story-to-video.mjs'), commandArgs, {cwd: repoRoot});
-    const storyboard = readJson(generator === 'api' ? loaded.paths.storyboard : loaded.paths.storyboardPlan);
-    if (generator === 'api') atomicWriteJson(loaded.paths.storyboardPlan, storyboard);
+    const storyboard = readJson(generator === 'api' && !approvalPending ? loaded.paths.storyboard : loaded.paths.storyboardPlan);
+    if (generator === 'api' && !approvalPending) atomicWriteJson(loaded.paths.storyboardPlan, storyboard);
     const suppliedContinuity = stringArg(args, 'continuity');
     const continuitySpec = suppliedContinuity
       ? readJson(resolve(process.cwd(), suppliedContinuity))
       : existsSync(loaded.paths.continuitySpec)
         ? readJson(loaded.paths.continuitySpec)
         : null;
-    const manifest = generator === 'codex' ? readJson(loaded.paths.codexManifest) : null;
-    const sourceText = readFileSync(resolveInside(loaded.paths.project, loaded.project.source.path), 'utf8');
+    const manifest = generator === 'codex' && !approvalPending ? readJson(loaded.paths.codexManifest) : null;
     const artifacts = createDirectorArtifacts({
       project: loaded.project,
       storyboard,
@@ -273,6 +324,8 @@ const plan = async (loaded = requiredProject(), {announce = true, generatorOverr
       textMode,
       continuitySpec,
     });
+    atomicWriteJson(loaded.paths.storyboardPlan, artifacts.storyboard);
+    if (generator === 'api') atomicWriteJson(loaded.paths.storyboard, artifacts.storyboard);
     atomicWriteJson(loaded.paths.director, artifacts.director);
     atomicWriteJson(loaded.paths.continuitySpec, artifacts.continuitySpec);
     atomicWriteJson(loaded.paths.continuityLedger, artifacts.continuityLedger);
@@ -283,12 +336,26 @@ const plan = async (loaded = requiredProject(), {announce = true, generatorOverr
         writeFileSync(job.prompt_file, `${job.prompt.trim()}\n`, 'utf8');
       }
     }
+    if (approvalPending) {
+      atomicWriteJson(loaded.paths.codexManifest, {
+        version: 2,
+        generator: 'blocked',
+        project_id: loaded.project.id,
+        storyboard: loaded.paths.storyboardPlan,
+        text_mode: textMode,
+        blocked_by: 'style_approval',
+        requires_replan: true,
+        jobs: [],
+      });
+    }
     const pending = (artifacts.manifest?.jobs || []).filter((job) => !existsSync(job.output_master));
-    const nextStatus = generator === 'api' ? 'assets_ready' : 'awaiting_assets';
+    const nextStatus = approvalPending ? 'awaiting_style_choice' : generator === 'api' ? 'assets_ready' : 'awaiting_assets';
     updateProjectState(
       loaded.paths,
       nextStatus,
-      generator === 'api' ? 'Director plan, images, and continuity ledger are ready' : 'Director image jobs are ready',
+      approvalPending
+        ? 'Director plan is ready and production is held for style approval'
+        : generator === 'api' ? 'Director plan, images, and continuity ledger are ready' : 'Director image jobs are ready',
       null,
       {
         current_revision: 1,
@@ -302,10 +369,135 @@ const plan = async (loaded = requiredProject(), {announce = true, generatorOverr
           text_mode: textMode,
           status: nextStatus,
         },
+        director: approvalPending
+          ? {status: 'awaiting_style_choice', recommended_theme: selectedTheme}
+          : {status: 'approved', theme: selectedTheme},
       },
     );
   });
   return announce ? statusFor(loaded.project.id) : loadById(loaded.project.id);
+};
+
+const creativeDirector = () => {
+  const action = stringArg(args, 'action', 'status');
+  if (action === 'list') return print(creativeDirectorCatalog());
+  if (!['plan', 'styles', 'choose', 'status'].includes(action)) {
+    throw new Error('--action must be plan, styles, choose, status, or list');
+  }
+  const loaded = requiredProject();
+  const storyboardPath = existsSync(loaded.paths.storyboard)
+    ? loaded.paths.storyboard
+    : loaded.paths.storyboardPlan;
+  if (action === 'status') {
+    return print({
+      project: loaded.project.id,
+      director: existsSync(loaded.paths.director) ? readJson(loaded.paths.director) : null,
+      style_bakeoff: existsSync(loaded.paths.styleBakeoff) ? readJson(loaded.paths.styleBakeoff) : null,
+    });
+  }
+  if (!existsSync(storyboardPath)) throw new Error('Plan the project before running the creative director');
+  const storyboard = readJson(storyboardPath);
+  const sourceText = loaded.project.source.type === 'story'
+    ? readFileSync(resolveInside(loaded.paths.project, loaded.project.source.path), 'utf8')
+    : storyboard.scenes.map((scene) => scene.text || scene.visual || '').join('\n');
+  if (action === 'styles') {
+    const candidates = stringArg(args, 'candidates')
+      ?.split(',').map((value) => value.trim()).filter(Boolean);
+    mkdirSync(loaded.paths.styleBakeoffDir, {recursive: true});
+    const bakeoff = createStyleBakeoffPlan({
+      projectId: loaded.project.id,
+      title: loaded.project.title,
+      sourceText,
+      scene: storyboard.scenes[Math.min(1, storyboard.scenes.length - 1)],
+      outputDirectory: loaded.paths.styleBakeoffDir.replaceAll('\\', '/'),
+      candidates,
+    });
+    for (const job of bakeoff.jobs) {
+      const promptFile = resolveInside(loaded.paths.styleBakeoffDir, `${job.id}.txt`);
+      writeFileSync(promptFile, `${job.prompt}\n`, 'utf8');
+      job.prompt_file = promptFile;
+    }
+    atomicWriteJson(loaded.paths.styleBakeoff, bakeoff);
+    updateProjectState(loaded.paths, loaded.state.status, 'Style bake-off jobs prepared', null, {
+      director: {status: 'awaiting_style_choice', style_bakeoff: loaded.paths.styleBakeoff},
+    });
+    return print({ok: true, manifest: loaded.paths.styleBakeoff, recommended: bakeoff.recommended, jobs: bakeoff.jobs});
+  }
+  if (action === 'choose') {
+    const theme = stringArg(args, 'theme');
+    if (!theme || !HANDDRAWN_THEMES[theme]) throw new Error(`--theme must be one of: ${Object.keys(HANDDRAWN_THEMES).join(', ')}`);
+    const pendingManifest = existsSync(loaded.paths.codexManifest) ? readJson(loaded.paths.codexManifest) : null;
+    const generated = (pendingManifest?.jobs || []).filter((job) => existsSync(job.output_master));
+    if (generated.length && args.force !== true) {
+      throw new Error(`Style choice would invalidate ${generated.length} generated master(s); rerun with --force to accept regeneration`);
+    }
+    const project = readJson(loaded.paths.config);
+    project.settings = applyThemeToSettings(project.settings, theme);
+    project.settings.director.style_approved = true;
+    project.updated_at = new Date().toISOString();
+    atomicWriteJson(loaded.paths.config, project);
+    const directed = applyCreativeDirectionToStoryboard(storyboard, {
+      title: project.title, sourceText, theme,
+      arc: project.settings.director.arc === 'auto' ? null : project.settings.director.arc,
+      forceShots: false, multiShot: project.settings.director.multi_shot,
+    });
+    directed.project.director.style_approved = true;
+    directed.project.style_lock = themeStyleLock(theme);
+    atomicWriteJson(loaded.paths.storyboardPlan, directed);
+    if (existsSync(loaded.paths.storyboard)) atomicWriteJson(loaded.paths.storyboard, directed);
+    if (existsSync(loaded.paths.styleBakeoff)) {
+      const bakeoff = readJson(loaded.paths.styleBakeoff);
+      bakeoff.selected = theme;
+      bakeoff.approved = true;
+      atomicWriteJson(loaded.paths.styleBakeoff, bakeoff);
+    }
+    if (existsSync(loaded.paths.director)) {
+      const director = readJson(loaded.paths.director);
+      director.creativeDirection = {...director.creativeDirection, ...directed.project.director, theme_label: HANDDRAWN_THEMES[theme].label};
+      director.scenes = director.scenes.map((scene) => ({...scene, shots: directed.scenes.find((item) => item.id === scene.id)?.shots || scene.shots}));
+      atomicWriteJson(loaded.paths.director, director);
+    }
+    if (pendingManifest) {
+      const manifest = pendingManifest;
+      manifest.jobs = (manifest.jobs || []).map((job) => {
+        const next = {...job, prompt: rewritePromptStyle(job.prompt, theme), status: 'pending'};
+        if (next.prompt_file) {
+          mkdirSync(dirname(next.prompt_file), {recursive: true});
+          writeFileSync(next.prompt_file, next.prompt, 'utf8');
+        }
+        return next;
+      });
+      manifest.creative_theme = theme;
+      manifest.blocked_by = null;
+      manifest.requires_replan = true;
+      atomicWriteJson(loaded.paths.codexManifest, manifest);
+    }
+    updateProjectState(loaded.paths, 'planning', `Creative theme approved: ${theme}; production plan must be refreshed`, null, {
+      director: {status: 'approved', theme},
+      production: {...(loaded.state.production || {}), status: 'planning'},
+    });
+    return print({ok: true, project: loaded.project.id, theme, storyboard: storyboardPath});
+  }
+  const arcArg = stringArg(args, 'arc');
+  const themeArg = stringArg(args, 'theme');
+  const directed = applyCreativeDirectionToStoryboard(storyboard, {
+    title: loaded.project.title, sourceText,
+    arc: arcArg || (loaded.project.settings.director.arc === 'auto' ? null : loaded.project.settings.director.arc),
+    theme: themeArg || (loaded.project.settings.director.theme === 'auto' ? null : loaded.project.settings.director.theme),
+    forceShots: args.force === true,
+    multiShot: loaded.project.settings.director.multi_shot,
+  });
+  atomicWriteJson(storyboardPath, directed);
+  if (existsSync(loaded.paths.director)) {
+    const director = readJson(loaded.paths.director);
+    director.creativeDirection = {...director.creativeDirection, ...directed.project.director};
+    director.scenes = director.scenes.map((scene) => ({...scene, shots: directed.scenes.find((item) => item.id === scene.id)?.shots || []}));
+    atomicWriteJson(loaded.paths.director, director);
+  }
+  updateProjectState(loaded.paths, loaded.state.status, 'Creative director shot plan updated', null, {
+    director: {status: 'planned', arc: directed.project.director.arc, theme: directed.project.director.theme},
+  });
+  print({ok: true, project: loaded.project.id, creative_direction: directed.project.director, storyboard: storyboardPath});
 };
 
 const ingest = async (loaded = requiredProject(), {announce = true} = {}) => {
@@ -344,6 +536,7 @@ const ingest = async (loaded = requiredProject(), {announce = true} = {}) => {
 
 const importCodex = async (loaded = requiredProject(), {announce = true} = {}) => {
   if (loaded.project.source.type !== 'story') throw new Error('import requires a story project');
+  if (styleApprovalPending(loaded)) return print(styleApprovalAction(loaded));
   await runProjectAction(loaded, 'importing', async () => {
     runNode(
       resolve(repoRoot, 'scripts', 'import-codex-images.mjs'),
@@ -565,12 +758,29 @@ const runQaFor = (loaded, quality, videoPath, storyboard) => {
   const reportPath = resolveInside(directory, 'report.json');
   const framesDir = resolveInside(directory, 'frames');
   const generatedStory = loaded.project.source.type === 'story';
+  const motionCutTimes = timeline.scenes.flatMap((timelineScene, index) => {
+    const scene = storyboard.scenes[index];
+    const shots = Array.isArray(scene?.shots) ? scene.shots : [];
+    if (shots.length < 2) return [];
+    const weights = shots.map((shot) => Math.max(0.01, Number(shot.duration_ratio || shot.duration_sec || 1)));
+    const totalWeight = weights.reduce((sum, value) => sum + value, 0);
+    const incomingFrames = index === 0 ? 0 : timeline.transition_frames;
+    const outgoingFrames = index === storyboard.scenes.length - 1 ? 0 : timeline.transition_frames;
+    const activeFrames = Math.max(1, timelineScene.duration_frames - incomingFrames - outgoingFrames);
+    let elapsed = 0;
+    return weights.slice(0, -1).map((weight) => {
+      elapsed += weight;
+      const localCutFrame = incomingFrames + Math.round(activeFrames * elapsed / totalWeight);
+      return (timelineScene.start_frame + localCutFrame) / timeline.fps;
+    });
+  });
   const report = runVisualQa(videoPath, {
     colorAfterSec: generatedStory ? storyboard.scenes[0].duration_sec * 0.9 : Math.min(1, timeline.duration_sec * 0.25),
     timelineSamples: quality === 'preview' ? 7 : 11,
     transitionTimes: storyboard.project.transition === 'page-flip'
       ? timeline.scenes.slice(1).map((scene) => scene.start_sec)
       : [],
+    motionCutTimes,
     framesDir,
     expected: {
       width: previewCanvas.width,
@@ -602,6 +812,7 @@ const runQaFor = (loaded, quality, videoPath, storyboard) => {
 };
 
 const render = async (loaded = requiredProject(), forcedQuality = null, {announce = true} = {}) => {
+  if (styleApprovalPending(loaded)) return print(styleApprovalAction(loaded));
   const quality = forcedQuality || stringArg(args, 'quality', 'preview');
   if (!['preview', 'final'].includes(quality)) throw new Error('--quality must be preview or final');
   await runProjectAction(loaded, `rendering_${quality}`, async () => {
@@ -688,7 +899,7 @@ const qa = async (loaded = requiredProject(), {announce = true} = {}) => {
 };
 
 const pendingCodexJobs = (loaded) => {
-  if (!existsSync(loaded.paths.codexManifest)) return null;
+  if (manifestNeedsReplan(loaded)) return null;
   const manifest = readJson(loaded.paths.codexManifest);
   return (manifest.jobs || []).filter((job) => !existsSync(resolve(job.output_master)));
 };
@@ -715,6 +926,10 @@ const produce = async () => {
       if (loaded.project.source.type === 'story') await plan(loaded, {announce: false});
       else await ingest(loaded, {announce: false});
       continue;
+    }
+    if (current === 'awaiting_style_choice') {
+      print({...styleApprovalAction(loaded), target});
+      return loaded;
     }
     if (['planning', 'awaiting_assets', 'importing'].includes(current)) {
       const pending = pendingCodexJobs(loaded);
@@ -963,9 +1178,15 @@ const assets = async () => {
   const action = stringArg(args, 'action', 'status');
   if (!['plan', 'run', 'status', 'retry'].includes(action)) throw new Error('--action must be plan, run, status, or retry');
   if (action === 'status') return print({project: loaded.project.id, provider: readProviderState(loaded.paths.providerState)});
+  if (styleApprovalPending(loaded)) {
+    updateProjectState(loaded.paths, 'awaiting_style_choice', 'Asset production is held for style approval', null, {
+      director: {status: 'awaiting_style_choice'},
+    });
+    return print(styleApprovalAction(loaded));
+  }
   const requested = stringArg(args, 'provider', loaded.project.settings.provider?.id || 'auto');
   const provider = resolveProvider(requested);
-  if (!existsSync(loaded.paths.codexManifest)) {
+  if (manifestNeedsReplan(loaded)) {
     if (loaded.project.source.type === 'images') await ingest(loaded, {announce: false});
     else await plan(loaded, {announce: false, generatorOverride: provider === 'openai' ? 'api' : 'codex'});
     loaded = loadById(loaded.project.id);
@@ -1122,6 +1343,7 @@ const resume = async () => {
   if (loaded.state?.production?.target) return produce();
   const current = loaded.state?.status === 'failed' ? loaded.state.resume_from || 'created' : loaded.state?.status || 'created';
   if (current === 'created') return loaded.project.source.type === 'story' ? plan(loaded) : ingest(loaded);
+  if (current === 'awaiting_style_choice') return print(styleApprovalAction(loaded));
   if (['planning', 'awaiting_assets', 'importing'].includes(current)) {
     const pending = pendingCodexJobs(loaded);
     if (pending === null) return plan(loaded);
@@ -1175,6 +1397,7 @@ try {
   else if (command === 'list') list();
   else if (command === 'status') status();
   else if (command === 'plan') await plan();
+  else if (command === 'director') creativeDirector();
   else if (command === 'ingest') await ingest();
   else if (command === 'import') await importCodex();
   else if (command === 'validate') validate();

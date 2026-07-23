@@ -1,7 +1,5 @@
 interface:
   display_name: "手绘故事视频"
-  short_description: "自动制片、声音导演、语义审片与可恢复返修的手绘视频"
+  short_description: "叙事导演、风格试片、多镜头动画与可恢复审片的手绘视频"
   brand_color: "#D97757"
-  default_prompt: "使用 $story-handdrawn-studio 把这段故事完整制作成有声手绘视频：保持连续性，生成素材，通过机器与语义质检，并输出可审片的预览。"
-policy:
-  allow_implicit_invocation: true
+  default_prompt: "使用 $story-handdrawn-studio 为这段故事选择叙事弧和手绘风格，制作有声多镜头视频，通过机器与语义质检，并输出可审片预览。"

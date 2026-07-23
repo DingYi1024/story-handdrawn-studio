@@ -1,5 +1,16 @@
 export type LayerId = 'text' | 'bw_full' | 'detail' | 'color';
 
+export type ShotData = {
+  id: string;
+  duration_ratio?: number;
+  duration_sec?: number;
+  shot_size?: 'WIDE' | 'MEDIUM' | 'CLOSE' | 'DETAIL';
+  camera_move?: 'static' | 'push_in' | 'pull_out' | 'pan_left' | 'pan_right' | 'tilt_up' | 'tilt_down' | 'parallax';
+  focus?: {x?: number; y?: number; scale?: number};
+  element_motion?: string[];
+  assets?: Partial<SceneData['assets']>;
+};
+
 export type SceneData = {
   id: string;
   duration_sec: number;
@@ -20,6 +31,7 @@ export type SceneData = {
     detail: string | null;
     color: string | null;
   };
+  shots?: ShotData[];
 };
 
 export type Storyboard = {
@@ -41,6 +53,14 @@ export type Storyboard = {
     transition_sec?: number;
     style_lock: string;
     character_lock: string;
+    director?: {
+      schema_version?: number;
+      arc: string;
+      theme: string;
+      motion_style?: string;
+      constraints?: 'strict' | 'loose';
+      style_approved?: boolean;
+    };
     audio: {
       voiceover: 'post';
       bgm: 'optional_bed_only';

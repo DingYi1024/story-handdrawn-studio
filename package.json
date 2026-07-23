@@ -1,6 +1,6 @@
 {
   "name": "story-handdrawn-studio",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Customizable studio for turning Chinese stories or ordered images into hand-drawn Remotion videos.",
   "license": "MIT",
   "repository": {
@@ -21,7 +21,8 @@
     "test": "node --test \"tests/*.test.mjs\"",
     "regress": "node scripts/studio.mjs regress --json",
     "audio:case": "node scripts/build-case-sprouting-note-audio.mjs",
-    "qa:case": "node scripts/qa-video.mjs examples/case-sprouting-note/final.mp4 --output examples/case-sprouting-note/qa-report.json --frames-dir examples/case-sprouting-note/qa-frames --width 1080 --height 1920 --fps 30 --duration 27.5 --duration-tolerance 0.1 --color-after 6.25 --samples 13 --require-audio --portable",
+    "props:case": "node scripts/build-case-render-props.mjs",
+    "qa:case": "node scripts/qa-video.mjs examples/case-sprouting-note/final.mp4 --output examples/case-sprouting-note/qa-report.json --frames-dir examples/case-sprouting-note/qa-frames --width 1080 --height 1920 --fps 30 --duration 27.5 --duration-tolerance 0.1 --color-after 6.25 --samples 13 --require-audio --motion-cut-time 3.666667 --motion-cut-time 10.5 --motion-cut-time 17.066667 --motion-cut-time 24.5 --portable",
     "evidence:case": "npm run qa:case -- --transition-time 6.333333 --transition-time 12.866667 --transition-time 19.5 && node scripts/build-case-v1-evidence.mjs",
     "studio": "node scripts/studio.mjs",
     "package:share": "npm run check && node scripts/sync-skill-runtime.mjs && node scripts/validate-skill-package.mjs && node scripts/package-project.mjs",
