@@ -29,10 +29,11 @@ After preview approval or an explicit final-only request:
 1. Run strict asset validation.
 2. Render at the selected preset's full dimensions.
 3. Confirm the MP4 exists and has nonzero size.
-4. Require `qa/final/report.json` to have `passed: true`, then probe width, height, duration, codec, pixel format, and audio streams.
+4. Require `qa/final/report.json` to have `passed: true`, inspect its transition samples, then probe width, height, duration, codec, pixel format, and audio streams.
 5. Confirm H.264 video and a broadly compatible 4:2:0 pixel format (`yuv420p` or full-range `yuvj420p`); audio should be absent unless deliberately added, and must be present when an audio feature was requested.
 6. Confirm the machine checks for first-frame content, first-frame monochrome artwork (generated stories), later color, expected geometry/FPS/duration, and no sampled black/white blank frames. Treat duplicate-frame hints as review warnings, not automatic failures.
-7. Inspect at least the opening and ending frames plus one middle frame.
+7. Inspect every semantic vision job or explicitly leave it `needs_review`; never turn absent observations into a pass.
+8. Inspect at least the opening and ending frames plus one middle frame, and use the local review workspace when approval is requested.
 
 Report measured properties rather than intended settings. A successful render command alone is not sufficient evidence.
 

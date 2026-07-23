@@ -52,16 +52,21 @@ Claude Code 也支持通过插件市场安装：
 ## 现在能做什么
 
 - `produce` 自动总导演：从原文/图片一路推进到素材、预览、正式片和机器验收
+- 本地自动声音导演：识别情绪与雨声、脚步、鸟鸣、发现等事件，原创合成 BGM/SFX 并帧级对齐翻页
 - 中文故事自动分镜，保留原文并按阅读速度计算镜头时长
 - 有序图片自动去重、版式检测、无损包含和黑白层派生
 - 首帧直接显示黑白画稿，再叠加文字，最后由左到右揭示彩色插画；没有纯白过渡
 - `revise` 指定镜头局部重做，旧版本归档，新素材不覆盖已验收母图
 - 角色、服装、道具、场景、时间、配色连续性账本；当前镜头人物必须显式声明，不会串场
 - 自动视频 QA：首帧、黑白/彩色时序、尺寸、帧率、时长、音频流、黑白空帧和疑似重复帧
+- 转场专项 QA：每次卷页前、中、后抽帧，直接阻止白屏或黑屏过渡
+- 语义 QA 与本地审片台：不伪造视觉结论，逐场批准/返修并导出可执行决定
 - 可选 OpenAI 旁白或自备旁白/BGM/音效，按真实音频时长校准镜头并混音为 AAC
 - `cut` 直切与 `page-flip` 卷页转场；卷页下方直接露出下一幕黑白图，结束后才写字、上色
 - 3:4、9:16、1:1、16:9 四种动态画布
 - Codex Image2 任务清单与显式选择的 OpenAI API 工作流
+- 图片提供方自动选择、费用估算、有界重试和持久化恢复状态
+- 5 个创作模板、v3 配置迁移、项目快照、安全回滚，以及 Windows/Linux/macOS CI
 - 自然语言意图路由、首次引导、状态导航与预览/正式片机器质检
 - 项目锁、原子状态文件、严格素材校验、失败后恢复
 - Skill 外持久数据、版本化运行时与不覆盖作品的升级契约
@@ -82,6 +87,8 @@ Claude Code 也支持通过插件市场安装：
 - [查看案例说明与复现命令](examples/case-sprouting-note/README.md)
 - [查看故事板 JSON](examples/case-sprouting-note/storyboard.json)
 - [查看机器 QA 报告](examples/case-sprouting-note/qa-report.json)
+- [打开本地审片台](examples/case-sprouting-note/review.html)
+- [查看语义 QA 报告](examples/case-sprouting-note/semantic-report.json)
 - [查看音频配置与原创音源](examples/case-sprouting-note/audio-options.json)
 - [查看角色与分镜素材](public/examples/case-sprouting-note/)
 
@@ -147,6 +154,15 @@ node scripts/studio.mjs produce --project summer --to preview
 
 ### 可选音频
 
+不使用密钥、完全在本地自动配乐和配音效：
+
+```bash
+node scripts/studio.mjs audio --project summer --action auto
+node scripts/studio.mjs produce --project summer --to final
+```
+
+需要旁白时再使用 OpenAI TTS 或自备录音：
+
 ```bash
 node scripts/studio.mjs audio --project summer --action prepare \
   --enable --provider openai --model tts-1-hd --voice alloy
@@ -154,6 +170,29 @@ node scripts/studio.mjs produce --project summer --to final
 ```
 
 也可用 `--voiceover 01=/absolute/01.wav --bgm /absolute/bed.mp3 --sfx 02=/absolute/rain.wav --provider files`。音频默认关闭；OpenAI 旁白需要 `OPENAI_API_KEY`，会把 `scene.narration` 发送到语音接口。
+
+### 模板、素材提供方与审片
+
+```bash
+node scripts/studio.mjs templates
+node scripts/studio.mjs create --template gentle-diary --id summer --title "纸上的夏天" --input story.txt
+node scripts/studio.mjs assets --project summer --action plan --provider auto
+node scripts/studio.mjs semantic-qa --project summer
+node scripts/studio.mjs review --project summer
+node scripts/studio.mjs apply-review --project summer --input /absolute/summer-review.json --to preview
+```
+
+`semantic-qa` 在没有真实视觉观察时返回 `needs_review`，不会假装检查通过。`review` 生成自包含 HTML；审片决定只会重做被拒绝的镜头。
+
+### 快照、迁移与回滚
+
+```bash
+node scripts/studio.mjs migrate --project summer
+node scripts/studio.mjs snapshot --project summer --label "正式渲染前"
+node scripts/studio.mjs rollback --project summer --snapshot s0001
+```
+
+迁移前自动备份；回滚前也会创建安全快照，因此恢复操作仍可逆。
 
 ## 画幅与配置
 
@@ -191,6 +230,11 @@ node scripts/studio.mjs produce --project summer --to final
 ├── storyboard.json           # 当前可渲染故事板
 ├── codex-image-jobs.json     # Codex 图片任务
 ├── revisions/rN/             # 历次修改归档
+├── snapshots/sNNNN/          # 可恢复项目快照
+├── provider-state.json       # 提供方、估算、尝试次数与错误
+├── semantic-report.json      # 语义策略与视觉观察报告
+├── vision-jobs.json          # Agent/人工视觉审查任务
+├── review/index.html         # 自包含本地审片台
 ├── qa/preview|final/         # QA 报告与抽帧
 ├── audio-options.json        # 可选音频设置
 ├── audio-manifest.json       # 音轨、时序、实测时长
@@ -227,4 +271,4 @@ npm run package:share    # 生成可分享源码包
 
 ## English
 
-Story Handdrawn Studio turns Chinese stories or ordered images into complete hand-drawn Remotion videos. Version 0.5 adds an automatic producer, scene retakes, versioned continuity ledgers, machine video QA, ten regression cases, and optional measured voiceover/BGM/SFX mixing while retaining isolated, resumable, multi-ratio projects.
+Story Handdrawn Studio v1 turns Chinese stories or ordered images into complete hand-drawn Remotion videos with automatic local sound design, resumable image providers, continuity ledgers, pixel and semantic QA, a local review UI, templates, snapshots, rollback, and multi-ratio delivery.

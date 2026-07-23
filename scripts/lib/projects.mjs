@@ -2,6 +2,7 @@ import {createHash} from 'node:crypto';
 import {
   closeSync,
   copyFileSync,
+  cpSync,
   existsSync,
   mkdirSync,
   openSync,
@@ -13,8 +14,9 @@ import {
 } from 'node:fs';
 import {basename, dirname, extname, isAbsolute, relative, resolve} from 'node:path';
 import {safeSlug} from './story-text.mjs';
+import {CURRENT_PROJECT_SCHEMA_VERSION, migrateProjectDocuments} from './migrations.mjs';
 
-export const PROJECT_SCHEMA_VERSION = 2;
+export const PROJECT_SCHEMA_VERSION = CURRENT_PROJECT_SCHEMA_VERSION;
 
 export const assertProjectId = (value) => {
   const id = String(value || '');
@@ -64,6 +66,8 @@ export const getProjectPaths = (
     output: resolveInside(project, 'output'),
     logs: resolveInside(project, 'logs'),
     revisions: resolveInside(project, 'revisions'),
+    snapshots: resolveInside(project, 'snapshots'),
+    review: resolveInside(project, 'review'),
     qa: resolveInside(project, 'qa'),
     audio: resolveInside(project, 'audio'),
     storyboardPlan: resolveInside(project, 'storyboard.generated.json'),
@@ -73,6 +77,14 @@ export const getProjectPaths = (
     continuityLedger: resolveInside(project, 'continuity.ledger.json'),
     audioOptions: resolveInside(project, 'audio-options.json'),
     audioManifest: resolveInside(project, 'audio-manifest.json'),
+    audioDirector: resolveInside(project, 'audio-director.json'),
+    providerState: resolveInside(project, 'provider-state.json'),
+    semanticReport: resolveInside(project, 'semantic-report.json'),
+    semanticObservations: resolveInside(project, 'semantic-observations.json'),
+    visionJobs: resolveInside(project, 'vision-jobs.json'),
+    reviewData: resolveInside(project, 'review', 'data.json'),
+    reviewHtml: resolveInside(project, 'review', 'index.html'),
+    reviewDecisions: resolveInside(project, 'review', 'decisions.json'),
     codexManifest: resolveInside(project, 'codex-image-jobs.json'),
     uploadedManifest: resolveInside(project, 'uploaded-pages.json'),
     renderProps: resolveInside(project, 'render-props.json'),
@@ -110,12 +122,17 @@ export const createProject = ({
   if ((storyText === null) === (images.length === 0)) {
     throw new Error('Create a project with either story text or one or more images');
   }
+  // Validate every external input before creating the project directory so a
+  // bad path cannot leave an unusable half-created project behind.
+  const validatedImages = images.length ? uniqueImages(images) : [];
 
   mkdirSync(paths.source, {recursive: true});
   mkdirSync(paths.prompts, {recursive: true});
   mkdirSync(paths.output, {recursive: true});
   mkdirSync(paths.logs, {recursive: true});
   mkdirSync(paths.revisions, {recursive: true});
+  mkdirSync(paths.snapshots, {recursive: true});
+  mkdirSync(paths.review, {recursive: true});
   mkdirSync(paths.qa, {recursive: true});
   mkdirSync(paths.audio, {recursive: true});
   mkdirSync(paths.publicAssets, {recursive: true});
@@ -128,7 +145,7 @@ export const createProject = ({
   } else {
     const imageDir = resolveInside(paths.source, 'images');
     mkdirSync(imageDir, {recursive: true});
-    const copied = uniqueImages(images).map((image, index) => {
+    const copied = validatedImages.map((image, index) => {
       const extension = extname(image.absolute).toLowerCase() || '.png';
       const name = `${String(index + 1).padStart(2, '0')}${extension}`;
       copyFileSync(image.absolute, resolveInside(imageDir, name));
@@ -159,6 +176,9 @@ export const createProject = ({
     pending_scenes: [],
     qa: {},
     audio: {status: 'disabled'},
+    provider: {status: 'not_started'},
+    review: {status: 'not_started'},
+    snapshots: [],
     updated_at: now,
     last_error: null,
     history: [{at: now, status: 'created', message: 'Project created'}],
@@ -169,11 +189,85 @@ export const createProject = ({
 export const loadProject = (repoRoot, projectId, projectsRoot = null, publicDir = null) => {
   const paths = getProjectPaths(repoRoot, projectId, projectsRoot, publicDir);
   if (!existsSync(paths.config)) throw new Error(`Project not found: ${paths.id}`);
+  const rawProject = readJson(paths.config);
+  const rawState = existsSync(paths.state) ? readJson(paths.state) : null;
+  const migrated = migrateProjectDocuments(rawProject, rawState);
   return {
     paths,
-    project: readJson(paths.config),
-    state: existsSync(paths.state) ? readJson(paths.state) : null,
+    project: migrated.project,
+    state: migrated.state,
+    migration: {from: migrated.from, to: migrated.to, changed: migrated.changed, changes: migrated.changes},
   };
+};
+
+const snapshotFiles = (paths) => ({
+  'project.json': paths.config,
+  'state.json': paths.state,
+  'storyboard.json': paths.storyboard,
+  'storyboard.generated.json': paths.storyboardPlan,
+  'director.generated.json': paths.director,
+  'continuity.spec.json': paths.continuitySpec,
+  'continuity.ledger.json': paths.continuityLedger,
+  'codex-image-jobs.json': paths.codexManifest,
+  'audio-options.json': paths.audioOptions,
+  'audio-manifest.json': paths.audioManifest,
+  'provider-state.json': paths.providerState,
+  'semantic-report.json': paths.semanticReport,
+});
+
+export const createProjectSnapshot = (paths, label = '') => {
+  mkdirSync(paths.snapshots, {recursive: true});
+  const ids = readdirSync(paths.snapshots, {withFileTypes: true})
+    .filter((entry) => entry.isDirectory() && /^s\d{4}$/.test(entry.name))
+    .map((entry) => Number(entry.name.slice(1)));
+  const id = `s${String(Math.max(0, ...ids) + 1).padStart(4, '0')}`;
+  const directory = resolveInside(paths.snapshots, id);
+  mkdirSync(directory, {recursive: true});
+  const files = [];
+  for (const [name, source] of Object.entries(snapshotFiles(paths))) {
+    if (!source || !existsSync(source)) continue;
+    copyFileSync(source, resolveInside(directory, name));
+    files.push(name);
+  }
+  if (existsSync(paths.review)) {
+    cpSync(paths.review, resolveInside(directory, 'review'), {recursive: true});
+    files.push('review/');
+  }
+  const manifest = {schema_version: 1, id, label: String(label), created_at: new Date().toISOString(), files};
+  atomicWriteJson(resolveInside(directory, 'snapshot.json'), manifest);
+  return {...manifest, directory};
+};
+
+export const restoreProjectSnapshot = (paths, snapshotId) => {
+  if (!/^s\d{4}$/.test(String(snapshotId))) throw new Error('Snapshot id must use s0001 format');
+  const directory = resolveInside(paths.snapshots, String(snapshotId));
+  const manifestPath = resolveInside(directory, 'snapshot.json');
+  if (!existsSync(manifestPath)) throw new Error(`Snapshot not found: ${snapshotId}`);
+  const safety = createProjectSnapshot(paths, `automatic backup before restoring ${snapshotId}`);
+  const restored = [];
+  for (const [name, target] of Object.entries(snapshotFiles(paths))) {
+    const source = resolveInside(directory, name);
+    if (!existsSync(source)) continue;
+    copyFileSync(source, target);
+    restored.push(name);
+  }
+  const reviewSource = resolveInside(directory, 'review');
+  if (existsSync(reviewSource)) {
+    cpSync(reviewSource, paths.review, {recursive: true, force: true});
+    restored.push('review/');
+  }
+  return {restored_snapshot: snapshotId, safety_snapshot: safety.id, files: restored};
+};
+
+export const persistProjectMigration = (paths) => {
+  const migrated = migrateProjectDocuments(readJson(paths.config), existsSync(paths.state) ? readJson(paths.state) : null);
+  if (migrated.changed) {
+    const snapshot = createProjectSnapshot(paths, `before schema migration ${migrated.from} to ${migrated.to}`);
+    atomicWriteJson(paths.config, migrated.project);
+    if (migrated.state) atomicWriteJson(paths.state, migrated.state);
+    return {...migrated, snapshot: snapshot.id};
+  }
+  return migrated;
 };
 
 export const updateProjectState = (paths, status, message, error = null, metadata = {}) => {

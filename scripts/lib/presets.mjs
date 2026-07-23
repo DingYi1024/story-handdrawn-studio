@@ -119,6 +119,8 @@ export const createSettings = (presetName = 'portrait', overrides = {}) => {
       sfx_volume: 0.35,
       narration_tail_seconds: 0.45,
     },
+    provider: {id: 'auto', max_attempts: 3},
+    review: {semantic_strict: false},
   };
   const settings = deepMerge(base, overrides);
   validateSettings(settings);
@@ -201,8 +203,8 @@ export const validateSettings = (settings) => {
   const audio = settings?.audio;
   if (audio !== undefined) {
     if (typeof audio.enabled !== 'boolean') errors.push('audio.enabled must be boolean');
-    if (!['none', 'openai', 'files'].includes(audio.provider)) {
-      errors.push('audio.provider must be none, openai, or files');
+    if (!['none', 'auto', 'openai', 'files'].includes(audio.provider)) {
+      errors.push('audio.provider must be none, auto, openai, or files');
     }
     if (!['mp3', 'wav', 'aac', 'flac', 'opus'].includes(audio.format)) {
       errors.push('audio.format must be mp3, wav, aac, flac, or opus');
@@ -215,6 +217,16 @@ export const validateSettings = (settings) => {
     if (!Number.isFinite(audio.narration_tail_seconds) || audio.narration_tail_seconds < 0 || audio.narration_tail_seconds > 5) {
       errors.push('audio.narration_tail_seconds must be between 0 and 5');
     }
+  }
+
+  if (!['auto', 'codex', 'openai', 'files'].includes(settings?.provider?.id)) {
+    errors.push('provider.id must be auto, codex, openai, or files');
+  }
+  if (!Number.isInteger(settings?.provider?.max_attempts) || settings.provider.max_attempts < 1 || settings.provider.max_attempts > 10) {
+    errors.push('provider.max_attempts must be between 1 and 10');
+  }
+  if (typeof settings?.review?.semantic_strict !== 'boolean') {
+    errors.push('review.semantic_strict must be boolean');
   }
 
   if (errors.length) throw new Error(`Invalid project settings:\n- ${errors.join('\n- ')}`);

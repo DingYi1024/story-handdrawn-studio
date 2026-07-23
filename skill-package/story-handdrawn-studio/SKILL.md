@@ -1,6 +1,6 @@
 ---
 name: story-handdrawn-studio
-description: Produce, revise, resume, and machine-check complete hand-drawn videos from Chinese stories, articles, scripts, diary entries, comic pages, or ordered local images. Use for automatic story direction, storyboard and image generation, character/prop/setting continuity, scene-specific retakes, 3:4/9:16/1:1/16:9 rendering, page flips, preview/final delivery, optional OpenAI voiceover or supplied BGM/SFX, interrupted-job recovery, and finished-video QA.
+description: Produce, revise, review, recover, and machine-check complete hand-drawn videos from Chinese stories, scripts, diary entries, comic pages, or ordered images. Use for automatic story direction, resumable image providers, character/prop/setting continuity, scene retakes, multi-ratio rendering, page flips, automatic local sound design or narration, semantic and pixel QA, visual review, snapshots, and final MP4 delivery.
 ---
 
 # Story Handdrawn Studio
@@ -23,6 +23,10 @@ The launcher keeps works under `~/.story-handdrawn-studio/`, outside the install
 - Scene feedback: use `revise --scene ID --note ...`, generate only returned retake jobs, then continue `produce`.
 - Character, outfit, prop, location, or palette consistency: prepare/apply a semantic continuity specification before generating affected scenes.
 - Voice, music, or sound effects: read [references/audio.md](references/audio.md); audio remains opt-in.
+- Automatic local BGM/SFX: use `audio --action auto`; read [references/automatic-audio.md](references/automatic-audio.md).
+- Visual approval or semantic checking: read [references/review-and-semantic-qa.md](references/review-and-semantic-qa.md).
+- Image provider selection, estimates, retries, or recovery: read [references/providers-and-recovery.md](references/providers-and-recovery.md).
+- Reusable genres, migrations, backup, or rollback: read [references/templates-and-rollback.md](references/templates-and-rollback.md).
 - Status questions: use `list` or `status` without mutating the work.
 - Renderer or reusable feature changes: read the customization route in [references/routing.md](references/routing.md).
 
@@ -36,8 +40,9 @@ Read [references/workflows.md](references/workflows.md) whenever executing produ
 4. For a story with recurring people/props/settings, write a semantic continuity JSON and pass `--continuity /absolute/file.json` on the first `produce` call. Every scene must explicitly list its current cast; use `[]` when nobody is present.
 5. Run `produce`. If it returns `action_required: generate_images`, process every returned job in manifest order with the available image-generation capability. Read the full `prompt` and all `references`, generate exactly one master, and save/copy it to the exact `output_master` path.
 6. Re-run the same `produce --project ID --to TARGET`. Repeat until it reaches the requested stable state. Do not activate a storyboard while any master is missing.
-7. Rendering automatically runs machine QA. If QA fails, use its report and sampled frames to fix the underlying asset, storyboard, timing, or render rule; rerender and recheck.
-8. A final is complete only when state is `completed`, `output/final.mp4` exists, and final QA has zero failures.
+7. Rendering runs geometry/pixel/audio QA, samples both sides of page flips, and emits semantic vision jobs without inventing observations. Use `review` when human approval is needed.
+8. If review requests changes, apply its JSON with `apply-review`, service only the returned retake jobs, and continue production.
+9. A final is complete only when state is `completed`, `output/final.mp4` exists, final QA has zero failures, and requested review gates are resolved.
 
 ## Visual contract
 
@@ -55,7 +60,7 @@ Read [references/workflows.md](references/workflows.md) whenever executing produ
 
 ## Optional audio contract
 
-Keep silent output as the default. When audio is requested, use narration text rather than line-broken captions, synthesize or copy tracks, measure real durations, extend scene timing when needed, mix with conservative volumes, and rerun visual QA on the muxed MP4 with an audio stream required. Clearly disclose when OpenAI speech sends narration text to an external API.
+Keep silent output as the default unless the selected template enables sound. For private, keyless sound design, prefer `audio --action auto`; it derives mood and events, creates original procedural BGM/SFX locally, aligns page-turn sounds, and makes no network call. When narration is requested, use narration text rather than captions, measure real durations, extend timing when needed, and clearly disclose external OpenAI speech calls.
 
 ## Truthful delivery
 

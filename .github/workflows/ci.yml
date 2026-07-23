@@ -10,7 +10,11 @@ permissions:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,6 +27,6 @@ jobs:
       - run: npm run package:skill
       - uses: actions/upload-artifact@v4
         with:
-          name: story-handdrawn-studio-skill
+          name: story-handdrawn-studio-skill-${{ matrix.os }}
           path: release/story-handdrawn-studio-skill-*.zip
           if-no-files-found: error

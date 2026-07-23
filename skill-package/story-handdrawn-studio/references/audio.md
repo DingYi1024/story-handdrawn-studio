@@ -4,6 +4,8 @@ Read this file only when the user requests narration, music, sound effects, or a
 
 Audio is disabled by default. Supported inputs are supplied per-scene voice files, one looping BGM file, per-scene SFX files, and OpenAI speech synthesis. The pipeline measures real audio duration, can extend scene timing, normalizes/limits the mix, preserves the H.264 picture stream, and outputs AAC audio.
 
+For fully local, automatically directed music and effects, use `audio --action auto` and read `automatic-audio.md`.
+
 ## Plan without external calls
 
 ```bash

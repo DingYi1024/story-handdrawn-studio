@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "project": {
+    "id": "sprouting-note",
+    "title": "会发芽的纸条"
+  },
+  "generated_at": "2026-07-23T01:48:41.077Z",
+  "qa": {
+    "status": "pass_with_warnings",
+    "summary": {
+      "pass": 10,
+      "warn": 1,
+      "fail": 0,
+      "total": 11
+    }
+  },
+  "scenes": [
+    {
+      "id": "01",
+      "duration_sec": 7.2,
+      "text": "加班回家的夜里，\n小满在公交站捡到一只\n被雨淋湿的纸袋。",
+      "narration": "加班回家的夜里，小满在公交站捡到一只被雨淋湿的纸袋。",
+      "visual": "雨夜公交站，小满弯腰拾起纸袋。",
+      "monochrome": "../../public/examples/case-sprouting-note/01_bw.png",
+      "color": "../../public/examples/case-sprouting-note/01_color.png",
+      "issues": [],
+      "audio_events": []
+    },
+    {
+      "id": "02",
+      "duration_sec": 7.4,
+      "text": "她把纸袋带回家。\n里面只有三颗向日葵种子，\n和一张空白纸条。",
+      "narration": "她把纸袋带回家，里面只有三颗向日葵种子和一张空白纸条。",
+      "visual": "深夜室内，小满打开纸袋看见三颗种子。",
+      "monochrome": "../../public/examples/case-sprouting-note/02_bw.png",
+      "color": "../../public/examples/case-sprouting-note/02_color.png",
+      "issues": [],
+      "audio_events": []
+    },
+    {
+      "id": "03",
+      "duration_sec": 7.5,
+      "text": "纸条上写着：\n“请替我看看它们开花。”\n她认真照料了九十天。",
+      "narration": "纸条上写着：请替我看看它们开花。她认真照料了九十天。",
+      "visual": "阳台上，小满给三个不同生长阶段的花盆浇水。",
+      "monochrome": "../../public/examples/case-sprouting-note/03_bw.png",
+      "color": "../../public/examples/case-sprouting-note/03_color.png",
+      "issues": [],
+      "audio_events": []
+    },
+    {
+      "id": "04",
+      "duration_sec": 8,
+      "text": "阳台亮起三朵小太阳。\n小满第一次觉得，\n这座城市也在等她回家。",
+      "narration": "九十天后，阳台亮起三朵小太阳。小满第一次觉得，这座陌生的城市也在等她回家。",
+      "visual": "清晨阳台，三朵向日葵盛开，小满安静微笑。",
+      "monochrome": "../../public/examples/case-sprouting-note/04_bw.png",
+      "color": "../../public/examples/case-sprouting-note/04_color.png",
+      "issues": [],
+      "audio_events": []
+    }
+  ]
+}

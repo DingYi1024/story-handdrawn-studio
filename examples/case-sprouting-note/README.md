@@ -34,8 +34,11 @@
 - `cover.png`：从正式片末幕提取的案例封面
 - `animated-preview.gif`：README 内可直接观看的完整动态预览
 - `transition-preview.gif`：三次卷页转场的短预览
-- `qa-report.json`：机器验收报告（9 项通过、1 项审片提示、0 项失败，包含音频流检查）
-- `qa-frames/`：首帧、彩色揭示点与全片时间线抽帧
+- `qa-report.json`：机器验收报告（10 项通过、1 项审片提示、0 项失败，包含音频流和三次卷页检查）
+- `qa-frames/`：23 个验收抽帧，包含每次卷页前、中、后
+- `semantic-observations.json`：逐场人工视觉观察
+- `semantic-report.json`：32/32 语义检查通过的机器报告
+- `review.html`：可直接打开、逐场批准或返修的本地审片台
 
 ## 本地复现
 
@@ -59,7 +62,7 @@ node scripts/audio-project.mjs \
   --config examples/case-sprouting-note/audio-options.json --enable \
   --video examples/case-sprouting-note/_final-silent.mp4 \
   --output examples/case-sprouting-note/final.mp4
-npm run qa:case
+npm run evidence:case
 ```
 
 案例没有使用外部录音或第三方音乐；全部音乐和音效由仓库脚本通过 FFmpeg 程序化生成。当前版本未加旁白，重点展示无语音 API 也能交付的有声氛围片。

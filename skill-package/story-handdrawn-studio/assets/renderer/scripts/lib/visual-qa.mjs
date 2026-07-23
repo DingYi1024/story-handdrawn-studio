@@ -77,6 +77,11 @@ export const createVisualQaPlan = (metadata, options = {}) => {
       roles: ['timeline'],
       checks: ['black_or_white_frame'],
     })),
+    ...(options.transitionTimes || []).flatMap((time, index) => [-0.08, 0, 0.08].map((offset) => ({
+      timeSec: Number(time) + offset,
+      roles: ['transition', `transition-${index + 1}`],
+      checks: ['transition_non_blank'],
+    }))),
   ];
 
   const merged = [];
@@ -290,6 +295,19 @@ export const createVisualQaReport = ({
     extremeFrames.map((sample) => ({id: sample.id, timeSec: sample.timeSec, black: sample.metrics.isBlack, white: sample.metrics.isWhite})),
     [],
     extremeFrames.map((sample) => sample.id),
+  ));
+
+  const extremeTransitions = samples.filter((sample) =>
+    sample.roles?.includes('transition') && (sample.metrics.isBlack || sample.metrics.isWhite || sample.metrics.isBlank),
+  );
+  checks.push(check(
+    'transition_extreme_frames',
+    extremeTransitions.length ? 'fail' : 'pass',
+    'error',
+    extremeTransitions.length ? 'Blank transition samples were found' : 'All sampled transitions retain visible artwork',
+    extremeTransitions.map((sample) => ({id: sample.id, timeSec: sample.timeSec, metrics: sample.metrics})),
+    [],
+    extremeTransitions.map((sample) => sample.id),
   ));
 
   const timeline = plan.samples
