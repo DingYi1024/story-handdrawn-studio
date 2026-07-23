@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "method": "human visual inspection of the four colour masters and rendered QA frames",
+  "scenes": {
+    "01": {
+      "scene_match": true,
+      "character_identity": true,
+      "character_count": true,
+      "props": true,
+      "caption_text": true,
+      "watermark": false,
+      "style": true
+    },
+    "02": {
+      "scene_match": true,
+      "character_identity": true,
+      "character_count": true,
+      "props": true,
+      "caption_text": true,
+      "watermark": false,
+      "style": true
+    },
+    "03": {
+      "scene_match": true,
+      "character_identity": true,
+      "character_count": true,
+      "props": true,
+      "caption_text": true,
+      "watermark": false,
+      "style": true
+    },
+    "04": {
+      "scene_match": true,
+      "character_identity": true,
+      "character_count": true,
+      "props": true,
+      "caption_text": true,
+      "watermark": false,
+      "style": true
+    }
+  }
+}

@@ -1,0 +1,451 @@
+{
+  "kind": "semantic-qa-report",
+  "schema_version": 1,
+  "generated_at": "2026-07-23T01:48:41.075Z",
+  "status": "pass",
+  "passed": true,
+  "summary": {
+    "pass": 32,
+    "fail": 0,
+    "needs_review": 0,
+    "total": 32
+  },
+  "checks": [
+    {
+      "id": "asset_integrity",
+      "status": "pass",
+      "scene_id": "01",
+      "message": "Declared scene assets are present",
+      "suggestion": "Regenerate or import the missing scene assets.",
+      "evidence": {
+        "assets": [
+          "examples/case-sprouting-note/01_bw.png",
+          "examples/case-sprouting-note/01_color.png"
+        ],
+        "required": [
+          "bw",
+          "color"
+        ],
+        "missing_declarations": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "scene_match",
+      "status": "pass",
+      "scene_id": "01",
+      "message": "scene_match passed visual review",
+      "suggestion": "Revise scene 01 with an explicit scene_match correction.",
+      "evidence": true
+    },
+    {
+      "id": "character_identity",
+      "status": "pass",
+      "scene_id": "01",
+      "message": "character_identity passed visual review",
+      "suggestion": "Revise scene 01 with an explicit character_identity correction.",
+      "evidence": true
+    },
+    {
+      "id": "character_count",
+      "status": "pass",
+      "scene_id": "01",
+      "message": "character_count passed visual review",
+      "suggestion": "Revise scene 01 with an explicit character_count correction.",
+      "evidence": true
+    },
+    {
+      "id": "props",
+      "status": "pass",
+      "scene_id": "01",
+      "message": "props passed visual review",
+      "suggestion": "Revise scene 01 with an explicit props correction.",
+      "evidence": true
+    },
+    {
+      "id": "caption_text",
+      "status": "pass",
+      "scene_id": "01",
+      "message": "caption_text passed visual review",
+      "suggestion": "Revise scene 01 with an explicit caption_text correction.",
+      "evidence": true
+    },
+    {
+      "id": "watermark",
+      "status": "pass",
+      "scene_id": "01",
+      "message": "watermark passed visual review",
+      "suggestion": "Revise scene 01 with an explicit watermark correction.",
+      "evidence": false
+    },
+    {
+      "id": "style",
+      "status": "pass",
+      "scene_id": "01",
+      "message": "style passed visual review",
+      "suggestion": "Revise scene 01 with an explicit style correction.",
+      "evidence": true
+    },
+    {
+      "id": "asset_integrity",
+      "status": "pass",
+      "scene_id": "02",
+      "message": "Declared scene assets are present",
+      "suggestion": "Regenerate or import the missing scene assets.",
+      "evidence": {
+        "assets": [
+          "examples/case-sprouting-note/02_bw.png",
+          "examples/case-sprouting-note/02_color.png"
+        ],
+        "required": [
+          "bw",
+          "color"
+        ],
+        "missing_declarations": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "scene_match",
+      "status": "pass",
+      "scene_id": "02",
+      "message": "scene_match passed visual review",
+      "suggestion": "Revise scene 02 with an explicit scene_match correction.",
+      "evidence": true
+    },
+    {
+      "id": "character_identity",
+      "status": "pass",
+      "scene_id": "02",
+      "message": "character_identity passed visual review",
+      "suggestion": "Revise scene 02 with an explicit character_identity correction.",
+      "evidence": true
+    },
+    {
+      "id": "character_count",
+      "status": "pass",
+      "scene_id": "02",
+      "message": "character_count passed visual review",
+      "suggestion": "Revise scene 02 with an explicit character_count correction.",
+      "evidence": true
+    },
+    {
+      "id": "props",
+      "status": "pass",
+      "scene_id": "02",
+      "message": "props passed visual review",
+      "suggestion": "Revise scene 02 with an explicit props correction.",
+      "evidence": true
+    },
+    {
+      "id": "caption_text",
+      "status": "pass",
+      "scene_id": "02",
+      "message": "caption_text passed visual review",
+      "suggestion": "Revise scene 02 with an explicit caption_text correction.",
+      "evidence": true
+    },
+    {
+      "id": "watermark",
+      "status": "pass",
+      "scene_id": "02",
+      "message": "watermark passed visual review",
+      "suggestion": "Revise scene 02 with an explicit watermark correction.",
+      "evidence": false
+    },
+    {
+      "id": "style",
+      "status": "pass",
+      "scene_id": "02",
+      "message": "style passed visual review",
+      "suggestion": "Revise scene 02 with an explicit style correction.",
+      "evidence": true
+    },
+    {
+      "id": "asset_integrity",
+      "status": "pass",
+      "scene_id": "03",
+      "message": "Declared scene assets are present",
+      "suggestion": "Regenerate or import the missing scene assets.",
+      "evidence": {
+        "assets": [
+          "examples/case-sprouting-note/03_bw.png",
+          "examples/case-sprouting-note/03_color.png"
+        ],
+        "required": [
+          "bw",
+          "color"
+        ],
+        "missing_declarations": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "scene_match",
+      "status": "pass",
+      "scene_id": "03",
+      "message": "scene_match passed visual review",
+      "suggestion": "Revise scene 03 with an explicit scene_match correction.",
+      "evidence": true
+    },
+    {
+      "id": "character_identity",
+      "status": "pass",
+      "scene_id": "03",
+      "message": "character_identity passed visual review",
+      "suggestion": "Revise scene 03 with an explicit character_identity correction.",
+      "evidence": true
+    },
+    {
+      "id": "character_count",
+      "status": "pass",
+      "scene_id": "03",
+      "message": "character_count passed visual review",
+      "suggestion": "Revise scene 03 with an explicit character_count correction.",
+      "evidence": true
+    },
+    {
+      "id": "props",
+      "status": "pass",
+      "scene_id": "03",
+      "message": "props passed visual review",
+      "suggestion": "Revise scene 03 with an explicit props correction.",
+      "evidence": true
+    },
+    {
+      "id": "caption_text",
+      "status": "pass",
+      "scene_id": "03",
+      "message": "caption_text passed visual review",
+      "suggestion": "Revise scene 03 with an explicit caption_text correction.",
+      "evidence": true
+    },
+    {
+      "id": "watermark",
+      "status": "pass",
+      "scene_id": "03",
+      "message": "watermark passed visual review",
+      "suggestion": "Revise scene 03 with an explicit watermark correction.",
+      "evidence": false
+    },
+    {
+      "id": "style",
+      "status": "pass",
+      "scene_id": "03",
+      "message": "style passed visual review",
+      "suggestion": "Revise scene 03 with an explicit style correction.",
+      "evidence": true
+    },
+    {
+      "id": "asset_integrity",
+      "status": "pass",
+      "scene_id": "04",
+      "message": "Declared scene assets are present",
+      "suggestion": "Regenerate or import the missing scene assets.",
+      "evidence": {
+        "assets": [
+          "examples/case-sprouting-note/04_bw.png",
+          "examples/case-sprouting-note/04_color.png"
+        ],
+        "required": [
+          "bw",
+          "color"
+        ],
+        "missing_declarations": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "scene_match",
+      "status": "pass",
+      "scene_id": "04",
+      "message": "scene_match passed visual review",
+      "suggestion": "Revise scene 04 with an explicit scene_match correction.",
+      "evidence": true
+    },
+    {
+      "id": "character_identity",
+      "status": "pass",
+      "scene_id": "04",
+      "message": "character_identity passed visual review",
+      "suggestion": "Revise scene 04 with an explicit character_identity correction.",
+      "evidence": true
+    },
+    {
+      "id": "character_count",
+      "status": "pass",
+      "scene_id": "04",
+      "message": "character_count passed visual review",
+      "suggestion": "Revise scene 04 with an explicit character_count correction.",
+      "evidence": true
+    },
+    {
+      "id": "props",
+      "status": "pass",
+      "scene_id": "04",
+      "message": "props passed visual review",
+      "suggestion": "Revise scene 04 with an explicit props correction.",
+      "evidence": true
+    },
+    {
+      "id": "caption_text",
+      "status": "pass",
+      "scene_id": "04",
+      "message": "caption_text passed visual review",
+      "suggestion": "Revise scene 04 with an explicit caption_text correction.",
+      "evidence": true
+    },
+    {
+      "id": "watermark",
+      "status": "pass",
+      "scene_id": "04",
+      "message": "watermark passed visual review",
+      "suggestion": "Revise scene 04 with an explicit watermark correction.",
+      "evidence": false
+    },
+    {
+      "id": "style",
+      "status": "pass",
+      "scene_id": "04",
+      "message": "style passed visual review",
+      "suggestion": "Revise scene 04 with an explicit style correction.",
+      "evidence": true
+    }
+  ],
+  "failed_scenes": [],
+  "revision_suggestions": [],
+  "vision_jobs": [
+    {
+      "id": "vision-01",
+      "scene_id": "01",
+      "assets": {
+        "text_image": null,
+        "bw": "examples/case-sprouting-note/01_bw.png",
+        "detail": null,
+        "color": "examples/case-sprouting-note/01_color.png"
+      },
+      "expected": {
+        "visual": "雨夜公交站，小满弯腰拾起纸袋。",
+        "caption": "加班回家的夜里，\n小满在公交站捡到一只\n被雨淋湿的纸袋。",
+        "characters": [],
+        "props": [],
+        "style": "minimalist Chinese diary comic, pure white background, uneven black felt-tip pen outlines, naive wobbly proportions, rough black crayon scribbles, sparse props, abundant negative space, selective muted wax-crayon color",
+        "forbidden": [
+          "watermark",
+          "logo",
+          "unrequested text",
+          "extra character"
+        ]
+      },
+      "prompt": null,
+      "checks": [
+        "scene_match",
+        "character_identity",
+        "character_count",
+        "props",
+        "caption_text",
+        "watermark",
+        "style"
+      ]
+    },
+    {
+      "id": "vision-02",
+      "scene_id": "02",
+      "assets": {
+        "text_image": null,
+        "bw": "examples/case-sprouting-note/02_bw.png",
+        "detail": null,
+        "color": "examples/case-sprouting-note/02_color.png"
+      },
+      "expected": {
+        "visual": "深夜室内，小满打开纸袋看见三颗种子。",
+        "caption": "她把纸袋带回家。\n里面只有三颗向日葵种子，\n和一张空白纸条。",
+        "characters": [],
+        "props": [],
+        "style": "minimalist Chinese diary comic, pure white background, uneven black felt-tip pen outlines, naive wobbly proportions, rough black crayon scribbles, sparse props, abundant negative space, selective muted wax-crayon color",
+        "forbidden": [
+          "watermark",
+          "logo",
+          "unrequested text",
+          "extra character"
+        ]
+      },
+      "prompt": null,
+      "checks": [
+        "scene_match",
+        "character_identity",
+        "character_count",
+        "props",
+        "caption_text",
+        "watermark",
+        "style"
+      ]
+    },
+    {
+      "id": "vision-03",
+      "scene_id": "03",
+      "assets": {
+        "text_image": null,
+        "bw": "examples/case-sprouting-note/03_bw.png",
+        "detail": null,
+        "color": "examples/case-sprouting-note/03_color.png"
+      },
+      "expected": {
+        "visual": "阳台上，小满给三个不同生长阶段的花盆浇水。",
+        "caption": "纸条上写着：\n“请替我看看它们开花。”\n她认真照料了九十天。",
+        "characters": [],
+        "props": [],
+        "style": "minimalist Chinese diary comic, pure white background, uneven black felt-tip pen outlines, naive wobbly proportions, rough black crayon scribbles, sparse props, abundant negative space, selective muted wax-crayon color",
+        "forbidden": [
+          "watermark",
+          "logo",
+          "unrequested text",
+          "extra character"
+        ]
+      },
+      "prompt": null,
+      "checks": [
+        "scene_match",
+        "character_identity",
+        "character_count",
+        "props",
+        "caption_text",
+        "watermark",
+        "style"
+      ]
+    },
+    {
+      "id": "vision-04",
+      "scene_id": "04",
+      "assets": {
+        "text_image": null,
+        "bw": "examples/case-sprouting-note/04_bw.png",
+        "detail": null,
+        "color": "examples/case-sprouting-note/04_color.png"
+      },
+      "expected": {
+        "visual": "清晨阳台，三朵向日葵盛开，小满安静微笑。",
+        "caption": "阳台亮起三朵小太阳。\n小满第一次觉得，\n这座城市也在等她回家。",
+        "characters": [],
+        "props": [],
+        "style": "minimalist Chinese diary comic, pure white background, uneven black felt-tip pen outlines, naive wobbly proportions, rough black crayon scribbles, sparse props, abundant negative space, selective muted wax-crayon color",
+        "forbidden": [
+          "watermark",
+          "logo",
+          "unrequested text",
+          "extra character"
+        ]
+      },
+      "prompt": null,
+      "checks": [
+        "scene_match",
+        "character_identity",
+        "character_count",
+        "props",
+        "caption_text",
+        "watermark",
+        "style"
+      ]
+    }
+  ]
+}

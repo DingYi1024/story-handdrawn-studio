@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-07-23
+
+### Added
+
+- A local automatic sound director that detects story mood and events, synthesizes original 48 kHz BGM/SFX, and aligns page-turn effects without a network call.
+- Semantic QA with truthful `needs_review` states, agent-readable vision jobs, strict observation mode, per-scene retake suggestions, and a self-contained local review page.
+- Review-decision import that preserves approved scenes and produces immutable revision jobs only for rejected scenes.
+- Image-provider catalog, automatic provider selection, explicit cost estimates, bounded retries, and persisted recovery state.
+- Five production templates, project schema v3 migration, metadata snapshots, safety backups, and reversible rollback.
+- Transition-focused QA sampling on both sides of every page flip and a three-platform GitHub Actions matrix.
+- V1 showcase evidence: 23 sampled frames, verified audio stream, all three nonblank page flips, 32/32 semantic checks, and a local review workspace.
+
+### Fixed
+
+- Invalid input image paths are now validated before project directories are created, preventing abandoned half-created projects.
+
+### Changed
+
+- The Skill now routes sound, provider recovery, semantic review, templates, migration, snapshots, and rollback through progressive reference guides.
+- Project state now records provider, review, snapshot, semantic, and automatic-audio artifacts.
+
 ## [0.5.1] - 2026-07-22
 
 ### Added

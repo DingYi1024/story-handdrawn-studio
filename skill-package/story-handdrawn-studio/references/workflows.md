@@ -19,6 +19,9 @@ python <SKILL_DIR>/scripts/run_story_video.py COMMAND [OPTIONS]
 | `audio` | Plan, prepare, mix, or disable optional audio | audio sidecars / mixed final |
 | `render` | Render and machine-check preview/final | `preview_ready` / `completed` |
 | `qa` | Re-run machine video QA without rendering | report plus sampled frames |
+| `semantic-qa` / `review` / `apply-review` | Semantic jobs and local scene approval loop | approved work or immutable retakes |
+| `providers` / `assets` | Select, estimate, run, and recover image jobs | persisted provider state |
+| `templates` / `migrate` / `snapshot` / `rollback` | Reuse genres and protect project state | versioned recoverability |
 | `resume` | Continue the saved production target | next truthful state |
 | `regress` | Compile all ten continuity regression cases | pass/fail summary |
 | `status` / `list` / `validate` / `doctor` | Inspect project or environment | no unintended content mutation |
@@ -55,7 +58,7 @@ python <SKILL_DIR>/scripts/run_story_video.py produce --project paper-summer --t
 
 Do not stop after only one scene, do not invent placeholder masters, and do not modify state by hand.
 
-Use `--generator api` only when the user explicitly selects direct API image generation and `OPENAI_API_KEY` is present. The normal Agent route is `codex`, where the Agent services the returned image jobs.
+Use `--generator auto` to choose OpenAI only when its key is present and otherwise return Codex jobs. Explicit `codex`, `openai`, and legacy `api` routes remain available.
 
 ## Manual stages
 

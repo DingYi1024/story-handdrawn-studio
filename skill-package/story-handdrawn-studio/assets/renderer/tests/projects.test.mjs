@@ -66,3 +66,19 @@ test('unsafe project identifiers and path escapes are rejected', () => {
   assert.throws(() => assertProjectId('../escape'), /Project id/);
   assert.throws(() => resolveInside('C:/safe', '..', 'escape'), /escapes/);
 });
+
+test('invalid image inputs do not leave a half-created project directory', () => {
+  const root = mkdtempSync(resolve(tmpdir(), 'story-studio-invalid-input-'));
+  try {
+    assert.throws(() => createProject({
+      repoRoot: root,
+      id: 'broken-images',
+      title: 'broken',
+      settings: createSettings(),
+      images: [resolve(root, 'missing.png')],
+    }), /does not exist/);
+    assert.equal(existsSync(resolve(root, 'projects', 'broken-images')), false);
+  } finally {
+    rmSync(root, {recursive: true, force: true});
+  }
+});

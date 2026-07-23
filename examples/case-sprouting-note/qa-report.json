@@ -1,15 +1,15 @@
 {
   "kind": "visual-qa-report",
   "schemaVersion": "1.0",
-  "generatedAt": "2026-07-22T16:01:52.806Z",
+  "generatedAt": "2026-07-23T01:48:40.976Z",
   "source": "examples/case-sprouting-note/final.mp4",
   "status": "pass_with_warnings",
   "passed": true,
   "summary": {
-    "pass": 9,
+    "pass": 10,
     "warn": 1,
     "fail": 0,
-    "total": 10
+    "total": 11
   },
   "metadata": {
     "width": 1080,
@@ -79,6 +79,39 @@
       },
       {
         "id": "frame-05",
+        "timeSec": 6.253333,
+        "roles": [
+          "transition",
+          "transition-1"
+        ],
+        "checks": [
+          "transition_non_blank"
+        ]
+      },
+      {
+        "id": "frame-06",
+        "timeSec": 6.333333,
+        "roles": [
+          "transition",
+          "transition-1"
+        ],
+        "checks": [
+          "transition_non_blank"
+        ]
+      },
+      {
+        "id": "frame-07",
+        "timeSec": 6.413333,
+        "roles": [
+          "transition",
+          "transition-1"
+        ],
+        "checks": [
+          "transition_non_blank"
+        ]
+      },
+      {
+        "id": "frame-08",
         "timeSec": 6.866667,
         "roles": [
           "timeline"
@@ -88,7 +121,7 @@
         ]
       },
       {
-        "id": "frame-06",
+        "id": "frame-09",
         "timeSec": 9.155556,
         "roles": [
           "timeline"
@@ -98,7 +131,7 @@
         ]
       },
       {
-        "id": "frame-07",
+        "id": "frame-10",
         "timeSec": 11.444444,
         "roles": [
           "timeline"
@@ -108,7 +141,40 @@
         ]
       },
       {
-        "id": "frame-08",
+        "id": "frame-11",
+        "timeSec": 12.786667,
+        "roles": [
+          "transition",
+          "transition-2"
+        ],
+        "checks": [
+          "transition_non_blank"
+        ]
+      },
+      {
+        "id": "frame-12",
+        "timeSec": 12.866667,
+        "roles": [
+          "transition",
+          "transition-2"
+        ],
+        "checks": [
+          "transition_non_blank"
+        ]
+      },
+      {
+        "id": "frame-13",
+        "timeSec": 12.946667,
+        "roles": [
+          "transition",
+          "transition-2"
+        ],
+        "checks": [
+          "transition_non_blank"
+        ]
+      },
+      {
+        "id": "frame-14",
         "timeSec": 13.733333,
         "roles": [
           "timeline"
@@ -118,7 +184,7 @@
         ]
       },
       {
-        "id": "frame-09",
+        "id": "frame-15",
         "timeSec": 16.022222,
         "roles": [
           "timeline"
@@ -128,7 +194,7 @@
         ]
       },
       {
-        "id": "frame-10",
+        "id": "frame-16",
         "timeSec": 18.311111,
         "roles": [
           "timeline"
@@ -138,7 +204,40 @@
         ]
       },
       {
-        "id": "frame-11",
+        "id": "frame-17",
+        "timeSec": 19.42,
+        "roles": [
+          "transition",
+          "transition-3"
+        ],
+        "checks": [
+          "transition_non_blank"
+        ]
+      },
+      {
+        "id": "frame-18",
+        "timeSec": 19.5,
+        "roles": [
+          "transition",
+          "transition-3"
+        ],
+        "checks": [
+          "transition_non_blank"
+        ]
+      },
+      {
+        "id": "frame-19",
+        "timeSec": 19.58,
+        "roles": [
+          "transition",
+          "transition-3"
+        ],
+        "checks": [
+          "transition_non_blank"
+        ]
+      },
+      {
+        "id": "frame-20",
         "timeSec": 20.6,
         "roles": [
           "timeline"
@@ -148,7 +247,7 @@
         ]
       },
       {
-        "id": "frame-12",
+        "id": "frame-21",
         "timeSec": 22.888889,
         "roles": [
           "timeline"
@@ -158,7 +257,7 @@
         ]
       },
       {
-        "id": "frame-13",
+        "id": "frame-22",
         "timeSec": 25.177778,
         "roles": [
           "timeline"
@@ -168,7 +267,7 @@
         ]
       },
       {
-        "id": "frame-14",
+        "id": "frame-23",
         "timeSec": 27.466667,
         "roles": [
           "timeline"
@@ -281,6 +380,81 @@
     },
     {
       "id": "frame-05",
+      "timeSec": 6.253333,
+      "roles": [
+        "transition",
+        "transition-1"
+      ],
+      "checks": [
+        "transition_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 239.59,
+        "lumaStdDev": 36.1,
+        "meanChroma": 0.02,
+        "chromaStdDev": 0.078,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.8059,
+        "colorPixelRatio": 0.0566,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-06",
+      "timeSec": 6.333333,
+      "roles": [
+        "transition",
+        "transition-1"
+      ],
+      "checks": [
+        "transition_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 239.59,
+        "lumaStdDev": 36.1,
+        "meanChroma": 0.02,
+        "chromaStdDev": 0.078,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.8059,
+        "colorPixelRatio": 0.0566,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-07",
+      "timeSec": 6.413333,
+      "roles": [
+        "transition",
+        "transition-1"
+      ],
+      "checks": [
+        "transition_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 239.21,
+        "lumaStdDev": 36.01,
+        "meanChroma": 0.0202,
+        "chromaStdDev": 0.0779,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.7976,
+        "colorPixelRatio": 0.0566,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-08",
       "timeSec": 6.866667,
       "roles": [
         "timeline"
@@ -304,7 +478,7 @@
       }
     },
     {
-      "id": "frame-06",
+      "id": "frame-09",
       "timeSec": 9.155556,
       "roles": [
         "timeline"
@@ -328,7 +502,7 @@
       }
     },
     {
-      "id": "frame-07",
+      "id": "frame-10",
       "timeSec": 11.444444,
       "roles": [
         "timeline"
@@ -352,7 +526,82 @@
       }
     },
     {
-      "id": "frame-08",
+      "id": "frame-11",
+      "timeSec": 12.786667,
+      "roles": [
+        "transition",
+        "transition-2"
+      ],
+      "checks": [
+        "transition_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 235.96,
+        "lumaStdDev": 45.7,
+        "meanChroma": 0.0246,
+        "chromaStdDev": 0.0836,
+        "darkPixelRatio": 0.0029,
+        "whitePixelRatio": 0.8018,
+        "colorPixelRatio": 0.082,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-12",
+      "timeSec": 12.866667,
+      "roles": [
+        "transition",
+        "transition-2"
+      ],
+      "checks": [
+        "transition_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 235.96,
+        "lumaStdDev": 45.69,
+        "meanChroma": 0.0246,
+        "chromaStdDev": 0.0836,
+        "darkPixelRatio": 0.0029,
+        "whitePixelRatio": 0.8018,
+        "colorPixelRatio": 0.082,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-13",
+      "timeSec": 12.946667,
+      "roles": [
+        "transition",
+        "transition-2"
+      ],
+      "checks": [
+        "transition_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 235.59,
+        "lumaStdDev": 45.59,
+        "meanChroma": 0.0248,
+        "chromaStdDev": 0.0835,
+        "darkPixelRatio": 0.0029,
+        "whitePixelRatio": 0.7935,
+        "colorPixelRatio": 0.082,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-14",
       "timeSec": 13.733333,
       "roles": [
         "timeline"
@@ -376,7 +625,7 @@
       }
     },
     {
-      "id": "frame-09",
+      "id": "frame-15",
       "timeSec": 16.022222,
       "roles": [
         "timeline"
@@ -400,7 +649,7 @@
       }
     },
     {
-      "id": "frame-10",
+      "id": "frame-16",
       "timeSec": 18.311111,
       "roles": [
         "timeline"
@@ -424,7 +673,82 @@
       }
     },
     {
-      "id": "frame-11",
+      "id": "frame-17",
+      "timeSec": 19.42,
+      "roles": [
+        "transition",
+        "transition-3"
+      ],
+      "checks": [
+        "transition_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 241.96,
+        "lumaStdDev": 32.91,
+        "meanChroma": 0.0222,
+        "chromaStdDev": 0.0831,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.8188,
+        "colorPixelRatio": 0.0671,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-18",
+      "timeSec": 19.5,
+      "roles": [
+        "transition",
+        "transition-3"
+      ],
+      "checks": [
+        "transition_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 241.96,
+        "lumaStdDev": 32.91,
+        "meanChroma": 0.0222,
+        "chromaStdDev": 0.0831,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.8188,
+        "colorPixelRatio": 0.0671,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-19",
+      "timeSec": 19.58,
+      "roles": [
+        "transition",
+        "transition-3"
+      ],
+      "checks": [
+        "transition_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 241.58,
+        "lumaStdDev": 32.84,
+        "meanChroma": 0.0224,
+        "chromaStdDev": 0.0831,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.8105,
+        "colorPixelRatio": 0.0671,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-20",
       "timeSec": 20.6,
       "roles": [
         "timeline"
@@ -448,7 +772,7 @@
       }
     },
     {
-      "id": "frame-12",
+      "id": "frame-21",
       "timeSec": 22.888889,
       "roles": [
         "timeline"
@@ -472,7 +796,7 @@
       }
     },
     {
-      "id": "frame-13",
+      "id": "frame-22",
       "timeSec": 25.177778,
       "roles": [
         "timeline"
@@ -496,7 +820,7 @@
       }
     },
     {
-      "id": "frame-14",
+      "id": "frame-23",
       "timeSec": 27.466667,
       "roles": [
         "timeline"
@@ -644,14 +968,23 @@
       "sampleIds": []
     },
     {
+      "id": "transition_extreme_frames",
+      "status": "pass",
+      "severity": "error",
+      "message": "All sampled transitions retain visible artwork",
+      "observed": [],
+      "expected": [],
+      "sampleIds": []
+    },
+    {
       "id": "duplicate_frame_hint",
       "status": "warn",
       "severity": "warning",
       "message": "Similar consecutive timeline samples may indicate a frozen or repeated section",
       "observed": [
         {
-          "from": "frame-12",
-          "to": "frame-13",
+          "from": "frame-21",
+          "to": "frame-22",
           "fromSec": 22.888889,
           "toSec": 25.177778,
           "distance": 0.00355
@@ -661,8 +994,8 @@
         "distanceGreaterThan": 0.008
       },
       "sampleIds": [
-        "frame-12",
-        "frame-13"
+        "frame-21",
+        "frame-22"
       ]
     }
   ],
@@ -674,8 +1007,8 @@
       "message": "Similar consecutive timeline samples may indicate a frozen or repeated section",
       "observed": [
         {
-          "from": "frame-12",
-          "to": "frame-13",
+          "from": "frame-21",
+          "to": "frame-22",
           "fromSec": 22.888889,
           "toSec": 25.177778,
           "distance": 0.00355
@@ -685,8 +1018,8 @@
         "distanceGreaterThan": 0.008
       },
       "sampleIds": [
-        "frame-12",
-        "frame-13"
+        "frame-21",
+        "frame-22"
       ]
     }
   ],
@@ -696,16 +1029,25 @@
       "examples/case-sprouting-note/qa-frames/frame-02-2.289s.jpg",
       "examples/case-sprouting-note/qa-frames/frame-03-4.578s.jpg",
       "examples/case-sprouting-note/qa-frames/frame-04-6.250s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-05-6.867s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-06-9.156s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-07-11.444s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-08-13.733s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-09-16.022s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-10-18.311s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-11-20.600s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-12-22.889s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-13-25.178s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-14-27.467s.jpg"
+      "examples/case-sprouting-note/qa-frames/frame-05-6.253s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-06-6.333s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-07-6.413s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-08-6.867s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-09-9.156s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-10-11.444s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-11-12.787s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-12-12.867s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-13-12.947s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-14-13.733s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-15-16.022s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-16-18.311s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-17-19.420s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-18-19.500s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-19-19.580s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-20-20.600s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-21-22.889s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-22-25.178s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-23-27.467s.jpg"
     ]
   },
   "inputName": "final.mp4"

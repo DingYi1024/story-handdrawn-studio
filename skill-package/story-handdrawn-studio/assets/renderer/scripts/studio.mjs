@@ -10,6 +10,7 @@ import {
   planSceneTimeline,
   writeAudioManifest,
 } from './lib/audio.mjs';
+import {createAutomaticAudioPlan, materializeAutomaticAudioPlan} from './lib/audio-director.mjs';
 import {
   computeContinuityImpact,
   createContinuityLedger,
@@ -22,14 +23,21 @@ import {
   prepareSceneRevision,
 } from './lib/director.mjs';
 import {calculatePreviewCanvas, createSettings, validateSettings} from './lib/presets.mjs';
+import {createSettingsFromTemplate, listTemplates} from './lib/templates.mjs';
+import {createProviderPlan, listProviders, readProviderState, resolveProvider} from './lib/providers.mjs';
+import {createSemanticQaReport} from './lib/semantic-qa.mjs';
+import {createReviewData, validateReviewDecisions, writeReviewWorkspace} from './lib/review.mjs';
 import {
   archiveProjectRevision,
   atomicWriteJson,
   createProject,
+  createProjectSnapshot,
   listProjects,
   loadProject,
+  persistProjectMigration,
   readJson,
   resolveInside,
+  restoreProjectSnapshot,
   updateProjectState,
   withProjectLock,
 } from './lib/projects.mjs';
@@ -66,17 +74,24 @@ Usage:
   node scripts/studio.mjs produce --project PROJECT [--to plan|assets|preview|final]
   node scripts/studio.mjs create --title "标题" --input story.txt [--preset portrait]
   node scripts/studio.mjs create --title "标题" --image page1.png [--image page2.png]
-  node scripts/studio.mjs plan --project PROJECT [--generator codex|api]
+  node scripts/studio.mjs plan --project PROJECT [--generator auto|codex|openai|api]
   node scripts/studio.mjs revise --project PROJECT --scene 01 --note "人物表情更克制"
   node scripts/studio.mjs continuity --project PROJECT [--apply continuity.json]
-  node scripts/studio.mjs audio --project PROJECT --action plan|prepare|mix|disable [OPTIONS]
+  node scripts/studio.mjs audio --project PROJECT --action auto|plan|prepare|mix|disable [OPTIONS]
   node scripts/studio.mjs render --project PROJECT [--quality preview|final]
   node scripts/studio.mjs qa --project PROJECT [--quality preview|final]
+  node scripts/studio.mjs semantic-qa --project PROJECT [--observations FILE] [--strict]
+  node scripts/studio.mjs review --project PROJECT
+  node scripts/studio.mjs apply-review --project PROJECT --input review.json
+  node scripts/studio.mjs providers|templates
+  node scripts/studio.mjs assets --project PROJECT --action plan|run|status|retry [--provider auto|codex|openai]
+  node scripts/studio.mjs migrate|snapshot|rollback --project PROJECT [OPTIONS]
   node scripts/studio.mjs resume --project PROJECT
   node scripts/studio.mjs regress [--json]
   node scripts/studio.mjs list|status|validate|doctor [OPTIONS]
 
 Audio options:
+  --audio auto (local procedural BGM and scene-aware sound effects)
   --enable --provider openai --voice alloy --model tts-1-hd
   --voiceover SCENE=FILE --bgm FILE --sfx SCENE=FILE [--audio-config FILE]
 
@@ -138,7 +153,8 @@ const durationSettings = (settings) => ({
 
 const createFromArgs = ({announce = true} = {}) => {
   const title = stringArg(args, 'title') || '未命名手绘故事';
-  const preset = stringArg(args, 'preset', 'portrait');
+  const template = stringArg(args, 'template');
+  const preset = stringArg(args, 'preset', template ? undefined : 'portrait');
   const canvasOverrides = {};
   for (const key of ['width', 'height', 'fps']) {
     const value = numberArg(args, key);
@@ -154,7 +170,9 @@ const createFromArgs = ({announce = true} = {}) => {
       ...(transitionSeconds !== undefined ? {seconds: transitionSeconds} : {}),
     };
   }
-  const settings = createSettings(preset, overrides);
+  const settings = template
+    ? createSettingsFromTemplate(template, preset, overrides)
+    : createSettings(preset, overrides);
   const inputPath = stringArg(args, 'input');
   const inlineText = stringArg(args, 'text');
   const images = (args.image || []).map((path) => resolve(process.cwd(), String(path)));
@@ -178,6 +196,10 @@ const createFromArgs = ({announce = true} = {}) => {
     storyText,
     images,
   });
+  if (template) {
+    result.project.template = template;
+    atomicWriteJson(result.paths.config, result.project);
+  }
   if (announce) print({project: result.project, directory: result.paths.project});
   return {...result, state: readJson(result.paths.state)};
 };
@@ -208,11 +230,13 @@ const statusFor = (id) => {
 
 const status = () => statusFor(requiredProject().project.id);
 
-const plan = async (loaded = requiredProject(), {announce = true} = {}) => {
+const plan = async (loaded = requiredProject(), {announce = true, generatorOverride = null} = {}) => {
   if (loaded.project.source.type !== 'story') throw new Error('plan requires a story project');
-  const generator = stringArg(args, 'generator', loaded.state?.production?.generator || 'codex');
+  const requestedGenerator = generatorOverride || stringArg(args, 'generator', loaded.state?.production?.generator || loaded.project.settings.provider?.id || 'auto');
+  const provider = requestedGenerator === 'api' ? 'openai' : resolveProvider(requestedGenerator);
+  const generator = provider === 'openai' ? 'api' : 'codex';
   const textMode = stringArg(args, 'text-mode', loaded.state?.production?.text_mode || 'font');
-  if (!['codex', 'api'].includes(generator)) throw new Error('--generator must be codex or api');
+  if (!['codex', 'api'].includes(generator)) throw new Error('--generator must be auto, codex, openai, or api');
   await runProjectAction(loaded, 'planning', async () => {
     const commandArgs = [
       '--input', resolveInside(loaded.paths.project, loaded.project.source.path),
@@ -274,6 +298,7 @@ const plan = async (loaded = requiredProject(), {announce = true} = {}) => {
         production: {
           ...(loaded.state?.production || {}),
           generator,
+          provider,
           text_mode: textMode,
           status: nextStatus,
         },
@@ -384,10 +409,12 @@ const buildAudioOptions = (loaded) => {
       sfx_volume: configured.mix?.sfx_volume ?? saved.mix?.sfx_volume ?? settings.sfx_volume ?? 0.35,
     },
   };
-  if (args.enable === true || args.audio === true) options.enabled = true;
+  const audioMode = stringArg(args, 'audio');
+  if (args.enable === true || args.audio === true || audioMode === 'auto') options.enabled = true;
   if (args.enable === false || args.audio === false) options.enabled = false;
   const provider = stringArg(args, 'provider');
   if (provider) options.tts.enabled = provider === 'openai';
+  options.automatic = audioMode === 'auto' || configured.automatic === true || saved.automatic === true || settings.provider === 'auto';
   const model = stringArg(args, 'model');
   const voice = stringArg(args, 'voice');
   if (model) options.tts.model = model;
@@ -474,9 +501,22 @@ const prepareAudio = async (loaded, storyboard, options = buildAudioOptions(load
     writeAudioManifest(loaded.paths.audioManifest, manifest);
     return {storyboard, manifest, options, changedSceneIds: []};
   }
-  const optionsHash = stableHash(options);
-  let planHash = audioPlanHash(storyboard, options);
-  const planned = planAudioManifest(storyboard, options);
+  let effectiveOptions = options;
+  if (options.automatic) {
+    const directorPlan = createAutomaticAudioPlan(storyboard, {mood: options.mood});
+    atomicWriteJson(loaded.paths.audioDirector, directorPlan);
+    const automatic = materializeAutomaticAudioPlan(directorPlan, loaded.paths.project);
+    effectiveOptions = {
+      ...options,
+      ...automatic,
+      automatic: true,
+      tts: options.tts?.enabled ? options.tts : automatic.tts,
+      mix: {...automatic.mix, ...options.mix},
+    };
+  }
+  const optionsHash = stableHash(effectiveOptions);
+  let planHash = audioPlanHash(storyboard, effectiveOptions);
+  const planned = planAudioManifest(storyboard, effectiveOptions);
   const plannedTracks = [
     ...planned.scenes.map((scene) => scene.voiceover).filter(Boolean),
     planned.bgm,
@@ -502,16 +542,16 @@ const prepareAudio = async (loaded, storyboard, options = buildAudioOptions(load
     loaded.project.settings.audio?.narration_tail_seconds ?? 0.45,
   );
   if (adjusted.changedSceneIds.length) {
-    manifest = mergeMaterializedAudio(planAudioManifest(adjusted.storyboard, options), manifest);
-    planHash = audioPlanHash(adjusted.storyboard, options);
+    manifest = mergeMaterializedAudio(planAudioManifest(adjusted.storyboard, effectiveOptions), manifest);
+    planHash = audioPlanHash(adjusted.storyboard, effectiveOptions);
     manifest.options_hash = optionsHash;
     manifest.plan_hash = planHash;
     atomicWriteJson(loaded.paths.storyboard, adjusted.storyboard);
     atomicWriteJson(loaded.paths.storyboardPlan, adjusted.storyboard);
   }
   writeAudioManifest(loaded.paths.audioManifest, manifest);
-  atomicWriteJson(loaded.paths.audioOptions, options);
-  return {...adjusted, manifest, options};
+  atomicWriteJson(loaded.paths.audioOptions, effectiveOptions);
+  return {...adjusted, manifest, options: effectiveOptions};
 };
 
 const runQaFor = (loaded, quality, videoPath, storyboard) => {
@@ -528,6 +568,9 @@ const runQaFor = (loaded, quality, videoPath, storyboard) => {
   const report = runVisualQa(videoPath, {
     colorAfterSec: generatedStory ? storyboard.scenes[0].duration_sec * 0.9 : Math.min(1, timeline.duration_sec * 0.25),
     timelineSamples: quality === 'preview' ? 7 : 11,
+    transitionTimes: storyboard.project.transition === 'page-flip'
+      ? timeline.scenes.slice(1).map((scene) => scene.start_sec)
+      : [],
     framesDir,
     expected: {
       width: previewCanvas.width,
@@ -537,13 +580,25 @@ const runQaFor = (loaded, quality, videoPath, storyboard) => {
       durationToleranceSec: Math.max(0.16, 2 / canvas.fps),
       firstMonochrome: generatedStory,
       colorAfterTitle: generatedStory,
+      hasAudio: existsSync(loaded.paths.audioManifest) && readJson(loaded.paths.audioManifest).enabled === true,
     },
   });
   atomicWriteJson(reportPath, report);
   if (!report.passed) {
     throw new Error(`Visual QA failed (${report.summary.fail} errors). Report: ${reportPath}`);
   }
-  return {report, reportPath, framesDir};
+  const semantic = createSemanticQaReport({
+    storyboard,
+    continuityLedger: existsSync(loaded.paths.continuityLedger) ? readJson(loaded.paths.continuityLedger) : null,
+    manifest: existsSync(loaded.paths.codexManifest) ? readJson(loaded.paths.codexManifest) : null,
+    observations: existsSync(loaded.paths.semanticObservations) ? readJson(loaded.paths.semanticObservations) : null,
+    publicDir,
+    strict: loaded.project.settings.review?.semantic_strict === true,
+  });
+  atomicWriteJson(loaded.paths.semanticReport, semantic);
+  atomicWriteJson(loaded.paths.visionJobs, {schema_version: 1, jobs: semantic.vision_jobs});
+  if (!semantic.passed) throw new Error(`Semantic QA failed for scenes: ${semantic.failed_scenes.join(', ')}`);
+  return {report, reportPath, framesDir, semantic};
 };
 
 const render = async (loaded = requiredProject(), forcedQuality = null, {announce = true} = {}) => {
@@ -601,6 +656,11 @@ const render = async (loaded = requiredProject(), forcedQuality = null, {announc
           ...(loaded.state?.qa || {}),
           [quality]: {status: qa.report.status, report: qa.reportPath, video: finalOutput},
         },
+        review: {
+          ...(loaded.state?.review || {}),
+          semantic_status: qa.semantic.status,
+          semantic_report: loaded.paths.semanticReport,
+        },
         audio: options.enabled
           ? {status: 'mixed', manifest: loaded.paths.audioManifest, video: finalOutput}
           : {status: 'disabled'},
@@ -620,6 +680,7 @@ const qa = async (loaded = requiredProject(), {announce = true} = {}) => {
   const result = runQaFor(loaded, quality, video, validated.storyboard);
   updateProjectState(loaded.paths, loaded.state.status, `${quality} machine QA passed`, null, {
     qa: {...(loaded.state?.qa || {}), [quality]: {status: result.report.status, report: result.reportPath, video}},
+    review: {...(loaded.state?.review || {}), semantic_status: result.semantic.status, semantic_report: loaded.paths.semanticReport},
   });
   const output = {ok: true, quality, video, report: result.reportPath, summary: result.report.summary};
   if (announce) print(output);
@@ -702,13 +763,13 @@ const produce = async () => {
   throw new Error('Automatic producer exceeded its safe step limit');
 };
 
-const revise = async (loaded = requiredProject()) => {
+const revise = async (loaded = requiredProject(), options = {}) => {
   if (loaded.project.source.type !== 'story') throw new Error('revise currently requires a generated story project');
-  const sceneIds = (args.scene || []).map(String);
+  const sceneIds = (options.sceneIds || args.scene || []).map(String);
   if (!sceneIds.length) throw new Error('Add at least one --scene SCENE_ID');
-  const note = stringArg(args, 'note');
+  const note = options.note || stringArg(args, 'note');
   if (!note) throw new Error('--note is required');
-  const target = stringArg(args, 'to', 'preview');
+  const target = options.target || stringArg(args, 'to', 'preview');
   if (!['assets', 'preview', 'final'].includes(target)) throw new Error('--to must be assets, preview, or final');
   for (const path of [loaded.paths.director, loaded.paths.storyboardPlan, loaded.paths.codexManifest, loaded.paths.continuitySpec, loaded.paths.continuityLedger]) {
     if (!existsSync(path)) throw new Error(`Revision metadata is missing: ${path}`);
@@ -723,7 +784,7 @@ const revise = async (loaded = requiredProject()) => {
     for (const scene of activeStoryboard?.scenes || []) {
       if (scene.assets?.color) currentAssetReferences[scene.id] = resolve(publicDir, scene.assets.color);
     }
-    const replacementTextRaw = stringArg(args, 'text');
+    const replacementTextRaw = options.text ?? stringArg(args, 'text');
     const replacementText = replacementTextRaw === undefined
       ? null
       : formatCaption(replacementTextRaw, {
@@ -740,7 +801,7 @@ const revise = async (loaded = requiredProject()) => {
       sceneIds,
       note,
       replacementText,
-      replacementNarration: stringArg(args, 'narration') ?? null,
+      replacementNarration: options.narration ?? stringArg(args, 'narration') ?? null,
       promptDirectory,
       currentAssetReferences,
     });
@@ -774,7 +835,7 @@ const revise = async (loaded = requiredProject()) => {
   });
   const refreshed = loadById(loaded.project.id);
   const pending = pendingCodexJobs(refreshed) || [];
-  print({
+  const output = {
     project: loaded.project.id,
     status: refreshed.state.status,
     revision: refreshed.state.current_revision,
@@ -784,7 +845,192 @@ const revise = async (loaded = requiredProject()) => {
       id, scene_id, prompt, prompt_file, references, output_master,
     })),
     resume: `produce --project ${loaded.project.id} --to ${refreshed.state.production?.target || 'preview'}`,
+  };
+  if (options.announce !== false) print(output);
+  return output;
+};
+
+const semanticQa = () => {
+  const loaded = requiredProject();
+  const storyboard = validateActive(loaded, false).storyboard;
+  const observationPath = stringArg(args, 'observations');
+  const observations = observationPath
+    ? readJson(resolve(process.cwd(), observationPath))
+    : existsSync(loaded.paths.semanticObservations)
+      ? readJson(loaded.paths.semanticObservations)
+      : null;
+  if (observationPath) atomicWriteJson(loaded.paths.semanticObservations, observations);
+  const report = createSemanticQaReport({
+    storyboard,
+    continuityLedger: existsSync(loaded.paths.continuityLedger) ? readJson(loaded.paths.continuityLedger) : null,
+    manifest: existsSync(loaded.paths.codexManifest) ? readJson(loaded.paths.codexManifest) : null,
+    observations,
+    publicDir,
+    strict: args.strict === true || loaded.project.settings.review?.semantic_strict === true,
   });
+  atomicWriteJson(loaded.paths.semanticReport, report);
+  atomicWriteJson(loaded.paths.visionJobs, {schema_version: 1, jobs: report.vision_jobs});
+  updateProjectState(loaded.paths, loaded.state.status, `Semantic QA ${report.status}`, null, {
+    review: {...(loaded.state.review || {}), semantic_status: report.status, semantic_report: loaded.paths.semanticReport},
+  });
+  print({ok: report.passed, status: report.status, report: loaded.paths.semanticReport, vision_jobs: loaded.paths.visionJobs, summary: report.summary});
+  if (!report.passed) process.exitCode = 1;
+};
+
+const review = () => {
+  const loaded = requiredProject();
+  const storyboard = validateActive(loaded, false).storyboard;
+  const semantic = existsSync(loaded.paths.semanticReport)
+    ? readJson(loaded.paths.semanticReport)
+    : createSemanticQaReport({
+        storyboard,
+        continuityLedger: existsSync(loaded.paths.continuityLedger) ? readJson(loaded.paths.continuityLedger) : null,
+        manifest: existsSync(loaded.paths.codexManifest) ? readJson(loaded.paths.codexManifest) : null,
+        publicDir,
+      });
+  const quality = existsSync(resolveInside(loaded.paths.qa, 'final', 'report.json')) ? 'final' : 'preview';
+  const qaPath = resolveInside(loaded.paths.qa, quality, 'report.json');
+  const data = createReviewData({
+    project: loaded.project,
+    storyboard,
+    qa: existsSync(qaPath) ? readJson(qaPath) : null,
+    semantic,
+    audio: existsSync(loaded.paths.audioOptions) ? readJson(loaded.paths.audioOptions) : null,
+    publicDir,
+  });
+  const result = writeReviewWorkspace({data, htmlPath: loaded.paths.reviewHtml, dataPath: loaded.paths.reviewData});
+  updateProjectState(loaded.paths, loaded.state.status, 'Local review workspace generated', null, {
+    review: {...(loaded.state.review || {}), status: 'awaiting_review', html: result.html},
+  });
+  print({ok: true, ...result, instruction: 'Open index.html in a browser, review every scene, then export the decision JSON.'});
+};
+
+const applyReview = async () => {
+  let loaded = requiredProject();
+  const inputPath = stringArg(args, 'input');
+  if (!inputPath) throw new Error('--input review.json is required');
+  const storyboard = validateActive(loaded, false).storyboard;
+  const decisions = validateReviewDecisions(
+    readJson(resolve(process.cwd(), inputPath)),
+    loaded.project.id,
+    storyboard.scenes.map((scene) => scene.id),
+  );
+  atomicWriteJson(loaded.paths.reviewDecisions, decisions);
+  const revisions = decisions.decisions.filter((item) => item.decision === 'revise');
+  if (!revisions.length) {
+    updateProjectState(loaded.paths, loaded.state.status, 'All scenes approved in local review', null, {
+      review: {status: 'approved', decisions: loaded.paths.reviewDecisions},
+    });
+    return print({ok: true, status: 'approved', decisions: loaded.paths.reviewDecisions});
+  }
+  const outputs = [];
+  for (const decision of revisions) {
+    loaded = loadById(loaded.project.id);
+    outputs.push(await revise(loaded, {
+      sceneIds: [String(decision.scene_id)],
+      note: String(decision.note),
+      target: stringArg(args, 'to', 'preview'),
+      announce: false,
+    }));
+  }
+  loaded = loadById(loaded.project.id);
+  updateProjectState(loaded.paths, loaded.state.status, `${revisions.length} review revisions prepared`, null, {
+    review: {status: 'revision_prepared', decisions: loaded.paths.reviewDecisions, scenes: revisions.map((item) => item.scene_id)},
+  });
+  print({ok: true, status: 'revision_prepared', revisions: outputs, next_action: `produce --project ${loaded.project.id} --to preview`});
+};
+
+const providerCatalog = () => print({selected: resolveProvider('auto'), providers: listProviders()});
+const templateCatalog = () => print({templates: listTemplates()});
+
+const providerManifestFor = (loaded) => {
+  if (existsSync(loaded.paths.codexManifest)) return readJson(loaded.paths.codexManifest);
+  const storyboardPath = existsSync(loaded.paths.storyboard) ? loaded.paths.storyboard : loaded.paths.storyboardPlan;
+  if (!existsSync(storyboardPath)) return {jobs: []};
+  const storyboard = readJson(storyboardPath);
+  return {
+    jobs: storyboard.scenes.map((scene) => ({
+      id: String(scene.id),
+      scene_id: String(scene.id),
+      prompt: scene.visual || '',
+      output_master: scene.assets?.color ? resolve(publicDir, scene.assets.color) : resolveInside(loaded.paths.publicAssets, `${scene.id}_master.png`),
+    })),
+  };
+};
+
+const assets = async () => {
+  let loaded = requiredProject();
+  const action = stringArg(args, 'action', 'status');
+  if (!['plan', 'run', 'status', 'retry'].includes(action)) throw new Error('--action must be plan, run, status, or retry');
+  if (action === 'status') return print({project: loaded.project.id, provider: readProviderState(loaded.paths.providerState)});
+  const requested = stringArg(args, 'provider', loaded.project.settings.provider?.id || 'auto');
+  const provider = resolveProvider(requested);
+  if (!existsSync(loaded.paths.codexManifest)) {
+    if (loaded.project.source.type === 'images') await ingest(loaded, {announce: false});
+    else await plan(loaded, {announce: false, generatorOverride: provider === 'openai' ? 'api' : 'codex'});
+    loaded = loadById(loaded.project.id);
+  }
+  let providerPlan = createProviderPlan(providerManifestFor(loaded), requested, {
+    maxAttempts: loaded.project.settings.provider?.max_attempts || 3,
+  });
+  atomicWriteJson(loaded.paths.providerState, providerPlan);
+  if (action === 'plan') return print(providerPlan);
+  if (providerPlan.status === 'completed') {
+    updateProjectState(loaded.paths, 'assets_ready', `${provider} assets are already complete`, null, {
+      provider: {status: 'completed', id: provider, state: loaded.paths.providerState},
+    });
+    return print(providerPlan);
+  }
+  if (provider === 'codex' || provider === 'files') {
+    updateProjectState(loaded.paths, 'awaiting_assets', `${provider} asset jobs prepared`, null, {
+      provider: {status: 'awaiting_external_execution', id: provider, state: loaded.paths.providerState},
+    });
+    return print({...providerPlan, action_required: provider === 'codex' ? 'Run the emitted image jobs with the host image tool, then resume.' : 'Place uploaded images in the declared outputs, then resume.'});
+  }
+  const attempts = Number(loaded.project.settings.provider?.max_attempts || 3);
+  let lastError = null;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      await plan(loaded, {announce: false, generatorOverride: 'api'});
+      loaded = loadById(loaded.project.id);
+      providerPlan = createProviderPlan(providerManifestFor(loaded), 'openai', {maxAttempts: attempts});
+      providerPlan.status = 'completed';
+      providerPlan.attempt = attempt;
+      atomicWriteJson(loaded.paths.providerState, providerPlan);
+      updateProjectState(loaded.paths, 'assets_ready', `OpenAI assets completed on attempt ${attempt}`, null, {provider: {status: 'completed', id: 'openai', state: loaded.paths.providerState}});
+      return print(providerPlan);
+    } catch (error) {
+      lastError = error;
+      providerPlan.status = attempt === attempts ? 'failed' : 'retrying';
+      providerPlan.attempt = attempt;
+      providerPlan.last_error = error.message;
+      atomicWriteJson(loaded.paths.providerState, providerPlan);
+    }
+  }
+  throw lastError;
+};
+
+const migrate = () => {
+  const loaded = requiredProject();
+  const result = persistProjectMigration(loaded.paths);
+  print({ok: true, from: result.from, to: result.to, changed: result.changed, changes: result.changes, backup_snapshot: result.snapshot || null});
+};
+
+const snapshot = () => {
+  const loaded = requiredProject();
+  const result = createProjectSnapshot(loaded.paths, stringArg(args, 'label', 'manual snapshot'));
+  updateProjectState(loaded.paths, loaded.state.status, `Snapshot ${result.id} created`, null, {
+    snapshots: [...(loaded.state.snapshots || []), {id: result.id, label: result.label, created_at: result.created_at}],
+  });
+  print({ok: true, ...result});
+};
+
+const rollback = () => {
+  const loaded = requiredProject();
+  const id = stringArg(args, 'snapshot');
+  if (!id) throw new Error('--snapshot s0001 is required');
+  const result = restoreProjectSnapshot(loaded.paths, id);
+  print({ok: true, ...result});
 };
 
 const continuity = () => {
@@ -813,7 +1059,7 @@ const continuity = () => {
 const audio = async () => {
   const loaded = requiredProject();
   const action = stringArg(args, 'action', 'plan');
-  if (!['plan', 'prepare', 'mix', 'disable'].includes(action)) throw new Error('--action must be plan, prepare, mix, or disable');
+  if (!['auto', 'plan', 'prepare', 'mix', 'disable'].includes(action)) throw new Error('--action must be auto, plan, prepare, mix, or disable');
   if (action === 'disable') {
     const options = {...buildAudioOptions(loaded), enabled: false};
     atomicWriteJson(loaded.paths.audioOptions, options);
@@ -827,6 +1073,16 @@ const audio = async () => {
   }
   const storyboard = validateActive(loaded, false).storyboard;
   const options = buildAudioOptions(loaded);
+  if (action === 'auto') {
+    options.enabled = true;
+    options.automatic = true;
+    const prepared = await prepareAudio(loaded, storyboard, options);
+    updateProjectState(loaded.paths, 'assets_ready', 'Automatic sound direction and procedural tracks prepared', null, {
+      audio: {status: 'prepared', mode: 'automatic', manifest: loaded.paths.audioManifest, director: loaded.paths.audioDirector},
+      production: {...(loaded.state.production || {}), target: 'final', status: 'assets_ready'},
+    });
+    return print({ok: true, mode: 'automatic', director: loaded.paths.audioDirector, manifest: loaded.paths.audioManifest, next_action: 'produce final'});
+  }
   if (action !== 'plan') options.enabled = true;
   atomicWriteJson(loaded.paths.audioOptions, options);
   if (action === 'plan') {
@@ -924,9 +1180,18 @@ try {
   else if (command === 'validate') validate();
   else if (command === 'render') await render();
   else if (command === 'qa') await qa();
+  else if (command === 'semantic-qa') semanticQa();
+  else if (command === 'review') review();
+  else if (command === 'apply-review') await applyReview();
   else if (command === 'revise') await revise();
   else if (command === 'continuity') continuity();
   else if (command === 'audio') await audio();
+  else if (command === 'providers') providerCatalog();
+  else if (command === 'templates') templateCatalog();
+  else if (command === 'assets') await assets();
+  else if (command === 'migrate') migrate();
+  else if (command === 'snapshot') snapshot();
+  else if (command === 'rollback') rollback();
   else if (command === 'resume') await resume();
   else if (command === 'regress') regress();
   else if (command === 'doctor') doctor();
