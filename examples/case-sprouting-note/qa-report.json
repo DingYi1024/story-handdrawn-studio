@@ -1,15 +1,15 @@
 {
   "kind": "visual-qa-report",
   "schemaVersion": "1.0",
-  "generatedAt": "2026-07-23T02:36:42.753Z",
+  "generatedAt": "2026-07-23T10:14:05.564Z",
   "source": "examples/case-sprouting-note/final.mp4",
   "status": "pass",
   "passed": true,
   "summary": {
-    "pass": 12,
+    "pass": 13,
     "warn": 0,
     "fail": 0,
-    "total": 12
+    "total": 13
   },
   "metadata": {
     "width": 1080,
@@ -49,6 +49,42 @@
       },
       {
         "id": "frame-02",
+        "timeSec": 1.866667,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-1",
+          "before"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-03",
+        "timeSec": 1.9,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-1",
+          "boundary"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-04",
+        "timeSec": 1.933333,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-1",
+          "after"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-05",
         "timeSec": 2.288889,
         "roles": [
           "timeline"
@@ -58,7 +94,7 @@
         ]
       },
       {
-        "id": "frame-03",
+        "id": "frame-06",
         "timeSec": 3.616667,
         "roles": [
           "motion-cut",
@@ -69,7 +105,7 @@
         ]
       },
       {
-        "id": "frame-04",
+        "id": "frame-07",
         "timeSec": 3.716667,
         "roles": [
           "motion-cut",
@@ -80,7 +116,7 @@
         ]
       },
       {
-        "id": "frame-05",
+        "id": "frame-08",
         "timeSec": 4.577778,
         "roles": [
           "timeline"
@@ -90,7 +126,7 @@
         ]
       },
       {
-        "id": "frame-06",
+        "id": "frame-09",
         "timeSec": 6.25,
         "roles": [
           "after_title"
@@ -100,7 +136,7 @@
         ]
       },
       {
-        "id": "frame-07",
+        "id": "frame-10",
         "timeSec": 6.253333,
         "roles": [
           "transition",
@@ -111,7 +147,7 @@
         ]
       },
       {
-        "id": "frame-08",
+        "id": "frame-11",
         "timeSec": 6.333333,
         "roles": [
           "transition",
@@ -122,7 +158,7 @@
         ]
       },
       {
-        "id": "frame-09",
+        "id": "frame-12",
         "timeSec": 6.413333,
         "roles": [
           "transition",
@@ -133,7 +169,7 @@
         ]
       },
       {
-        "id": "frame-10",
+        "id": "frame-13",
         "timeSec": 6.866667,
         "roles": [
           "timeline"
@@ -143,7 +179,43 @@
         ]
       },
       {
-        "id": "frame-11",
+        "id": "frame-14",
+        "timeSec": 8.866667,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-2",
+          "before"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-15",
+        "timeSec": 8.9,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-2",
+          "boundary"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-16",
+        "timeSec": 8.933333,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-2",
+          "after"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-17",
         "timeSec": 9.155556,
         "roles": [
           "timeline"
@@ -153,7 +225,7 @@
         ]
       },
       {
-        "id": "frame-12",
+        "id": "frame-18",
         "timeSec": 10.45,
         "roles": [
           "motion-cut",
@@ -164,7 +236,7 @@
         ]
       },
       {
-        "id": "frame-13",
+        "id": "frame-19",
         "timeSec": 10.55,
         "roles": [
           "motion-cut",
@@ -175,7 +247,7 @@
         ]
       },
       {
-        "id": "frame-14",
+        "id": "frame-20",
         "timeSec": 11.444444,
         "roles": [
           "timeline"
@@ -185,7 +257,7 @@
         ]
       },
       {
-        "id": "frame-15",
+        "id": "frame-21",
         "timeSec": 12.786667,
         "roles": [
           "transition",
@@ -196,7 +268,7 @@
         ]
       },
       {
-        "id": "frame-16",
+        "id": "frame-22",
         "timeSec": 12.866667,
         "roles": [
           "transition",
@@ -207,7 +279,7 @@
         ]
       },
       {
-        "id": "frame-17",
+        "id": "frame-23",
         "timeSec": 12.946667,
         "roles": [
           "transition",
@@ -218,7 +290,7 @@
         ]
       },
       {
-        "id": "frame-18",
+        "id": "frame-24",
         "timeSec": 13.733333,
         "roles": [
           "timeline"
@@ -228,7 +300,43 @@
         ]
       },
       {
-        "id": "frame-19",
+        "id": "frame-25",
+        "timeSec": 15.433334,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-3",
+          "before"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-26",
+        "timeSec": 15.466667,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-3",
+          "boundary"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-27",
+        "timeSec": 15.5,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-3",
+          "after"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-28",
         "timeSec": 16.022222,
         "roles": [
           "timeline"
@@ -238,7 +346,7 @@
         ]
       },
       {
-        "id": "frame-20",
+        "id": "frame-29",
         "timeSec": 17.016667,
         "roles": [
           "motion-cut",
@@ -249,7 +357,7 @@
         ]
       },
       {
-        "id": "frame-21",
+        "id": "frame-30",
         "timeSec": 17.116667,
         "roles": [
           "motion-cut",
@@ -260,7 +368,7 @@
         ]
       },
       {
-        "id": "frame-22",
+        "id": "frame-31",
         "timeSec": 18.311111,
         "roles": [
           "timeline"
@@ -270,7 +378,7 @@
         ]
       },
       {
-        "id": "frame-23",
+        "id": "frame-32",
         "timeSec": 19.42,
         "roles": [
           "transition",
@@ -281,7 +389,7 @@
         ]
       },
       {
-        "id": "frame-24",
+        "id": "frame-33",
         "timeSec": 19.5,
         "roles": [
           "transition",
@@ -292,7 +400,7 @@
         ]
       },
       {
-        "id": "frame-25",
+        "id": "frame-34",
         "timeSec": 19.58,
         "roles": [
           "transition",
@@ -303,7 +411,7 @@
         ]
       },
       {
-        "id": "frame-26",
+        "id": "frame-35",
         "timeSec": 20.6,
         "roles": [
           "timeline"
@@ -313,7 +421,43 @@
         ]
       },
       {
-        "id": "frame-27",
+        "id": "frame-36",
+        "timeSec": 22.466667,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-4",
+          "before"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-37",
+        "timeSec": 22.5,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-4",
+          "boundary"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-38",
+        "timeSec": 22.533333,
+        "roles": [
+          "caption-color-handoff",
+          "caption-color-handoff-4",
+          "after"
+        ],
+        "checks": [
+          "caption_color_handoff"
+        ]
+      },
+      {
+        "id": "frame-39",
         "timeSec": 22.888889,
         "roles": [
           "timeline"
@@ -323,7 +467,7 @@
         ]
       },
       {
-        "id": "frame-28",
+        "id": "frame-40",
         "timeSec": 24.45,
         "roles": [
           "motion-cut",
@@ -334,7 +478,7 @@
         ]
       },
       {
-        "id": "frame-29",
+        "id": "frame-41",
         "timeSec": 24.55,
         "roles": [
           "motion-cut",
@@ -345,7 +489,7 @@
         ]
       },
       {
-        "id": "frame-30",
+        "id": "frame-42",
         "timeSec": 25.177778,
         "roles": [
           "timeline"
@@ -355,7 +499,7 @@
         ]
       },
       {
-        "id": "frame-31",
+        "id": "frame-43",
         "timeSec": 27.466667,
         "roles": [
           "timeline"
@@ -396,20 +540,22 @@
     },
     {
       "id": "frame-02",
-      "timeSec": 2.288889,
+      "timeSec": 1.866667,
       "roles": [
-        "timeline"
+        "caption-color-handoff",
+        "caption-color-handoff-1",
+        "before"
       ],
       "checks": [
-        "black_or_white_frame"
+        "caption_color_handoff"
       ],
       "metrics": {
-        "meanLuma": 241.15,
-        "lumaStdDev": 34.73,
-        "meanChroma": 0.0003,
-        "chromaStdDev": 0.0015,
+        "meanLuma": 241.28,
+        "lumaStdDev": 34.6,
+        "meanChroma": 0.0004,
+        "chromaStdDev": 0.0018,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.813,
+        "whitePixelRatio": 0.8186,
         "colorPixelRatio": 0,
         "isBlack": false,
         "isWhite": false,
@@ -420,21 +566,22 @@
     },
     {
       "id": "frame-03",
-      "timeSec": 3.616667,
+      "timeSec": 1.9,
       "roles": [
-        "motion-cut",
-        "motion-cut-1"
+        "caption-color-handoff",
+        "caption-color-handoff-1",
+        "boundary"
       ],
       "checks": [
-        "motion_cut_non_blank"
+        "caption_color_handoff"
       ],
       "metrics": {
-        "meanLuma": 240.83,
-        "lumaStdDev": 35.09,
-        "meanChroma": 0.0003,
-        "chromaStdDev": 0.0015,
+        "meanLuma": 241.25,
+        "lumaStdDev": 34.61,
+        "meanChroma": 0.0007,
+        "chromaStdDev": 0.0024,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.8088,
+        "whitePixelRatio": 0.8179,
         "colorPixelRatio": 0,
         "isBlack": false,
         "isWhite": false,
@@ -445,21 +592,22 @@
     },
     {
       "id": "frame-04",
-      "timeSec": 3.716667,
+      "timeSec": 1.933333,
       "roles": [
-        "motion-cut",
-        "motion-cut-1"
+        "caption-color-handoff",
+        "caption-color-handoff-1",
+        "after"
       ],
       "checks": [
-        "motion_cut_non_blank"
+        "caption_color_handoff"
       ],
       "metrics": {
-        "meanLuma": 239.33,
-        "lumaStdDev": 36.82,
-        "meanChroma": 0.0003,
-        "chromaStdDev": 0.0015,
+        "meanLuma": 240.97,
+        "lumaStdDev": 34.83,
+        "meanChroma": 0.0028,
+        "chromaStdDev": 0.0102,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.7876,
+        "whitePixelRatio": 0.8152,
         "colorPixelRatio": 0,
         "isBlack": false,
         "isWhite": false,
@@ -470,7 +618,7 @@
     },
     {
       "id": "frame-05",
-      "timeSec": 4.577778,
+      "timeSec": 2.288889,
       "roles": [
         "timeline"
       ],
@@ -478,37 +626,38 @@
         "black_or_white_frame"
       ],
       "metrics": {
-        "meanLuma": 237.63,
-        "lumaStdDev": 38.11,
-        "meanChroma": 0.019,
-        "chromaStdDev": 0.0817,
+        "meanLuma": 240.14,
+        "lumaStdDev": 35.48,
+        "meanChroma": 0.0091,
+        "chromaStdDev": 0.0341,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.7742,
-        "colorPixelRatio": 0.0522,
+        "whitePixelRatio": 0.8054,
+        "colorPixelRatio": 0.043,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
         "isMonochrome": false,
-        "hasColor": true
+        "hasColor": false
       }
     },
     {
       "id": "frame-06",
-      "timeSec": 6.25,
+      "timeSec": 3.616667,
       "roles": [
-        "after_title"
+        "motion-cut",
+        "motion-cut-1"
       ],
       "checks": [
-        "color_after_title"
+        "motion_cut_non_blank"
       ],
       "metrics": {
-        "meanLuma": 236.45,
-        "lumaStdDev": 39.18,
-        "meanChroma": 0.0263,
-        "chromaStdDev": 0.0891,
+        "meanLuma": 238.67,
+        "lumaStdDev": 37.02,
+        "meanChroma": 0.0193,
+        "chromaStdDev": 0.0713,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.7688,
-        "colorPixelRatio": 0.0771,
+        "whitePixelRatio": 0.792,
+        "colorPixelRatio": 0.062,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -518,6 +667,79 @@
     },
     {
       "id": "frame-07",
+      "timeSec": 3.716667,
+      "roles": [
+        "motion-cut",
+        "motion-cut-1"
+      ],
+      "checks": [
+        "motion_cut_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 236.67,
+        "lumaStdDev": 38.95,
+        "meanChroma": 0.0236,
+        "chromaStdDev": 0.0801,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.7693,
+        "colorPixelRatio": 0.0737,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-08",
+      "timeSec": 4.577778,
+      "roles": [
+        "timeline"
+      ],
+      "checks": [
+        "black_or_white_frame"
+      ],
+      "metrics": {
+        "meanLuma": 236.45,
+        "lumaStdDev": 39.16,
+        "meanChroma": 0.0262,
+        "chromaStdDev": 0.0892,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.7695,
+        "colorPixelRatio": 0.0767,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-09",
+      "timeSec": 6.25,
+      "roles": [
+        "after_title"
+      ],
+      "checks": [
+        "color_after_title"
+      ],
+      "metrics": {
+        "meanLuma": 236.45,
+        "lumaStdDev": 39.17,
+        "meanChroma": 0.0263,
+        "chromaStdDev": 0.0892,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.7688,
+        "colorPixelRatio": 0.0776,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-10",
       "timeSec": 6.253333,
       "roles": [
         "transition",
@@ -528,12 +750,12 @@
       ],
       "metrics": {
         "meanLuma": 236.45,
-        "lumaStdDev": 39.18,
+        "lumaStdDev": 39.17,
         "meanChroma": 0.0263,
-        "chromaStdDev": 0.0891,
+        "chromaStdDev": 0.0892,
         "darkPixelRatio": 0,
         "whitePixelRatio": 0.7688,
-        "colorPixelRatio": 0.0771,
+        "colorPixelRatio": 0.0776,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -542,7 +764,7 @@
       }
     },
     {
-      "id": "frame-08",
+      "id": "frame-11",
       "timeSec": 6.333333,
       "roles": [
         "transition",
@@ -558,7 +780,7 @@
         "chromaStdDev": 0.0893,
         "darkPixelRatio": 0,
         "whitePixelRatio": 0.7678,
-        "colorPixelRatio": 0.0781,
+        "colorPixelRatio": 0.0776,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -567,7 +789,7 @@
       }
     },
     {
-      "id": "frame-09",
+      "id": "frame-12",
       "timeSec": 6.413333,
       "roles": [
         "transition",
@@ -577,7 +799,7 @@
         "transition_non_blank"
       ],
       "metrics": {
-        "meanLuma": 236.02,
+        "meanLuma": 236.01,
         "lumaStdDev": 39.17,
         "meanChroma": 0.0265,
         "chromaStdDev": 0.0892,
@@ -592,7 +814,7 @@
       }
     },
     {
-      "id": "frame-10",
+      "id": "frame-13",
       "timeSec": 6.866667,
       "roles": [
         "timeline"
@@ -601,87 +823,13 @@
         "black_or_white_frame"
       ],
       "metrics": {
-        "meanLuma": 236.17,
+        "meanLuma": 236.18,
         "lumaStdDev": 40.55,
         "meanChroma": 0.0082,
-        "chromaStdDev": 0.0316,
+        "chromaStdDev": 0.0317,
         "darkPixelRatio": 0.0078,
-        "whitePixelRatio": 0.7107,
-        "colorPixelRatio": 0.0088,
-        "isBlack": false,
-        "isWhite": false,
-        "isBlank": false,
-        "isMonochrome": true,
-        "hasColor": false
-      }
-    },
-    {
-      "id": "frame-11",
-      "timeSec": 9.155556,
-      "roles": [
-        "timeline"
-      ],
-      "checks": [
-        "black_or_white_frame"
-      ],
-      "metrics": {
-        "meanLuma": 237.46,
-        "lumaStdDev": 45.02,
-        "meanChroma": 0.0002,
-        "chromaStdDev": 0.0012,
-        "darkPixelRatio": 0.009,
-        "whitePixelRatio": 0.7979,
-        "colorPixelRatio": 0,
-        "isBlack": false,
-        "isWhite": false,
-        "isBlank": false,
-        "isMonochrome": true,
-        "hasColor": false
-      }
-    },
-    {
-      "id": "frame-12",
-      "timeSec": 10.45,
-      "roles": [
-        "motion-cut",
-        "motion-cut-2"
-      ],
-      "checks": [
-        "motion_cut_non_blank"
-      ],
-      "metrics": {
-        "meanLuma": 237.44,
-        "lumaStdDev": 45.39,
-        "meanChroma": 0.0002,
-        "chromaStdDev": 0.0012,
-        "darkPixelRatio": 0.0105,
-        "whitePixelRatio": 0.8,
-        "colorPixelRatio": 0,
-        "isBlack": false,
-        "isWhite": false,
-        "isBlank": false,
-        "isMonochrome": true,
-        "hasColor": false
-      }
-    },
-    {
-      "id": "frame-13",
-      "timeSec": 10.55,
-      "roles": [
-        "motion-cut",
-        "motion-cut-2"
-      ],
-      "checks": [
-        "motion_cut_non_blank"
-      ],
-      "metrics": {
-        "meanLuma": 233.94,
-        "lumaStdDev": 49.25,
-        "meanChroma": 0.0012,
-        "chromaStdDev": 0.017,
-        "darkPixelRatio": 0.0159,
-        "whitePixelRatio": 0.7666,
-        "colorPixelRatio": 0.0034,
+        "whitePixelRatio": 0.7109,
+        "colorPixelRatio": 0.0093,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -691,7 +839,85 @@
     },
     {
       "id": "frame-14",
-      "timeSec": 11.444444,
+      "timeSec": 8.866667,
+      "roles": [
+        "caption-color-handoff",
+        "caption-color-handoff-2",
+        "before"
+      ],
+      "checks": [
+        "caption_color_handoff"
+      ],
+      "metrics": {
+        "meanLuma": 237.49,
+        "lumaStdDev": 45.25,
+        "meanChroma": 0.0002,
+        "chromaStdDev": 0.0012,
+        "darkPixelRatio": 0.01,
+        "whitePixelRatio": 0.8022,
+        "colorPixelRatio": 0,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": true,
+        "hasColor": false
+      }
+    },
+    {
+      "id": "frame-15",
+      "timeSec": 8.9,
+      "roles": [
+        "caption-color-handoff",
+        "caption-color-handoff-2",
+        "boundary"
+      ],
+      "checks": [
+        "caption_color_handoff"
+      ],
+      "metrics": {
+        "meanLuma": 237.44,
+        "lumaStdDev": 45.28,
+        "meanChroma": 0.0002,
+        "chromaStdDev": 0.0012,
+        "darkPixelRatio": 0.0098,
+        "whitePixelRatio": 0.8025,
+        "colorPixelRatio": 0,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": true,
+        "hasColor": false
+      }
+    },
+    {
+      "id": "frame-16",
+      "timeSec": 8.933333,
+      "roles": [
+        "caption-color-handoff",
+        "caption-color-handoff-2",
+        "after"
+      ],
+      "checks": [
+        "caption_color_handoff"
+      ],
+      "metrics": {
+        "meanLuma": 237.15,
+        "lumaStdDev": 45.43,
+        "meanChroma": 0.0035,
+        "chromaStdDev": 0.0114,
+        "darkPixelRatio": 0.0088,
+        "whitePixelRatio": 0.8008,
+        "colorPixelRatio": 0,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": true,
+        "hasColor": false
+      }
+    },
+    {
+      "id": "frame-17",
+      "timeSec": 9.155556,
       "roles": [
         "timeline"
       ],
@@ -699,13 +925,38 @@
         "black_or_white_frame"
       ],
       "metrics": {
-        "meanLuma": 230.68,
-        "lumaStdDev": 51.85,
-        "meanChroma": 0.0309,
-        "chromaStdDev": 0.0958,
-        "darkPixelRatio": 0.0146,
-        "whitePixelRatio": 0.7493,
-        "colorPixelRatio": 0.1001,
+        "meanLuma": 236.68,
+        "lumaStdDev": 45.45,
+        "meanChroma": 0.0093,
+        "chromaStdDev": 0.0307,
+        "darkPixelRatio": 0.0078,
+        "whitePixelRatio": 0.7927,
+        "colorPixelRatio": 0.0381,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": false
+      }
+    },
+    {
+      "id": "frame-18",
+      "timeSec": 10.45,
+      "roles": [
+        "motion-cut",
+        "motion-cut-2"
+      ],
+      "checks": [
+        "motion_cut_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 235.51,
+        "lumaStdDev": 46.66,
+        "meanChroma": 0.0222,
+        "chromaStdDev": 0.0737,
+        "darkPixelRatio": 0.0061,
+        "whitePixelRatio": 0.7947,
+        "colorPixelRatio": 0.0818,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -714,7 +965,56 @@
       }
     },
     {
-      "id": "frame-15",
+      "id": "frame-19",
+      "timeSec": 10.55,
+      "roles": [
+        "motion-cut",
+        "motion-cut-2"
+      ],
+      "checks": [
+        "motion_cut_non_blank"
+      ],
+      "metrics": {
+        "meanLuma": 231.41,
+        "lumaStdDev": 50.71,
+        "meanChroma": 0.0288,
+        "chromaStdDev": 0.0855,
+        "darkPixelRatio": 0.0081,
+        "whitePixelRatio": 0.7595,
+        "colorPixelRatio": 0.0996,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-20",
+      "timeSec": 11.444444,
+      "roles": [
+        "timeline"
+      ],
+      "checks": [
+        "black_or_white_frame"
+      ],
+      "metrics": {
+        "meanLuma": 230.5,
+        "lumaStdDev": 51.55,
+        "meanChroma": 0.0333,
+        "chromaStdDev": 0.0969,
+        "darkPixelRatio": 0.0073,
+        "whitePixelRatio": 0.7493,
+        "colorPixelRatio": 0.1108,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-21",
       "timeSec": 12.786667,
       "roles": [
         "transition",
@@ -727,9 +1027,9 @@
         "meanLuma": 229.25,
         "lumaStdDev": 53.08,
         "meanChroma": 0.0357,
-        "chromaStdDev": 0.1012,
+        "chromaStdDev": 0.1011,
         "darkPixelRatio": 0.0071,
-        "whitePixelRatio": 0.7424,
+        "whitePixelRatio": 0.7427,
         "colorPixelRatio": 0.1157,
         "isBlack": false,
         "isWhite": false,
@@ -739,7 +1039,7 @@
       }
     },
     {
-      "id": "frame-16",
+      "id": "frame-22",
       "timeSec": 12.866667,
       "roles": [
         "transition",
@@ -749,12 +1049,12 @@
         "transition_non_blank"
       ],
       "metrics": {
-        "meanLuma": 229.23,
+        "meanLuma": 229.24,
         "lumaStdDev": 53.1,
         "meanChroma": 0.0357,
         "chromaStdDev": 0.1012,
         "darkPixelRatio": 0.0071,
-        "whitePixelRatio": 0.7424,
+        "whitePixelRatio": 0.7427,
         "colorPixelRatio": 0.1157,
         "isBlack": false,
         "isWhite": false,
@@ -764,7 +1064,7 @@
       }
     },
     {
-      "id": "frame-17",
+      "id": "frame-23",
       "timeSec": 12.946667,
       "roles": [
         "transition",
@@ -774,12 +1074,12 @@
         "transition_non_blank"
       ],
       "metrics": {
-        "meanLuma": 228.87,
+        "meanLuma": 228.88,
         "lumaStdDev": 52.97,
-        "meanChroma": 0.036,
-        "chromaStdDev": 0.1011,
+        "meanChroma": 0.0359,
+        "chromaStdDev": 0.101,
         "darkPixelRatio": 0.0071,
-        "whitePixelRatio": 0.7346,
+        "whitePixelRatio": 0.7351,
         "colorPixelRatio": 0.1157,
         "isBlack": false,
         "isWhite": false,
@@ -789,7 +1089,7 @@
       }
     },
     {
-      "id": "frame-18",
+      "id": "frame-24",
       "timeSec": 13.733333,
       "roles": [
         "timeline"
@@ -813,21 +1113,23 @@
       }
     },
     {
-      "id": "frame-19",
-      "timeSec": 16.022222,
+      "id": "frame-25",
+      "timeSec": 15.433334,
       "roles": [
-        "timeline"
+        "caption-color-handoff",
+        "caption-color-handoff-3",
+        "before"
       ],
       "checks": [
-        "black_or_white_frame"
+        "caption_color_handoff"
       ],
       "metrics": {
-        "meanLuma": 243.66,
-        "lumaStdDev": 31.52,
+        "meanLuma": 243.78,
+        "lumaStdDev": 31.24,
         "meanChroma": 0.0002,
         "chromaStdDev": 0.0011,
-        "darkPixelRatio": 0.0002,
-        "whitePixelRatio": 0.8347,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.8318,
         "colorPixelRatio": 0,
         "isBlack": false,
         "isWhite": false,
@@ -837,7 +1139,83 @@
       }
     },
     {
-      "id": "frame-20",
+      "id": "frame-26",
+      "timeSec": 15.466667,
+      "roles": [
+        "caption-color-handoff",
+        "caption-color-handoff-3",
+        "boundary"
+      ],
+      "checks": [
+        "caption_color_handoff"
+      ],
+      "metrics": {
+        "meanLuma": 243.75,
+        "lumaStdDev": 31.32,
+        "meanChroma": 0.0002,
+        "chromaStdDev": 0.0011,
+        "darkPixelRatio": 0.0002,
+        "whitePixelRatio": 0.832,
+        "colorPixelRatio": 0,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": true,
+        "hasColor": false
+      }
+    },
+    {
+      "id": "frame-27",
+      "timeSec": 15.5,
+      "roles": [
+        "caption-color-handoff",
+        "caption-color-handoff-3",
+        "after"
+      ],
+      "checks": [
+        "caption_color_handoff"
+      ],
+      "metrics": {
+        "meanLuma": 243.54,
+        "lumaStdDev": 31.41,
+        "meanChroma": 0.0026,
+        "chromaStdDev": 0.0098,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.8286,
+        "colorPixelRatio": 0,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": true,
+        "hasColor": false
+      }
+    },
+    {
+      "id": "frame-28",
+      "timeSec": 16.022222,
+      "roles": [
+        "timeline"
+      ],
+      "checks": [
+        "black_or_white_frame"
+      ],
+      "metrics": {
+        "meanLuma": 242.55,
+        "lumaStdDev": 32.36,
+        "meanChroma": 0.0122,
+        "chromaStdDev": 0.045,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.8218,
+        "colorPixelRatio": 0.0459,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-29",
       "timeSec": 17.016667,
       "roles": [
         "motion-cut",
@@ -847,22 +1225,22 @@
         "motion_cut_non_blank"
       ],
       "metrics": {
-        "meanLuma": 243.45,
-        "lumaStdDev": 31.69,
-        "meanChroma": 0.0006,
-        "chromaStdDev": 0.0057,
+        "meanLuma": 241.66,
+        "lumaStdDev": 33.3,
+        "meanChroma": 0.0205,
+        "chromaStdDev": 0.0748,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.8298,
-        "colorPixelRatio": 0.001,
+        "whitePixelRatio": 0.8118,
+        "colorPixelRatio": 0.0642,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
-        "isMonochrome": true,
-        "hasColor": false
+        "isMonochrome": false,
+        "hasColor": true
       }
     },
     {
-      "id": "frame-21",
+      "id": "frame-30",
       "timeSec": 17.116667,
       "roles": [
         "motion-cut",
@@ -872,37 +1250,13 @@
         "motion_cut_non_blank"
       ],
       "metrics": {
-        "meanLuma": 241.17,
-        "lumaStdDev": 34.46,
-        "meanChroma": 0.0012,
-        "chromaStdDev": 0.0114,
-        "darkPixelRatio": 0.0005,
-        "whitePixelRatio": 0.7993,
-        "colorPixelRatio": 0.0044,
-        "isBlack": false,
-        "isWhite": false,
-        "isBlank": false,
-        "isMonochrome": true,
-        "hasColor": false
-      }
-    },
-    {
-      "id": "frame-22",
-      "timeSec": 18.311111,
-      "roles": [
-        "timeline"
-      ],
-      "checks": [
-        "black_or_white_frame"
-      ],
-      "metrics": {
-        "meanLuma": 238.81,
-        "lumaStdDev": 36.41,
-        "meanChroma": 0.0293,
-        "chromaStdDev": 0.0964,
+        "meanLuma": 239,
+        "lumaStdDev": 36.22,
+        "meanChroma": 0.0266,
+        "chromaStdDev": 0.0869,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.7791,
-        "colorPixelRatio": 0.0857,
+        "whitePixelRatio": 0.7822,
+        "colorPixelRatio": 0.0808,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -911,7 +1265,31 @@
       }
     },
     {
-      "id": "frame-23",
+      "id": "frame-31",
+      "timeSec": 18.311111,
+      "roles": [
+        "timeline"
+      ],
+      "checks": [
+        "black_or_white_frame"
+      ],
+      "metrics": {
+        "meanLuma": 238.8,
+        "lumaStdDev": 36.43,
+        "meanChroma": 0.0294,
+        "chromaStdDev": 0.0964,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.7793,
+        "colorPixelRatio": 0.0862,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": true
+      }
+    },
+    {
+      "id": "frame-32",
       "timeSec": 19.42,
       "roles": [
         "transition",
@@ -922,12 +1300,12 @@
       ],
       "metrics": {
         "meanLuma": 238.79,
-        "lumaStdDev": 36.43,
+        "lumaStdDev": 36.44,
         "meanChroma": 0.0294,
-        "chromaStdDev": 0.0963,
+        "chromaStdDev": 0.0964,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.7805,
-        "colorPixelRatio": 0.0845,
+        "whitePixelRatio": 0.7808,
+        "colorPixelRatio": 0.085,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -936,7 +1314,7 @@
       }
     },
     {
-      "id": "frame-24",
+      "id": "frame-33",
       "timeSec": 19.5,
       "roles": [
         "transition",
@@ -948,11 +1326,11 @@
       "metrics": {
         "meanLuma": 238.72,
         "lumaStdDev": 36.55,
-        "meanChroma": 0.0294,
+        "meanChroma": 0.0295,
         "chromaStdDev": 0.0964,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.7803,
-        "colorPixelRatio": 0.0854,
+        "whitePixelRatio": 0.78,
+        "colorPixelRatio": 0.0864,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -961,7 +1339,7 @@
       }
     },
     {
-      "id": "frame-25",
+      "id": "frame-34",
       "timeSec": 19.58,
       "roles": [
         "transition",
@@ -974,10 +1352,10 @@
         "meanLuma": 238.35,
         "lumaStdDev": 36.45,
         "meanChroma": 0.0297,
-        "chromaStdDev": 0.0964,
+        "chromaStdDev": 0.0963,
         "darkPixelRatio": 0,
         "whitePixelRatio": 0.7722,
-        "colorPixelRatio": 0.0854,
+        "colorPixelRatio": 0.0864,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -986,7 +1364,7 @@
       }
     },
     {
-      "id": "frame-26",
+      "id": "frame-35",
       "timeSec": 20.6,
       "roles": [
         "timeline"
@@ -996,7 +1374,7 @@
       ],
       "metrics": {
         "meanLuma": 246.78,
-        "lumaStdDev": 25.13,
+        "lumaStdDev": 25.14,
         "meanChroma": 0.0001,
         "chromaStdDev": 0.0013,
         "darkPixelRatio": 0,
@@ -1010,21 +1388,23 @@
       }
     },
     {
-      "id": "frame-27",
-      "timeSec": 22.888889,
+      "id": "frame-36",
+      "timeSec": 22.466667,
       "roles": [
-        "timeline"
+        "caption-color-handoff",
+        "caption-color-handoff-4",
+        "before"
       ],
       "checks": [
-        "black_or_white_frame"
+        "caption_color_handoff"
       ],
       "metrics": {
-        "meanLuma": 241.94,
-        "lumaStdDev": 30.95,
-        "meanChroma": 0.0003,
-        "chromaStdDev": 0.0019,
+        "meanLuma": 242.03,
+        "lumaStdDev": 30.85,
+        "meanChroma": 0.0005,
+        "chromaStdDev": 0.0021,
         "darkPixelRatio": 0.0002,
-        "whitePixelRatio": 0.8064,
+        "whitePixelRatio": 0.8074,
         "colorPixelRatio": 0,
         "isBlack": false,
         "isWhite": false,
@@ -1034,7 +1414,83 @@
       }
     },
     {
-      "id": "frame-28",
+      "id": "frame-37",
+      "timeSec": 22.5,
+      "roles": [
+        "caption-color-handoff",
+        "caption-color-handoff-4",
+        "boundary"
+      ],
+      "checks": [
+        "caption_color_handoff"
+      ],
+      "metrics": {
+        "meanLuma": 242.01,
+        "lumaStdDev": 30.86,
+        "meanChroma": 0.0008,
+        "chromaStdDev": 0.0027,
+        "darkPixelRatio": 0.0002,
+        "whitePixelRatio": 0.8076,
+        "colorPixelRatio": 0,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": true,
+        "hasColor": false
+      }
+    },
+    {
+      "id": "frame-38",
+      "timeSec": 22.533333,
+      "roles": [
+        "caption-color-handoff",
+        "caption-color-handoff-4",
+        "after"
+      ],
+      "checks": [
+        "caption_color_handoff"
+      ],
+      "metrics": {
+        "meanLuma": 241.76,
+        "lumaStdDev": 31.16,
+        "meanChroma": 0.0033,
+        "chromaStdDev": 0.0098,
+        "darkPixelRatio": 0.0005,
+        "whitePixelRatio": 0.8035,
+        "colorPixelRatio": 0,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": true,
+        "hasColor": false
+      }
+    },
+    {
+      "id": "frame-39",
+      "timeSec": 22.888889,
+      "roles": [
+        "timeline"
+      ],
+      "checks": [
+        "black_or_white_frame"
+      ],
+      "metrics": {
+        "meanLuma": 240.98,
+        "lumaStdDev": 32.09,
+        "meanChroma": 0.0107,
+        "chromaStdDev": 0.0336,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.7969,
+        "colorPixelRatio": 0.0449,
+        "isBlack": false,
+        "isWhite": false,
+        "isBlank": false,
+        "isMonochrome": false,
+        "hasColor": false
+      }
+    },
+    {
+      "id": "frame-40",
       "timeSec": 24.45,
       "roles": [
         "motion-cut",
@@ -1044,22 +1500,22 @@
         "motion_cut_non_blank"
       ],
       "metrics": {
-        "meanLuma": 241.59,
-        "lumaStdDev": 31.42,
-        "meanChroma": 0.0003,
-        "chromaStdDev": 0.0019,
-        "darkPixelRatio": 0.0002,
-        "whitePixelRatio": 0.8013,
-        "colorPixelRatio": 0,
+        "meanLuma": 239.37,
+        "lumaStdDev": 34.25,
+        "meanChroma": 0.0241,
+        "chromaStdDev": 0.0743,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.7839,
+        "colorPixelRatio": 0.0823,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
-        "isMonochrome": true,
-        "hasColor": false
+        "isMonochrome": false,
+        "hasColor": true
       }
     },
     {
-      "id": "frame-29",
+      "id": "frame-41",
       "timeSec": 24.55,
       "roles": [
         "motion-cut",
@@ -1069,22 +1525,22 @@
         "motion_cut_non_blank"
       ],
       "metrics": {
-        "meanLuma": 240.9,
-        "lumaStdDev": 32.38,
-        "meanChroma": 0.0003,
-        "chromaStdDev": 0.002,
-        "darkPixelRatio": 0.0005,
-        "whitePixelRatio": 0.7925,
-        "colorPixelRatio": 0,
+        "meanLuma": 238.4,
+        "lumaStdDev": 35.47,
+        "meanChroma": 0.0268,
+        "chromaStdDev": 0.0799,
+        "darkPixelRatio": 0,
+        "whitePixelRatio": 0.7749,
+        "colorPixelRatio": 0.0886,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
-        "isMonochrome": true,
-        "hasColor": false
+        "isMonochrome": false,
+        "hasColor": true
       }
     },
     {
-      "id": "frame-30",
+      "id": "frame-42",
       "timeSec": 25.177778,
       "roles": [
         "timeline"
@@ -1093,22 +1549,22 @@
         "black_or_white_frame"
       ],
       "metrics": {
-        "meanLuma": 240.32,
-        "lumaStdDev": 33.08,
-        "meanChroma": 0.0101,
-        "chromaStdDev": 0.0537,
+        "meanLuma": 238.35,
+        "lumaStdDev": 35.59,
+        "meanChroma": 0.0294,
+        "chromaStdDev": 0.0884,
         "darkPixelRatio": 0,
-        "whitePixelRatio": 0.7852,
-        "colorPixelRatio": 0.0342,
+        "whitePixelRatio": 0.7769,
+        "colorPixelRatio": 0.0928,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
-        "isMonochrome": true,
-        "hasColor": false
+        "isMonochrome": false,
+        "hasColor": true
       }
     },
     {
-      "id": "frame-31",
+      "id": "frame-43",
       "timeSec": 27.466667,
       "roles": [
         "timeline"
@@ -1118,12 +1574,12 @@
       ],
       "metrics": {
         "meanLuma": 239.37,
-        "lumaStdDev": 34.41,
-        "meanChroma": 0.0272,
-        "chromaStdDev": 0.0853,
+        "lumaStdDev": 34.39,
+        "meanChroma": 0.0271,
+        "chromaStdDev": 0.0852,
         "darkPixelRatio": 0,
         "whitePixelRatio": 0.7891,
-        "colorPixelRatio": 0.0864,
+        "colorPixelRatio": 0.0869,
         "isBlack": false,
         "isWhite": false,
         "isBlank": false,
@@ -1234,7 +1690,7 @@
       "message": "Colour is visible after the title section",
       "observed": {
         "timeSec": 6.25,
-        "colorPixelRatio": 0.0771,
+        "colorPixelRatio": 0.0776,
         "meanChroma": 0.0263
       },
       "expected": {
@@ -1243,7 +1699,7 @@
         "minimumMeanChroma": 0.012
       },
       "sampleIds": [
-        "frame-06"
+        "frame-09"
       ]
     },
     {
@@ -1274,6 +1730,76 @@
       "sampleIds": []
     },
     {
+      "id": "caption_color_handoff",
+      "status": "pass",
+      "severity": "error",
+      "message": "Colour advances on the frame immediately after every completed caption reveal",
+      "observed": [
+        {
+          "role": "caption-color-handoff-1",
+          "passed": true,
+          "sampleIds": [
+            "frame-02",
+            "frame-03",
+            "frame-04"
+          ],
+          "boundaryMeanChroma": 0.0007,
+          "afterMeanChroma": 0.0028
+        },
+        {
+          "role": "caption-color-handoff-2",
+          "passed": true,
+          "sampleIds": [
+            "frame-14",
+            "frame-15",
+            "frame-16"
+          ],
+          "boundaryMeanChroma": 0.0002,
+          "afterMeanChroma": 0.0035
+        },
+        {
+          "role": "caption-color-handoff-3",
+          "passed": true,
+          "sampleIds": [
+            "frame-25",
+            "frame-26",
+            "frame-27"
+          ],
+          "boundaryMeanChroma": 0.0002,
+          "afterMeanChroma": 0.0026
+        },
+        {
+          "role": "caption-color-handoff-4",
+          "passed": true,
+          "sampleIds": [
+            "frame-36",
+            "frame-37",
+            "frame-38"
+          ],
+          "boundaryMeanChroma": 0.0008,
+          "afterMeanChroma": 0.0033
+        }
+      ],
+      "expected": {
+        "nonBlank": true,
+        "nextFrameMeanChromaIncreaseGreaterThan": 0.0001
+      },
+      "sampleIds": [
+        "frame-02",
+        "frame-03",
+        "frame-04",
+        "frame-14",
+        "frame-15",
+        "frame-16",
+        "frame-25",
+        "frame-26",
+        "frame-27",
+        "frame-36",
+        "frame-37",
+        "frame-38"
+      ]
+    },
+    {
       "id": "duplicate_frame_hint",
       "status": "pass",
       "severity": "warning",
@@ -1289,36 +1815,48 @@
   "artifacts": {
     "frames": [
       "examples/case-sprouting-note/qa-frames/frame-01-0.000s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-02-2.289s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-03-3.617s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-04-3.717s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-05-4.578s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-06-6.250s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-07-6.253s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-08-6.333s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-09-6.413s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-10-6.867s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-11-9.156s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-12-10.450s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-13-10.550s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-14-11.444s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-15-12.787s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-16-12.867s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-17-12.947s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-18-13.733s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-19-16.022s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-20-17.017s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-21-17.117s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-22-18.311s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-23-19.420s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-24-19.500s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-25-19.580s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-26-20.600s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-27-22.889s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-28-24.450s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-29-24.550s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-30-25.178s.jpg",
-      "examples/case-sprouting-note/qa-frames/frame-31-27.467s.jpg"
+      "examples/case-sprouting-note/qa-frames/frame-02-1.867s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-03-1.900s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-04-1.933s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-05-2.289s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-06-3.617s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-07-3.717s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-08-4.578s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-09-6.250s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-10-6.253s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-11-6.333s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-12-6.413s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-13-6.867s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-14-8.867s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-15-8.900s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-16-8.933s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-17-9.156s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-18-10.450s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-19-10.550s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-20-11.444s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-21-12.787s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-22-12.867s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-23-12.947s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-24-13.733s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-25-15.433s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-26-15.467s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-27-15.500s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-28-16.022s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-29-17.017s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-30-17.117s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-31-18.311s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-32-19.420s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-33-19.500s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-34-19.580s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-35-20.600s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-36-22.467s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-37-22.500s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-38-22.533s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-39-22.889s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-40-24.450s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-41-24.550s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-42-25.178s.jpg",
+      "examples/case-sprouting-note/qa-frames/frame-43-27.467s.jpg"
     ]
   },
   "inputName": "final.mp4"

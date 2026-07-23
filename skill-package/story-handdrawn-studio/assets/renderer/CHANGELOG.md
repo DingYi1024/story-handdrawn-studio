@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-07-23
+
+### Fixed
+
+- Color reveal now starts on the exact frame the caption reveal completes and fades across the artwork with a fast ease-out onset, removing both the real pause and the white-margin delay while preserving the monochrome opening artwork.
+
 ## [1.1.0] - 2026-07-23
 
 ### Added

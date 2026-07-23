@@ -1,5 +1,5 @@
 import {Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {revealProgress} from './easing';
+import {linearRevealProgress, revealProgress} from './easing';
 import type {Storyboard} from './types';
 
 type LayerWipeProps = {
@@ -35,11 +35,16 @@ export const LayerWipe: React.FC<LayerWipeProps> = ({
   const {width, height} = useVideoConfig();
   const progress = visibleFromStart
     ? 1
-    : revealProgress(frame, startFrame, durationFrames);
+    : treatment === 'color'
+      ? Math.sqrt(linearRevealProgress(frame, startFrame, durationFrames))
+      : revealProgress(frame, startFrame, durationFrames);
   // The BW base plate is already present on the first frame. Later detail and
   // color plates keep one left-to-right mask direction so the drawing never
   // jumps or passes through a blank page.
-  const clipPath = `inset(0 ${100 - progress * 100}% 0 0)`;
+  const colorFade = treatment === 'color' && !visibleFromStart;
+  const clipPath = colorFade
+    ? 'none'
+    : `inset(0 ${100 - progress * 100}% 0 0)`;
 
   return (
     <div
@@ -51,7 +56,7 @@ export const LayerWipe: React.FC<LayerWipeProps> = ({
         top: height * (layout?.illustration_top_ratio ?? 0.265),
         bottom: height * (layout?.bottom_margin_ratio ?? 0.03),
         clipPath,
-        opacity,
+        opacity: colorFade ? opacity * progress : opacity,
       }}
     >
       <Img

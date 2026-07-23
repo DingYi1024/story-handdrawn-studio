@@ -16,3 +16,14 @@ export const revealProgress = (
 
   return smoothstep(linear);
 };
+
+export const linearRevealProgress = (
+  frame: number,
+  startFrame: number,
+  durationFrames: number,
+) => interpolate(
+  frame,
+  [startFrame, startFrame + Math.max(1, durationFrames)],
+  [0, 1],
+  {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'},
+);
