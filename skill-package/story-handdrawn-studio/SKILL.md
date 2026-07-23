@@ -47,8 +47,8 @@ Read [references/workflows.md](references/workflows.md) whenever executing produ
 
 ## Visual contract
 
-- Direct-cut story scenes show the black-and-white illustration on frame zero, reveal text over that drawing, then reveal color. There is no blank white opening phase.
-- Page-flip story scenes reveal the next monochrome drawing underneath the curling page, hold it through the end of the flip, then reveal text and color; never cover the incoming scene with a blank white transition plate.
+- Direct-cut story scenes show the black-and-white illustration on frame zero and reveal text over that drawing. Start the full-artwork colour fade on the exact frame the text reveal completes; do not add a completed-text hold or blank opening phase.
+- Page-flip story scenes reveal the next monochrome drawing underneath the curling page and hold it through the end of the flip. Then reveal text and start colour immediately when that reveal completes; never cover the incoming scene with a blank white transition plate.
 - Page-flip uploaded-page works preserve each complete page and original composition.
 - Captions remain in the upper safe region; illustrations use contained framing without cover-cropping.
 - Multi-shot motion transforms artwork only. Captions remain stable; adjacent shots use safe local moves and retain visible artwork across every cut.

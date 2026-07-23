@@ -87,6 +87,11 @@ export const createVisualQaPlan = (metadata, options = {}) => {
       roles: ['motion-cut', `motion-cut-${index + 1}`],
       checks: ['motion_cut_non_blank'],
     }))),
+    ...(options.revealTimes || []).flatMap((time, index) => [-1 / fps, 0, 1 / fps].map((offset, sampleIndex) => ({
+      timeSec: Number(time) + offset,
+      roles: ['caption-color-handoff', `caption-color-handoff-${index + 1}`, ['before', 'boundary', 'after'][sampleIndex]],
+      checks: ['caption_color_handoff'],
+    }))),
   ];
 
   const merged = [];
@@ -327,6 +332,38 @@ export const createVisualQaReport = ({
     [],
     extremeMotionCuts.map((sample) => sample.id),
   ));
+
+  const handoffGroups = [...new Set(samples
+    .flatMap((sample) => sample.roles || [])
+    .filter((role) => /^caption-color-handoff-\d+$/.test(role)))];
+  const handoffResults = handoffGroups.map((role) => {
+    const group = samples.filter((sample) => sample.roles?.includes(role));
+    const boundary = group.find((sample) => sample.roles?.includes('boundary'));
+    const after = group.find((sample) => sample.roles?.includes('after'));
+    const nonBlank = group.length === 3 && group.every((sample) => !sample.metrics.isBlank);
+    const colorAdvanced = Number(after?.metrics.meanChroma) > Number(boundary?.metrics.meanChroma) + 0.0001;
+    return {
+      role,
+      passed: nonBlank && colorAdvanced,
+      sampleIds: group.map((sample) => sample.id),
+      boundaryMeanChroma: boundary?.metrics.meanChroma ?? null,
+      afterMeanChroma: after?.metrics.meanChroma ?? null,
+    };
+  });
+  const failedHandoffs = handoffResults.filter((result) => !result.passed);
+  if (handoffGroups.length) {
+    checks.push(check(
+      'caption_color_handoff',
+      failedHandoffs.length ? 'fail' : 'pass',
+      'error',
+      failedHandoffs.length
+        ? 'One or more caption-to-colour boundaries did not advance colour on the next frame'
+        : 'Colour advances on the frame immediately after every completed caption reveal',
+      handoffResults,
+      {nonBlank: true, nextFrameMeanChromaIncreaseGreaterThan: 0.0001},
+      handoffResults.flatMap((result) => result.sampleIds),
+    ));
+  }
 
   const timeline = plan.samples
     .filter((sample) => sample.roles.includes('timeline'))

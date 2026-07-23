@@ -12,8 +12,8 @@ Check:
 - no stretched, cover-cropped, clipped, or missing artwork;
 - caption line count, legibility, safe margins, and correct wording;
 - scene order and reasonable reading time;
-- direct-cut scenes show `bw_full` from frame zero, then reveal `text`, then reveal `color`;
-- page-flip story mode exposes the next monochrome scene under the curl, ends on that drawing, then reveals text and color without a blank transition plate;
+- direct-cut scenes show `bw_full` from frame zero, then reveal `text`; start revealing `color` on the exact frame the text reveal completes, with no completed-text hold;
+- page-flip story mode exposes the next monochrome scene under the curl, ends on that drawing, then reveals text and immediately starts color when the text reveal completes, without a hold or blank transition plate;
 - page-flip uploaded-page mode retains the complete page;
 - characters retain face, hair, age, clothing colors, and proportions;
 - no unintended text, watermark, extra people, or premature narrative elements;
@@ -31,7 +31,7 @@ After preview approval or an explicit final-only request:
 3. Confirm the MP4 exists and has nonzero size.
 4. Require `qa/final/report.json` to have `passed: true`, inspect its transition samples, then probe width, height, duration, codec, pixel format, and audio streams.
 5. Confirm H.264 video and a broadly compatible 4:2:0 pixel format (`yuv420p` or full-range `yuvj420p`); audio should be absent unless deliberately added, and must be present when an audio feature was requested.
-6. Confirm the machine checks for first-frame content, first-frame monochrome artwork (generated stories), later color, expected geometry/FPS/duration, and no sampled black/white blank frames. Treat duplicate-frame hints as review warnings, not automatic failures.
+6. Confirm the machine checks for first-frame content, first-frame monochrome artwork (generated stories), next-frame colour advancement at every caption/colour handoff, later color, expected geometry/FPS/duration, and no sampled black/white blank frames. Treat duplicate-frame hints as review warnings, not automatic failures.
 7. Inspect every semantic vision job or explicitly leave it `needs_review`; never turn absent observations into a pass.
 8. Inspect at least the opening and ending frames plus one middle frame, and use the local review workspace when approval is requested.
 

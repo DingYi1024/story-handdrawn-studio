@@ -101,11 +101,14 @@ test('templates, migration, snapshots, and rollback preserve recoverability', ()
 });
 
 test('transition QA samples both sides of every page flip', () => {
-  const plan = createVisualQaPlan({durationSec: 8, fps: 30}, {transitionTimes: [3.3], motionCutTimes: [2.2]});
+  const plan = createVisualQaPlan({durationSec: 8, fps: 30}, {transitionTimes: [3.3], motionCutTimes: [2.2], revealTimes: [1.9]});
   const samples = plan.samples.filter((sample) => sample.roles.includes('transition'));
   assert.equal(samples.length, 3);
   assert.deepEqual(samples.map((sample) => sample.timeSec), [3.22, 3.3, 3.38]);
   assert.equal(plan.samples.filter((sample) => sample.roles.includes('motion-cut')).length, 2);
+  const handoff = plan.samples.filter((sample) => sample.roles.includes('caption-color-handoff'));
+  assert.equal(handoff.length, 3);
+  assert.deepEqual(handoff.map((sample) => sample.timeSec), [1.866667, 1.9, 1.933333]);
 });
 
 test('style approval is a real production gate and chosen storyboards stay synchronized', () => {

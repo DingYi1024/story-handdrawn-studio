@@ -8,12 +8,12 @@ const usage = `Usage:
   node scripts/qa-video.mjs VIDEO [--output report.json] [--frames-dir qa-frames]
     [--width 1080 --height 1440 --fps 30 --duration 12]
     [--duration-tolerance 0.15 --fps-tolerance 0.02]
-    [--color-after 2.5 --samples 9] [--require-audio]
+    [--color-after 2.5 --samples 9] [--reveal-time SEC] [--require-audio]
     [--compact] [--portable] [--no-fail-on-qa]
 
 The report is always emitted as machine-readable JSON on stdout.`;
 
-const args = parseArgs(process.argv.slice(2), {repeatable: ['transition-time', 'motion-cut-time']});
+const args = parseArgs(process.argv.slice(2), {repeatable: ['transition-time', 'motion-cut-time', 'reveal-time']});
 if (args.help === true || args.h === true) {
   console.log(usage);
   process.exit(0);
@@ -59,6 +59,7 @@ if (!inputArg) {
         timelineSamples: optionalNumber('samples'),
         transitionTimes: (args['transition-time'] || []).map((value) => Number(value)),
         motionCutTimes: (args['motion-cut-time'] || []).map((value) => Number(value)),
+        revealTimes: (args['reveal-time'] || []).map((value) => Number(value)),
         framesDir: framesArg ? resolve(process.cwd(), framesArg) : undefined,
         artifactsRelativeTo: args.portable === true ? process.cwd() : undefined,
         ffmpeg: stringArg(args, 'ffmpeg', 'ffmpeg'),
