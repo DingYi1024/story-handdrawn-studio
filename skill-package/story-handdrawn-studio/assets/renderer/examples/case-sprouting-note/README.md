@@ -1,6 +1,6 @@
 # 案例：会发芽的纸条
 
-这是 Story Handdrawn Studio 的完整 9:16 有声案例，演示同一角色在四幕故事中的身份一致性、`黑白图 → 文字 → 彩色图` 的幕内顺序，以及幕间卷页转场和同步音效。
+这是 Story Handdrawn Studio 的完整 9:16 有声案例，演示同一角色在四幕八镜中的身份一致性、`黑白图 → 文字 → 彩色图` 的幕内顺序、推拉/平移/视差和局部手绘微动画，以及幕间卷页转场和同步音效。
 
 下面是完整 27.5 秒成片的低分辨率动态预览。GIF 格式本身没有声音；点击图片可打开带 AAC 立体声的 1080×1920 正式 MP4。
 
@@ -34,8 +34,8 @@
 - `cover.png`：从正式片末幕提取的案例封面
 - `animated-preview.gif`：README 内可直接观看的完整动态预览
 - `transition-preview.gif`：三次卷页转场的短预览
-- `qa-report.json`：机器验收报告（10 项通过、1 项审片提示、0 项失败，包含音频流和三次卷页检查）
-- `qa-frames/`：23 个验收抽帧，包含每次卷页前、中、后
+- `qa-report.json`：机器验收报告（包含音频流、三次卷页和四个内部镜头切点检查）
+- `qa-frames/`：验收抽帧，包含每次卷页和每个多镜头切点的前后画面
 - `semantic-observations.json`：逐场人工视觉观察
 - `semantic-report.json`：32/32 语义检查通过的机器报告
 - `review.html`：可直接打开、逐场批准或返修的本地审片台
@@ -45,6 +45,7 @@
 ```bash
 npm ci
 npm run audio:case
+npm run props:case
 node scripts/validate-storyboard.mjs examples/case-sprouting-note/storyboard.json
 npx remotion render src/index.ts ProjectVideo examples/case-sprouting-note/_preview-silent.mp4 \
   --props=examples/case-sprouting-note/render-props.json \

@@ -14,6 +14,7 @@ python <SKILL_DIR>/scripts/run_story_video.py COMMAND [OPTIONS]
 | `produce` | Create/continue an automatic plan → assets → preview → final loop | requested target or explicit image jobs |
 | `create` | Copy text/images into an isolated project | `created` |
 | `plan` / `ingest` / `import` | Manual preparation stages | `awaiting_assets` / `assets_ready` |
+| `director` | Inspect/rebuild arc, theme, style bake-off, and multi-shot plan | creative plan or style jobs |
 | `revise` | Archive the current revision and prepare scene retakes | `awaiting_assets` |
 | `continuity` | Inspect/apply the continuity specification and impact report | current state preserved |
 | `audio` | Plan, prepare, mix, or disable optional audio | audio sidecars / mixed final |

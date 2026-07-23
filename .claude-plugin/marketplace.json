@@ -4,16 +4,16 @@
     "name": "DingYi1024"
   },
   "metadata": {
-    "description": "把中文故事或有序图片制作成可续做、可质检的多画幅手绘动画",
-    "version": "1.0.0"
+    "description": "把中文故事或有序图片导演成可续做、可质检的多镜头手绘动画",
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "story-handdrawn-studio",
-      "description": "从故事或有序图片创建、续做、质检并渲染手绘动画视频。",
+      "description": "从故事或有序图片完成叙事导演、风格试片、多镜头动画、质检与渲染。",
       "source": "./",
       "strict": false,
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "content-creation",
       "keywords": ["story-video", "hand-drawn", "remotion", "image-generation", "chinese"],
       "skills": ["./skill-package/story-handdrawn-studio"]

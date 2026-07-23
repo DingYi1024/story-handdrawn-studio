@@ -1,4 +1,4 @@
-export const CURRENT_PROJECT_SCHEMA_VERSION = 3;
+export const CURRENT_PROJECT_SCHEMA_VERSION = 4;
 
 const clone = (value) => structuredClone(value);
 
@@ -16,6 +16,14 @@ export const migrateProjectDocuments = (projectInput, stateInput = null) => {
     project.settings.review = project.settings.review || {semantic_strict: false};
     project.template = project.template || null;
     changes.push('added provider, review, and template settings');
+  }
+  if (from < 4) {
+    project.settings = project.settings || {};
+    project.settings.director = project.settings.director || {
+      arc: 'auto', theme: 'auto', multi_shot: true,
+      require_plan_approval: false, require_style_approval: false,
+    };
+    changes.push('added creative director, multi-shot, and style bake-off settings');
   }
   project.schema_version = CURRENT_PROJECT_SCHEMA_VERSION;
   if (state) {

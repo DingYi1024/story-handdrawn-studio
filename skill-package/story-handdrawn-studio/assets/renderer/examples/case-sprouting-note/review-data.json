@@ -4,14 +4,14 @@
     "id": "sprouting-note",
     "title": "会发芽的纸条"
   },
-  "generated_at": "2026-07-23T01:48:41.077Z",
+  "generated_at": "2026-07-23T02:36:42.889Z",
   "qa": {
-    "status": "pass_with_warnings",
+    "status": "pass",
     "summary": {
-      "pass": 10,
-      "warn": 1,
+      "pass": 12,
+      "warn": 0,
       "fail": 0,
-      "total": 11
+      "total": 12
     }
   },
   "scenes": [

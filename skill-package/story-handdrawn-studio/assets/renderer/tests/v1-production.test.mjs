@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
+import {copyFileSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {resolve} from 'node:path';
 import {createAutomaticAudioPlan, materializeAutomaticAudioPlan} from '../scripts/lib/audio-director.mjs';
@@ -85,8 +85,9 @@ test('templates, migration, snapshots, and rollback preserve recoverability', ()
   assert.equal(listTemplates().length, 5);
   assert.equal(createSettingsFromTemplate('gentle-diary').audio.provider, 'auto');
   const migrated = migrateProjectDocuments({schema_version: 2, settings: {}}, {schema_version: 2});
-  assert.equal(migrated.to, 3);
-  assert.equal(migrated.project.settings.provider.id, 'auto');
+    assert.equal(migrated.to, 4);
+    assert.equal(migrated.project.settings.provider.id, 'auto');
+    assert.equal(migrated.project.settings.director.multi_shot, true);
   const root = mkdtempSync(resolve(tmpdir(), 'snapshot-'));
   try {
     const created = createProject({repoRoot: root, id: 'recover', title: '恢复', settings: createSettingsFromTemplate('warm-memory'), storyText: '故事。'});
@@ -100,8 +101,45 @@ test('templates, migration, snapshots, and rollback preserve recoverability', ()
 });
 
 test('transition QA samples both sides of every page flip', () => {
-  const plan = createVisualQaPlan({durationSec: 8, fps: 30}, {transitionTimes: [3.3]});
+  const plan = createVisualQaPlan({durationSec: 8, fps: 30}, {transitionTimes: [3.3], motionCutTimes: [2.2]});
   const samples = plan.samples.filter((sample) => sample.roles.includes('transition'));
   assert.equal(samples.length, 3);
   assert.deepEqual(samples.map((sample) => sample.timeSec), [3.22, 3.3, 3.38]);
+  assert.equal(plan.samples.filter((sample) => sample.roles.includes('motion-cut')).length, 2);
+});
+
+test('style approval is a real production gate and chosen storyboards stay synchronized', () => {
+  const root = mkdtempSync(resolve(tmpdir(), 'style-approval-'));
+  try {
+    const settings = createSettingsFromTemplate('gentle-diary');
+    settings.director.theme = 'auto';
+    settings.director.require_style_approval = true;
+    const created = createProject({
+      repoRoot: root,
+      id: 'style-gate',
+      title: '雨夜纸条',
+      settings,
+      storyText: '雨夜，她捡到一张纸条。\n第二天，纸条旁的种子发芽了。',
+    });
+    const studio = resolve(process.cwd(), 'scripts', 'studio.mjs');
+    const common = ['--project', 'style-gate', '--data-root', root, '--json'];
+    const planResult = spawnSync(process.execPath, [studio, 'plan', ...common, '--generator', 'codex'], {encoding: 'utf8'});
+    assert.equal(planResult.status, 0, planResult.stderr);
+    assert.equal(readJson(created.paths.state).status, 'awaiting_style_choice');
+    const heldManifest = readJson(created.paths.codexManifest);
+    assert.equal(heldManifest.requires_replan, true);
+    assert.equal(heldManifest.jobs.length, 0);
+    assert.equal(readJson(created.paths.config).settings.director.theme, 'auto');
+
+    const assetsResult = spawnSync(process.execPath, [studio, 'assets', ...common, '--action', 'run', '--provider', 'codex'], {encoding: 'utf8'});
+    assert.equal(assetsResult.status, 0, assetsResult.stderr);
+    assert.match(assetsResult.stdout, /awaiting_style_choice/);
+    copyFileSync(created.paths.storyboardPlan, created.paths.storyboard);
+
+    const chooseResult = spawnSync(process.execPath, [studio, 'director', ...common, '--action', 'choose', '--theme', 'child-crayon'], {encoding: 'utf8'});
+    assert.equal(chooseResult.status, 0, chooseResult.stderr);
+    assert.deepEqual(readJson(created.paths.storyboard), readJson(created.paths.storyboardPlan));
+    assert.equal(readJson(created.paths.config).settings.director.style_approved, true);
+    assert.equal(readJson(created.paths.state).status, 'planning');
+  } finally { rmSync(root, {recursive: true, force: true}); }
 });

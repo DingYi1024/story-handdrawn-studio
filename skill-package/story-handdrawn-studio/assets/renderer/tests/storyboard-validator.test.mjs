@@ -64,3 +64,14 @@ test('validator rejects text-first scenes that can open on a blank page', () => 
   const result = validateStoryboardObject(storyboard);
   assert.ok(result.errors.some((error) => error.includes('bw_full must appear before text')));
 });
+
+test('validator accepts supported multi-shot motion and rejects unsafe tokens', () => {
+  const storyboard = validStoryboard();
+  storyboard.scenes[0].shots = [
+    {id: 'a', duration_ratio: 0.6, camera_move: 'push_in', focus: {x: 0.5, y: 0.6, scale: 1}, element_motion: ['rain']},
+    {id: 'b', duration_ratio: 0.4, camera_move: 'static', focus: {x: 0.5, y: 0.6, scale: 1.14}, element_motion: ['ink-breathe']},
+  ];
+  assert.deepEqual(validateStoryboardObject(storyboard).errors, []);
+  storyboard.scenes[0].shots[1].camera_move = 'orbit';
+  assert.ok(validateStoryboardObject(storyboard).errors.some((error) => error.includes('unsupported camera_move')));
+});

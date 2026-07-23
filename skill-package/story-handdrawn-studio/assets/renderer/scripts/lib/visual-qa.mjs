@@ -82,6 +82,11 @@ export const createVisualQaPlan = (metadata, options = {}) => {
       roles: ['transition', `transition-${index + 1}`],
       checks: ['transition_non_blank'],
     }))),
+    ...(options.motionCutTimes || []).flatMap((time, index) => [-0.05, 0.05].map((offset) => ({
+      timeSec: Number(time) + offset,
+      roles: ['motion-cut', `motion-cut-${index + 1}`],
+      checks: ['motion_cut_non_blank'],
+    }))),
   ];
 
   const merged = [];
@@ -308,6 +313,19 @@ export const createVisualQaReport = ({
     extremeTransitions.map((sample) => ({id: sample.id, timeSec: sample.timeSec, metrics: sample.metrics})),
     [],
     extremeTransitions.map((sample) => sample.id),
+  ));
+
+  const extremeMotionCuts = samples.filter((sample) =>
+    sample.roles?.includes('motion-cut') && (sample.metrics.isBlack || sample.metrics.isWhite || sample.metrics.isBlank),
+  );
+  checks.push(check(
+    'motion_cut_extreme_frames',
+    extremeMotionCuts.length ? 'fail' : 'pass',
+    'error',
+    extremeMotionCuts.length ? 'Blank multi-shot cut samples were found' : 'All sampled multi-shot cuts retain visible artwork',
+    extremeMotionCuts.map((sample) => ({id: sample.id, timeSec: sample.timeSec, metrics: sample.metrics})),
+    [],
+    extremeMotionCuts.map((sample) => sample.id),
   ));
 
   const timeline = plan.samples

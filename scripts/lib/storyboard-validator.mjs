@@ -1,6 +1,7 @@
 import {existsSync, readFileSync} from 'node:fs';
 import {isAbsolute, relative, resolve} from 'node:path';
 import {parseRatio} from './presets.mjs';
+import {CAMERA_MOVES} from './creative-director.mjs';
 
 const allowedLayers = new Set(['text', 'bw_full', 'detail', 'color']);
 
@@ -137,6 +138,29 @@ export const validateStoryboardObject = (
     }
     if (project.mode === 'speed' && scene.assets.detail) {
       errors.push(`${label}: detail asset must be null in speed mode`);
+    }
+    if (scene.shots !== undefined) {
+      if (!Array.isArray(scene.shots) || (!scene.shots.length && scene.shot !== 'full_uploaded_page')) {
+        errors.push(`${label}: shots must be a non-empty array`);
+      } else if (Array.isArray(scene.shots)) {
+        const shotIds = new Set();
+        for (const shot of scene.shots) {
+          const shotLabel = `${label}/${shot?.id || '?'}`;
+          if (!shot?.id || !/^[A-Za-z0-9_-]+$/.test(shot.id)) errors.push(`${shotLabel}: shot id is invalid`);
+          if (shotIds.has(shot?.id)) errors.push(`${label}: duplicate shot id ${shot?.id}`);
+          shotIds.add(shot?.id);
+          if (shot.duration_ratio !== undefined && !(Number(shot.duration_ratio) > 0)) errors.push(`${shotLabel}: duration_ratio must be positive`);
+          if (shot.duration_sec !== undefined && !(Number(shot.duration_sec) > 0)) errors.push(`${shotLabel}: duration_sec must be positive`);
+          if (shot.camera_move && !CAMERA_MOVES.includes(shot.camera_move)) errors.push(`${shotLabel}: unsupported camera_move ${shot.camera_move}`);
+          if (shot.element_motion !== undefined && (!Array.isArray(shot.element_motion) || shot.element_motion.some((value) => typeof value !== 'string'))) {
+            errors.push(`${shotLabel}: element_motion must be an array of strings`);
+          }
+          if (shot.focus) {
+            for (const key of ['x', 'y']) if (shot.focus[key] !== undefined && (!Number.isFinite(shot.focus[key]) || shot.focus[key] < 0 || shot.focus[key] > 1)) errors.push(`${shotLabel}: focus.${key} must be between 0 and 1`);
+            if (shot.focus.scale !== undefined && (!Number.isFinite(shot.focus.scale) || shot.focus.scale < 0.8 || shot.focus.scale > 2)) errors.push(`${shotLabel}: focus.scale must be between 0.8 and 2`);
+          }
+        }
+      }
     }
 
     const plateSizes = [];

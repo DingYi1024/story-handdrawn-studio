@@ -121,6 +121,13 @@ export const createSettings = (presetName = 'portrait', overrides = {}) => {
     },
     provider: {id: 'auto', max_attempts: 3},
     review: {semantic_strict: false},
+    director: {
+      arc: 'auto',
+      theme: 'auto',
+      multi_shot: true,
+      require_plan_approval: false,
+      require_style_approval: false,
+    },
   };
   const settings = deepMerge(base, overrides);
   validateSettings(settings);
@@ -228,6 +235,11 @@ export const validateSettings = (settings) => {
   if (typeof settings?.review?.semantic_strict !== 'boolean') {
     errors.push('review.semantic_strict must be boolean');
   }
+  const director = settings?.director;
+  if (!director || typeof director !== 'object') errors.push('director settings are required');
+  if (director && typeof director.multi_shot !== 'boolean') errors.push('director.multi_shot must be boolean');
+  if (director && typeof director.require_plan_approval !== 'boolean') errors.push('director.require_plan_approval must be boolean');
+  if (director && typeof director.require_style_approval !== 'boolean') errors.push('director.require_style_approval must be boolean');
 
   if (errors.length) throw new Error(`Invalid project settings:\n- ${errors.join('\n- ')}`);
   return settings;

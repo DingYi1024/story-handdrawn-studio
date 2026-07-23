@@ -5,8 +5,13 @@ import {
   createContinuityLedger,
   stableHash,
 } from './continuity.mjs';
+import {
+  applyCreativeDirectionToStoryboard,
+  HANDDRAWN_THEMES,
+  NARRATIVE_ARCS,
+} from './creative-director.mjs';
 
-export const DIRECTOR_SCHEMA_VERSION = 1;
+export const DIRECTOR_SCHEMA_VERSION = 2;
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -57,6 +62,13 @@ export const createDirectorArtifacts = ({
   textMode = 'font',
   continuitySpec = null,
 }) => {
+  const directedStoryboard = applyCreativeDirectionToStoryboard(storyboard, {
+    title: project.title,
+    sourceText,
+    arc: project.settings?.director?.arc === 'auto' ? null : project.settings?.director?.arc,
+    theme: project.settings?.director?.theme === 'auto' ? null : project.settings?.director?.theme,
+    multiShot: project.settings?.director?.multi_shot !== false,
+  });
   const spec = clone(continuitySpec || createAutomaticContinuitySpec(storyboard, project));
   const ledger = createContinuityLedger(spec);
   const revision = 1;
@@ -70,7 +82,16 @@ export const createDirectorArtifacts = ({
     textMode,
     continuityVersion: ledger.version,
     semanticContinuity: continuitySpec ? 'user-or-agent-supplied' : 'safe-empty-cast',
-    scenes: storyboard.scenes.map((scene, index) => ({
+    creativeDirection: {
+      ...directedStoryboard.project.director,
+      arc_label: NARRATIVE_ARCS[directedStoryboard.project.director.arc].label,
+      theme_label: HANDDRAWN_THEMES[directedStoryboard.project.director.theme].label,
+      gates: {
+        beat_map: project.settings?.director?.require_plan_approval === true ? 'pending' : 'automatic',
+        style_bakeoff: project.settings?.director?.require_style_approval === true ? 'pending' : 'optional',
+      },
+    },
+    scenes: directedStoryboard.scenes.map((scene, index) => ({
       id: scene.id,
       index,
       revision,
@@ -82,11 +103,12 @@ export const createDirectorArtifacts = ({
       setting: ledger.scenes[index]?.setting || null,
       continuityTags: [ledger.scenes[index]?.resolvedHash].filter(Boolean),
       dependsOn: (ledger.scenes[index]?.dependencies || []).map(({sceneId}) => sceneId),
+      shots: clone(scene.shots || []),
       notes: [],
     })),
   };
 
-  if (!manifest) return {director: plan, continuitySpec: spec, continuityLedger: ledger, manifest: null};
+  if (!manifest) return {director: plan, storyboard: directedStoryboard, continuitySpec: spec, continuityLedger: ledger, manifest: null};
   const nextManifest = clone(manifest);
   const sceneJobs = nextManifest.jobs.filter((job) => job.role !== 'reference');
   let previousMaster = null;
@@ -111,7 +133,7 @@ export const createDirectorArtifacts = ({
   nextManifest.revision = revision;
   nextManifest.continuity_version = ledger.version;
   nextManifest.director_hash = stableHash(plan);
-  return {director: plan, continuitySpec: spec, continuityLedger: ledger, manifest: nextManifest};
+  return {director: plan, storyboard: directedStoryboard, continuitySpec: spec, continuityLedger: ledger, manifest: nextManifest};
 };
 
 const revisedAssetPath = (current, stem, suffix) => {

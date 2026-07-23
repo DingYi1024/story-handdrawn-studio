@@ -52,6 +52,9 @@ Claude Code 也支持通过插件市场安装：
 ## 现在能做什么
 
 - `produce` 自动总导演：从原文/图片一路推进到素材、预览、正式片和机器验收
+- Creative Director：从 6 种原创叙事弧和 5 套原创手绘主题中自动推荐，也可先生成 4 张同场景风格试片再确认
+- 一幕多镜：长场景自动拆成全景与特写，镜头运动和元素运动分离，并保持旧故事板兼容
+- 本地确定性微动画：推拉、平移、视差、雨滴、花瓣、光点、纸片漂浮和墨线呼吸，不依赖 AI 视频模型
 - 本地自动声音导演：识别情绪与雨声、脚步、鸟鸣、发现等事件，原创合成 BGM/SFX 并帧级对齐翻页
 - 中文故事自动分镜，保留原文并按阅读速度计算镜头时长
 - 有序图片自动去重、版式检测、无损包含和黑白层派生
@@ -66,7 +69,7 @@ Claude Code 也支持通过插件市场安装：
 - 3:4、9:16、1:1、16:9 四种动态画布
 - Codex Image2 任务清单与显式选择的 OpenAI API 工作流
 - 图片提供方自动选择、费用估算、有界重试和持久化恢复状态
-- 5 个创作模板、v3 配置迁移、项目快照、安全回滚，以及 Windows/Linux/macOS CI
+- 5 个创作模板、v4 配置迁移、项目快照、安全回滚，以及 Windows/Linux/macOS CI
 - 自然语言意图路由、首次引导、状态导航与预览/正式片机器质检
 - 项目锁、原子状态文件、严格素材校验、失败后恢复
 - Skill 外持久数据、版本化运行时与不覆盖作品的升级契约
@@ -76,7 +79,7 @@ Claude Code 也支持通过插件市场安装：
 
 [![《会发芽的纸条》完整动态预览](examples/case-sprouting-note/animated-preview.gif)](examples/case-sprouting-note/final.mp4)
 
-上方 GIF 只展示画面；点击它即可打开带声音的正式 MP4。案例为 9:16、4 幕、27.5 秒，同一角色贯穿，完整展示 `黑白画稿 → 文字 → 彩色插画`、三次卷页转场，以及原创背景音乐、雨声、浇水声、鸟鸣和同步翻页声。
+上方 GIF 只展示画面；点击它即可打开带声音的正式 MP4。案例为 9:16、4 幕、8 镜头、27.5 秒，同一角色贯穿，完整展示 `黑白画稿 → 文字 → 彩色插画`、推拉/平移/视差与局部手绘微动画、三次卷页转场，以及原创背景音乐、雨声、浇水声、鸟鸣和同步翻页声。
 
 三次卷页转场特写：
 
@@ -184,6 +187,17 @@ node scripts/studio.mjs apply-review --project summer --input /absolute/summer-r
 
 `semantic-qa` 在没有真实视觉观察时返回 `needs_review`，不会假装检查通过。`review` 生成自包含 HTML；审片决定只会重做被拒绝的镜头。
 
+### Creative Director 与风格试片
+
+```bash
+node scripts/studio.mjs director --project summer --action list
+node scripts/studio.mjs director --project summer --action styles
+node scripts/studio.mjs director --project summer --action choose --theme warm-diary
+node scripts/studio.mjs director --project summer --action plan --force
+```
+
+`plan` 默认自动推荐叙事弧、主题和安全的非重复镜头节奏。高成本或风格敏感作品可先运行 `styles`，用同一代表场景生成 4 张候选图，再通过 `choose` 锁定主题。中文正文仍由独立文字层排版，不默认烧进生成图片。
+
 ### 快照、迁移与回滚
 
 ```bash
@@ -211,6 +225,7 @@ node scripts/studio.mjs rollback --project summer --snapshot s0001
 - `layout`：字幕区、插图区和安全边距的画布比例
 - `transition`：转场类型与时长
 - `visual`：风格锁、角色锁、配色
+- `director`：叙事弧、手绘主题、多镜头与审批策略
 - `render`：预览宽度、CRF、并发数
 
 修改后再运行 `validate`；非法比例、奇数尺寸、路径穿越、缺图、图层顺序与字幕溢出会被拒绝。
@@ -224,6 +239,7 @@ node scripts/studio.mjs rollback --project summer --snapshot s0001
 ├── source/                   # 原始故事或图片副本
 ├── prompts/                  # 每批次提示词
 ├── director.generated.json   # 总导演计划与镜头版本
+├── style-bakeoff.json        # 同场景风格试片任务和选择状态
 ├── continuity.spec.json      # 可编辑连续性规范
 ├── continuity.ledger.json    # 编译后的连续性账本
 ├── storyboard.generated.json # 故事规划结果
@@ -271,4 +287,4 @@ npm run package:share    # 生成可分享源码包
 
 ## English
 
-Story Handdrawn Studio v1 turns Chinese stories or ordered images into complete hand-drawn Remotion videos with automatic local sound design, resumable image providers, continuity ledgers, pixel and semantic QA, a local review UI, templates, snapshots, rollback, and multi-ratio delivery.
+Story Handdrawn Studio v1.1 turns Chinese stories or ordered images into complete directed hand-drawn Remotion videos with narrative arcs, style bake-offs, deterministic multi-shot motion, automatic local sound design, resumable image providers, continuity ledgers, pixel and semantic QA, a local review UI, snapshots, rollback, and multi-ratio delivery.

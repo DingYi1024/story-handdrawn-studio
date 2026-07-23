@@ -3,19 +3,19 @@ import {createSettings, mergeSettings} from './presets.mjs';
 export const PROJECT_TEMPLATES = Object.freeze({
   'gentle-diary': {
     label: '温柔日记', preset: 'vertical',
-    settings: {transition: {type: 'page-flip', seconds: 0.7}, audio: {enabled: true, provider: 'auto'}},
+    settings: {transition: {type: 'page-flip', seconds: 0.7}, audio: {enabled: true, provider: 'auto'}, director: {arc: 'warm_story', theme: 'warm-diary'}},
   },
   'warm-memory': {
     label: '温暖回忆', preset: 'portrait',
-    settings: {transition: {type: 'page-flip', seconds: 0.8}, visual: {palette: ['warm tan', 'dusty rose', 'sage green']}},
+    settings: {transition: {type: 'page-flip', seconds: 0.8}, visual: {palette: ['warm tan', 'dusty rose', 'sage green']}, director: {arc: 'warm_story', theme: 'warm-diary'}},
   },
   children: {
     label: '儿童故事', preset: 'vertical',
-    settings: {caption: {max_chars_per_line: 11, max_lines: 3}, timing: {reading_characters_per_second: 3.5}},
+    settings: {caption: {max_chars_per_line: 11, max_lines: 3}, timing: {reading_characters_per_second: 3.5}, director: {arc: 'growth_arc', theme: 'child-crayon'}},
   },
   science: {
     label: '科普解释', preset: 'landscape',
-    settings: {caption: {max_chars_per_line: 18, max_lines: 3}, transition: {type: 'cut', seconds: 0.45}},
+    settings: {caption: {max_chars_per_line: 18, max_lines: 3}, transition: {type: 'cut', seconds: 0.45}, director: {arc: 'knowledge_explainer', theme: 'science-notebook'}},
   },
   'uploaded-comic': {
     label: '上传漫画', preset: 'vertical',
