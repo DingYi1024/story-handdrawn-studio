@@ -43,7 +43,7 @@
     "check:assets:uploaded": "node scripts/validate-storyboard.mjs storyboard.uploaded.json"
   },
   "dependencies": {
-    "@remotion/cli": "4.0.487",
+    "@remotion/cli": "4.0.497",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "remotion": "4.0.487"
