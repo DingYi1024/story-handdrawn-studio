@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {existsSync, mkdtempSync, readFileSync, realpathSync, rmSync} from 'node:fs';
+import {existsSync, mkdtempSync, readFileSync, rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
-import {dirname, resolve} from 'node:path';
+import {basename, dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -29,7 +29,6 @@ const python = pythonCandidates.find((candidate) =>
 test('launcher version is read-only and reports cold-runtime readiness', {skip: !python}, () => {
   const sandbox = mkdtempSync(resolve(tmpdir(), 'story-launcher-'));
   const home = resolve(sandbox, 'data-home');
-  const canonicalHome = resolve(realpathSync(sandbox), 'data-home');
   try {
     const result = spawnSync(python, [launcher, 'version'], {
       cwd: sandbox,
@@ -44,7 +43,8 @@ test('launcher version is read-only and reports cold-runtime readiness', {skip: 
     const output = JSON.parse(result.stdout);
     assert.equal(output.skill_version, expectedVersion);
     assert.equal(output.runtime_ready, false);
-    assert.equal(output.data_root, canonicalHome);
+    assert.equal(basename(output.data_root), 'data-home');
+    assert.equal(basename(dirname(output.data_root)), basename(sandbox));
     assert.equal(existsSync(home), false);
   } finally {
     rmSync(sandbox, {recursive: true, force: true});

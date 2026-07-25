@@ -21,8 +21,15 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Install FFmpeg
+      - name: Install FFmpeg (Windows)
+        if: runner.os == 'Windows'
         uses: FedericoCarboni/setup-ffmpeg@36c6454b5a2348e7794ba2d82a21506605921e3d # v3
+      - name: Install FFmpeg (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install FFmpeg (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ffmpeg
       - run: npm ci
       - run: npm run check
       - run: npm run build
