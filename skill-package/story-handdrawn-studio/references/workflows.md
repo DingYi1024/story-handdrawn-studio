@@ -11,6 +11,7 @@ python <SKILL_DIR>/scripts/run_story_video.py COMMAND [OPTIONS]
 | Command | Purpose | Stable result |
 | --- | --- | --- |
 | `setup` | Prepare locked runtime dependencies and diagnose tools | healthy environment |
+| `version` / `where` | Inspect Skill, runtime, data root, and runtime readiness without mutation | installation evidence |
 | `produce` | Create/continue an automatic plan → assets → preview → final loop | requested target or explicit image jobs |
 | `create` | Copy text/images into an isolated project | `created` |
 | `plan` / `ingest` / `import` | Manual preparation stages | `awaiting_assets` / `assets_ready` |
@@ -26,6 +27,8 @@ python <SKILL_DIR>/scripts/run_story_video.py COMMAND [OPTIONS]
 | `resume` | Continue the saved production target | next truthful state |
 | `regress` | Compile all ten continuity regression cases | pass/fail summary |
 | `status` / `list` / `validate` / `doctor` | Inspect project or environment | no unintended content mutation |
+
+`setup` succeeds only after strict environment checks pass. `doctor` reports exact recovery actions for missing Node/npm/FFmpeg, incomplete Remotion/browser dependencies, incompatible projects, unwritable data roots, version mismatches, and low disk space.
 
 ## Automatic production
 

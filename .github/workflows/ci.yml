@@ -25,6 +25,7 @@ jobs:
       - run: npm run check
       - run: npm run build
       - run: npm run package:skill
+      - run: npm run verify:install
       - uses: actions/upload-artifact@v4
         with:
           name: story-handdrawn-studio-skill-${{ matrix.os }}

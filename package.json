@@ -1,6 +1,6 @@
 {
   "name": "story-handdrawn-studio",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Customizable studio for turning Chinese stories or ordered images into hand-drawn Remotion videos.",
   "license": "MIT",
   "repository": {
@@ -27,6 +27,7 @@
     "studio": "node scripts/studio.mjs",
     "package:share": "npm run check && node scripts/sync-skill-runtime.mjs && node scripts/validate-skill-package.mjs && node scripts/package-project.mjs",
     "validate:skill": "node scripts/validate-skill-package.mjs",
+    "verify:install": "node scripts/verify-skill-install.mjs",
     "package:skill": "node scripts/sync-skill-runtime.mjs && node scripts/validate-skill-package.mjs && node scripts/package-skill.mjs",
     "story": "node scripts/story-to-video.mjs",
     "import:codex": "node scripts/import-codex-images.mjs",

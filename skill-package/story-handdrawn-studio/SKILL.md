@@ -30,12 +30,13 @@ The launcher keeps works under `~/.story-handdrawn-studio/`, outside the install
 - Reusable genres, migrations, backup, or rollback: read [references/templates-and-rollback.md](references/templates-and-rollback.md).
 - Status questions: use `list` or `status` without mutating the work.
 - Renderer or reusable feature changes: read the customization route in [references/routing.md](references/routing.md).
+- Skill upgrades, packaging, release gates, or cold-install verification: read [references/release-readiness.md](references/release-readiness.md).
 
 Read [references/workflows.md](references/workflows.md) whenever executing production commands or image jobs. Read [references/creative-director.md](references/creative-director.md) for narrative arcs, style bake-offs, or multi-shot work. Read [references/continuity-and-revisions.md](references/continuity-and-revisions.md) for recurring entities or retakes. Read [references/quality.md](references/quality.md) before reporting a preview/final. Read [references/storage-and-updates.md](references/storage-and-updates.md) for installation, paths, privacy, backup, or upgrades.
 
 ## Production loop
 
-1. On first use, run `setup`. Re-run it only if `doctor` finds an environment problem.
+1. On first use, run `setup` and require a `ready` doctor report. Re-run with `setup --force` only when the returned recovery action calls for it. Use `version` to inspect the installed Skill/runtime without mutating data.
 2. Give each work a unique safe ID. Preserve the supplied text and image order.
 3. Select the explicit ratio, or default to `portrait` (3:4). Use `vertical` for 9:16 short video, `square` for 1:1, and `landscape` for 16:9. Let the Creative Director recommend an arc, theme, and safe non-repeating shot rhythm.
 4. For a story with recurring people/props/settings, write a semantic continuity JSON and pass `--continuity /absolute/file.json` on the first `produce` call. Every scene must explicitly list its current cast; use `[]` when nobody is present.

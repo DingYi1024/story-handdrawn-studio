@@ -52,7 +52,8 @@ import {
   updateProjectState,
   withProjectLock,
 } from './lib/projects.mjs';
-import {probeCommand, remotionCli, runNode} from './lib/process.mjs';
+import {remotionCli, runNode} from './lib/process.mjs';
+import {buildDoctorReport} from './lib/doctor.mjs';
 import {durationFor, formatCaption, safeSlug} from './lib/story-text.mjs';
 import {validateStoryboardFile} from './lib/storyboard-validator.mjs';
 import {runVisualQa} from './lib/visual-qa.mjs';
@@ -1375,19 +1376,14 @@ const regress = () => {
 };
 
 const doctor = () => {
-  const checks = {
-    node: probeCommand(process.execPath, ['--version'], repoRoot),
-    ffmpeg: probeCommand('ffmpeg', ['-version'], repoRoot),
-    ffprobe: probeCommand('ffprobe', ['-version'], repoRoot),
-    dependencies: {ok: existsSync(resolve(repoRoot, 'node_modules', '@remotion', 'cli')), detail: 'node_modules/@remotion/cli'},
-    references: {
-      ok: ['style-bw.png', 'style-color.png'].every((name) => existsSync(resolve(repoRoot, 'references', name))),
-      detail: resolve(repoRoot, 'references'),
-    },
-  };
-  const ok = Object.values(checks).every((check) => check.ok);
-  print({ok, data_root: dataRoot, projects_root: projectsRoot || resolve(repoRoot, 'projects'), public_dir: publicDir, checks});
-  if (!ok) process.exitCode = 1;
+  const report = buildDoctorReport({
+    repoRoot,
+    dataRoot: dataRoot || repoRoot,
+    projectsRoot: projectsRoot || resolve(repoRoot, 'projects'),
+    publicDir,
+  });
+  print(report);
+  if (!report.ok || (args.strict === true && report.status !== 'ready')) process.exitCode = 1;
 };
 
 try {
