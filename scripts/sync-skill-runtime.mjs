@@ -64,6 +64,7 @@ for (const generatedOnly of [
   'scripts/run_story_video.py',
   'scripts/sync-skill-runtime.mjs',
   'scripts/validate-skill-package.mjs',
+  'scripts/verify-skill-install.mjs',
 ]) {
   const path = resolve(target, generatedOnly);
   if (existsSync(path)) unlinkSync(path);
@@ -74,6 +75,7 @@ const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'));
 delete packageJson.scripts['package:share'];
 delete packageJson.scripts['package:skill'];
 delete packageJson.scripts['validate:skill'];
+delete packageJson.scripts['verify:install'];
 writeFileSync(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`, 'utf8');
 
 console.log(`✓ synchronized Skill renderer → ${target}`);

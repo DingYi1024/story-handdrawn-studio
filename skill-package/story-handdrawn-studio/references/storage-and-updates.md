@@ -24,6 +24,14 @@ Each project also keeps versioned director/continuity sidecars, revision archive
 
 Update by replacing the installed `story-handdrawn-studio` Skill folder with the new release. Do not delete `~/.story-handdrawn-studio/`. The next invocation creates a new versioned runtime and continues using existing projects and assets.
 
+Inspect an installation without creating files:
+
+```bash
+python <SKILL_DIR>/scripts/run_story_video.py version
+```
+
+After an upgrade, run `setup` and require `runtime_ready: true` from `version`. If setup fails, follow the exact `next_action` from the doctor report; use `setup --force` only for a damaged or stale dependency installation.
+
 The launcher can copy projects found in a pre-0.3 bundled installation into the persistent data root when the destination is still empty. It never overwrites a newer project directory during migration.
 
 There is no background updater and no automatic remote code download. Runtime code changes only when the user installs a new Skill package or explicitly selects an external renderer.

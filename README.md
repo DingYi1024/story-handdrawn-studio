@@ -270,10 +270,15 @@ npm run check            # 测试、TypeScript、示例故事板结构
 npm run check:assets     # 示例故事板连同素材严格检查
 npm run build            # Remotion 生产 bundle
 npm run dev              # Remotion Studio
+npm run validate:skill   # 校验 Skill 契约与版本一致性
+npm run package:skill    # 同步并生成可安装 Skill 包
+npm run verify:install   # 隔离冷安装、完整渲染、音频与最终 QA 验收
 npm run package:share    # 生成可分享源码包
 ```
 
 关键边界：`scripts/lib/` 是纯规则与基础设施，`scripts/studio.mjs` 负责编排，故事板 JSON 是生成端与 `src/` 渲染端之间的稳定契约。扩展路线见 [CUSTOMIZATION.md](CUSTOMIZATION.md)，渲染约束见 [DESIGN.md](DESIGN.md)。
+
+`npm run verify:install` 是正式发布门禁：它在临时目录中模拟陌生用户首次安装，准备锁定依赖，运行严格环境诊断，使用内置图片完成一个带自动音频的方形视频，并要求最终机器 QA 通过。CI 会在 Windows、macOS 和 Linux 上执行同一流程。
 
 ## Agent Skill
 
@@ -287,4 +292,4 @@ npm run package:share    # 生成可分享源码包
 
 ## English
 
-Story Handdrawn Studio v1.1 turns Chinese stories or ordered images into complete directed hand-drawn Remotion videos with narrative arcs, style bake-offs, deterministic multi-shot motion, automatic local sound design, resumable image providers, continuity ledgers, pixel and semantic QA, a local review UI, snapshots, rollback, and multi-ratio delivery.
+Story Handdrawn Studio v1.2 turns Chinese stories or ordered images into complete directed hand-drawn Remotion videos with narrative arcs, style bake-offs, deterministic multi-shot motion, automatic local sound design, resumable image providers, continuity ledgers, pixel and semantic QA, a local review UI, snapshots, rollback, multi-ratio delivery, actionable diagnostics, and isolated cold-install release acceptance.

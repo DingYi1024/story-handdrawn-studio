@@ -17,6 +17,7 @@ const required = [
   'references/workflows.md',
   'references/quality.md',
   'references/storage-and-updates.md',
+  'references/release-readiness.md',
   'assets/renderer/package.json',
   'assets/renderer/package-lock.json',
   'assets/renderer/scripts/studio.mjs',
@@ -38,7 +39,7 @@ const versions = new Set([
 ]);
 if (versions.size !== 1) failures.push(`version mismatch: ${[...versions].join(', ')}`);
 
-for (const scriptName of ['package:share', 'package:skill', 'validate:skill']) {
+for (const scriptName of ['package:share', 'package:skill', 'validate:skill', 'verify:install']) {
   if (rendererPackage.scripts?.[scriptName]) {
     failures.push(`repository-only script leaked into runtime: ${scriptName}`);
   }
@@ -49,6 +50,7 @@ for (const entry of [
   'scripts/run_story_video.py',
   'scripts/sync-skill-runtime.mjs',
   'scripts/validate-skill-package.mjs',
+  'scripts/verify-skill-install.mjs',
 ]) {
   if (existsSync(resolve(renderer, entry))) failures.push(`repository-only file leaked: ${entry}`);
 }

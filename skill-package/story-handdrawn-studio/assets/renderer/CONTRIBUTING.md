@@ -13,7 +13,8 @@ Thanks for your interest in improving `story-handdrawn-studio`.
 1. Fork the repository and create a branch from `main`.
 2. Make your change. Keep diffs small and focused.
 3. If you change user-facing behavior, update `README.md` (both the 中文 and English sections) and `CHANGELOG.md` under `Unreleased`.
-4. Open a pull request describing the problem and the change. Link any related issue.
+4. Run `npm run check`, `npm run build`, `npm run package:skill`, and `npm run verify:install`. Launcher, dependency, packaging, migration, or rendering changes must pass the isolated cold-install gate.
+5. Open a pull request describing the problem and the change. Link any related issue.
 
 ## Reporting issues
 

@@ -18,6 +18,9 @@ uploaded-pages.json
 *.zip
 .DS_Store
 .npm-cache/
+.studio-data/
+.qa-launcher-home/
+production-inputs/
 .qa-data/
 .qa-skill-home/
 .qa-skill-extract*/

@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-25
+
+### Added
+
+- Release-grade isolated acceptance command that cold-installs the packaged Skill, runs strict diagnostics, renders a complete audio-enabled video, and requires final machine QA.
+- Four-ratio long-story planning and resumability coverage plus dedicated launcher and environment-diagnostic tests.
+- Actionable doctor checks for npm, Remotion browser availability, package/lock compatibility, writable persistent storage, project schema compatibility, and free disk space.
+- Read-only launcher runtime readiness evidence and release-maintenance guidance.
+
+### Changed
+
+- First-run dependency setup now verifies Remotion and browser artifacts, records installation provenance, and returns concise recovery instructions on failure.
+- Windows, macOS, and Linux CI plus tagged releases now require the isolated install-and-render acceptance gate.
+- Local production data and acceptance working directories are excluded from source control without deleting user data.
+
 ## [1.1.1] - 2026-07-23
 
 ### Fixed

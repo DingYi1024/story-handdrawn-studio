@@ -17,12 +17,15 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - name: Verify tag matches VERSION
         shell: bash
         run: test "v$(tr -d '\r\n' < VERSION)" = "$GITHUB_REF_NAME"
       - run: npm ci
       - run: npm run check
       - run: npm run package:skill
+      - run: npm run verify:install
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
