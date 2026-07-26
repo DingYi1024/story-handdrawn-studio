@@ -18,6 +18,7 @@ const required = [
   'references/quality.md',
   'references/storage-and-updates.md',
   'references/release-readiness.md',
+  'references/batch-and-audit.md',
   'assets/renderer/package.json',
   'assets/renderer/package-lock.json',
   'assets/renderer/scripts/studio.mjs',

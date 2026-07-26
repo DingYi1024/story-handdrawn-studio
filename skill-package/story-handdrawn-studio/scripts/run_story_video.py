@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -154,26 +155,45 @@ def install_dependencies(renderer: Path, home: Path, force: bool = False) -> Non
     npm_cache = home / "npm-cache"
     npm_cache.mkdir(parents=True, exist_ok=True)
     print("Preparing Story Handdrawn Studio (first run for this version)...", flush=True)
-    try:
-        subprocess.run(
-            [
-                npm,
-                "ci",
-                "--cache",
-                str(npm_cache),
-                "--prefer-offline",
-                "--no-fund",
-                "--no-audit",
-            ],
-            cwd=renderer,
-            check=True,
-        )
-    except subprocess.CalledProcessError as error:
+    npm_error = None
+    for attempt, delay_seconds in enumerate((0, 2, 5), start=1):
+        if delay_seconds:
+            print(
+                f"Retrying locked dependency setup ({attempt}/3) in {delay_seconds}s...",
+                flush=True,
+            )
+            time.sleep(delay_seconds)
+        try:
+            subprocess.run(
+                [
+                    npm,
+                    "ci",
+                    "--cache",
+                    str(npm_cache),
+                    "--prefer-offline",
+                    "--no-fund",
+                    "--no-audit",
+                ],
+                cwd=renderer,
+                check=True,
+            )
+            npm_error = None
+            break
+        except subprocess.CalledProcessError as error:
+            npm_error = error
+            if attempt < 3:
+                print(
+                    f"Dependency setup attempt {attempt}/3 failed "
+                    f"(status {error.returncode}).",
+                    file=sys.stderr,
+                    flush=True,
+                )
+    if npm_error is not None:
         raise SystemExit(
-            "Dependency setup failed. Check network/npm access and free disk space, "
+            "Dependency setup failed after 3 attempts. Check network/npm access and free disk space, "
             "then run `setup --force`. "
-            f"npm exited with status {error.returncode}; cache: {npm_cache}"
-        ) from error
+            f"npm exited with status {npm_error.returncode}; cache: {npm_cache}"
+        ) from npm_error
 
     remotion_cli = renderer / "node_modules" / "@remotion" / "cli" / "remotion-cli.js"
     if not remotion_cli.exists():

@@ -10,6 +10,7 @@ By default all user work lives under:
 ~/.story-handdrawn-studio/
 ├── projects/              # source copies, settings, storyboards, state, outputs
 ├── public/projects/       # render-time media assets
+├── batches/               # normalized batch manifests and resumable queue state
 ├── runtimes/VERSION/      # immutable renderer code and installed dependencies
 └── npm-cache/             # private first-run dependency cache
 ```
@@ -40,7 +41,7 @@ There is no background updater and no automatic remote code download. Runtime co
 
 Back up the complete data root to preserve sources, generated assets, state, previews, and finals. After moving it, set `STORY_HANDDRAWN_STUDIO_HOME` to the restored absolute path.
 
-Do not back up `runtimes/` if space is limited; those directories can be reconstructed from installed Skill packages. Always retain `projects/` and `public/projects/` together.
+Do not back up `runtimes/` if space is limited; those directories can be reconstructed from installed Skill packages. Always retain `projects/`, `public/projects/`, and `batches/` together.
 
 ## Privacy
 

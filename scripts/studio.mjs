@@ -1,3 +1,4 @@
+import {spawnSync} from 'node:child_process';
 import {existsSync, mkdirSync, readFileSync, statSync, writeFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -40,9 +41,11 @@ import {createSemanticQaReport} from './lib/semantic-qa.mjs';
 import {createReviewData, validateReviewDecisions, writeReviewWorkspace} from './lib/review.mjs';
 import {
   archiveProjectRevision,
+  assertProjectId,
   atomicWriteJson,
   createProject,
   createProjectSnapshot,
+  getProjectPaths,
   listProjects,
   loadProject,
   persistProjectMigration,
@@ -54,6 +57,13 @@ import {
 } from './lib/projects.mjs';
 import {remotionCli, runNode} from './lib/process.mjs';
 import {buildDoctorReport} from './lib/doctor.mjs';
+import {
+  buildBatchProduceArgs,
+  createBatchState,
+  runBatch,
+  validateBatchManifest,
+} from './lib/batch.mjs';
+import {auditPortfolio} from './lib/portfolio-audit.mjs';
 import {durationFor, formatCaption, safeSlug} from './lib/story-text.mjs';
 import {validateStoryboardFile} from './lib/storyboard-validator.mjs';
 import {runVisualQa} from './lib/visual-qa.mjs';
@@ -100,6 +110,9 @@ Usage:
   node scripts/studio.mjs assets --project PROJECT --action plan|run|status|retry [--provider auto|codex|openai]
   node scripts/studio.mjs migrate|snapshot|rollback --project PROJECT [OPTIONS]
   node scripts/studio.mjs resume --project PROJECT
+  node scripts/studio.mjs batch --input batch.json [--action run|status|retry]
+  node scripts/studio.mjs batch --id BATCH_ID --action status|run|retry
+  node scripts/studio.mjs audit [--strict]
   node scripts/studio.mjs regress [--json]
   node scripts/studio.mjs list|status|validate|doctor [OPTIONS]
 
@@ -922,7 +935,10 @@ const produce = async () => {
     const current = loaded.state?.status === 'failed'
       ? loaded.state.resume_from || 'created'
       : loaded.state?.status || 'created';
-    if (target === 'plan' && existsSync(loaded.paths.storyboardPlan)) return statusFor(loaded.project.id);
+    if (
+      target === 'plan' &&
+      (existsSync(loaded.paths.storyboardPlan) || existsSync(loaded.paths.storyboard))
+    ) return statusFor(loaded.project.id);
     if (current === 'created') {
       if (loaded.project.source.type === 'story') await plan(loaded, {announce: false});
       else await ingest(loaded, {announce: false});
@@ -1357,6 +1373,153 @@ const resume = async () => {
   throw new Error(`Cannot resume from status: ${current}`);
 };
 
+const batch = async () => {
+  const input = stringArg(args, 'input');
+  const action = stringArg(args, 'action', 'run');
+  if (!['run', 'status', 'retry'].includes(action)) {
+    throw new Error('--action must be run, status, or retry');
+  }
+  const effectiveDataRoot = dataRoot || repoRoot;
+  let manifestPath;
+  let manifest;
+  let batchDirectory;
+  if (input) {
+    manifestPath = resolve(process.cwd(), input);
+    if (!existsSync(manifestPath)) throw new Error(`Batch manifest does not exist: ${manifestPath}`);
+    manifest = validateBatchManifest(readJson(manifestPath), manifestPath);
+    batchDirectory = resolveInside(effectiveDataRoot, 'batches', manifest.id);
+  } else {
+    const id = assertProjectId(stringArg(args, 'id'));
+    batchDirectory = resolveInside(effectiveDataRoot, 'batches', id);
+    const savedManifest = resolveInside(batchDirectory, 'batch.json');
+    if (!existsSync(savedManifest)) {
+      throw new Error(`Batch snapshot not found: ${savedManifest}; provide --input batch.json`);
+    }
+    manifestPath = savedManifest;
+    manifest = validateBatchManifest(readJson(savedManifest), savedManifest, {checkSources: false});
+  }
+  const statePath = resolveInside(batchDirectory, 'state.json');
+  const manifestSnapshot = resolveInside(batchDirectory, 'batch.json');
+  const batchLock = resolveInside(batchDirectory, '.batch.lock');
+  if (action === 'status') {
+    if (!existsSync(statePath)) throw new Error(`Batch has not started: ${manifest.id}`);
+    const state = readJson(statePath);
+    if (state.manifest_fingerprint !== manifest.fingerprint) {
+      throw new Error(`Batch ${manifest.id} manifest changed; use a new batch id to protect recovery state`);
+    }
+    return print({...state, directory: batchDirectory, state_path: statePath});
+  }
+  mkdirSync(batchDirectory, {recursive: true});
+  if (!existsSync(manifestSnapshot)) atomicWriteJson(manifestSnapshot, manifest);
+  let state = existsSync(statePath) ? readJson(statePath) : createBatchState(manifest);
+  const persist = async (next) => {
+    atomicWriteJson(statePath, next);
+    state = next;
+  };
+  const execute = async (job) => {
+    const paths = getProjectPaths(repoRoot, job.id, projectsRoot, publicDir);
+    const projectExists = existsSync(paths.config);
+    let executionJob = job;
+    if (!projectExists && job.text) {
+      const sourcePath = resolveInside(batchDirectory, 'sources', `${job.id}.txt`);
+      mkdirSync(dirname(sourcePath), {recursive: true});
+      if (!existsSync(sourcePath)) writeFileSync(sourcePath, `${job.text.trim()}\n`, 'utf8');
+      const {text: _inlineText, ...withoutInlineText} = job;
+      executionJob = {...withoutInlineText, input: sourcePath};
+    }
+    const childArgs = buildBatchProduceArgs(executionJob, {
+      projectExists,
+      dataRoot: dataRoot || null,
+    });
+    childArgs.push('--json');
+    const verbose = args.verbose === true;
+    const result = spawnSync(
+      process.execPath,
+      [resolve(repoRoot, 'scripts', 'studio.mjs'), ...childArgs],
+      {
+        cwd: dirname(manifestPath),
+        encoding: 'utf8',
+        stdio: verbose ? 'inherit' : 'pipe',
+        maxBuffer: 32 * 1024 * 1024,
+      },
+    );
+    if (result.error) throw result.error;
+    if (result.status !== 0) {
+      const detail = `${result.stdout || ''}\n${result.stderr || ''}`.trim().slice(-4000);
+      throw new Error(`Project ${job.id} exited with status ${result.status}${detail ? `: ${detail}` : ''}`);
+    }
+  };
+  const inspect = async (job) => {
+    const loaded = loadById(job.id);
+    const finalReport = loaded.state?.qa?.final?.report;
+    let qaPassed = loaded.state?.qa?.final?.status === 'passed';
+    if (finalReport && existsSync(finalReport)) {
+      const report = readJson(finalReport);
+      qaPassed = report.passed === true || report.status === 'passed';
+    }
+    const pending = pendingCodexJobs(loaded) || [];
+    return {
+      status: loaded.state?.status || 'unknown',
+      has_plan: existsSync(loaded.paths.storyboardPlan) || existsSync(loaded.paths.storyboard),
+      preview_exists: existsSync(resolveInside(loaded.paths.output, 'preview.mp4')),
+      final_exists: existsSync(resolveInside(loaded.paths.output, 'final.mp4')),
+      qa_passed: qaPassed,
+      pending_jobs: pending.map(({
+        id,
+        scene_id,
+        prompt,
+        prompt_file,
+        references,
+        output_master,
+      }) => ({
+        id,
+        scene_id: scene_id || null,
+        prompt,
+        prompt_file,
+        references,
+        output_master,
+      })),
+      last_error: loaded.state?.last_error || null,
+    };
+  };
+  state = await withProjectLock(
+    {id: `batch-${manifest.id}`, lock: batchLock},
+    () => runBatch({
+      manifest,
+      state,
+      execute,
+      inspect,
+      persist,
+      retryFailed: action === 'retry',
+    }),
+  );
+  print({
+    ...state,
+    directory: batchDirectory,
+    state_path: statePath,
+    manifest_snapshot: manifestSnapshot,
+    next_actions: state.jobs
+      .filter((job) => job.status === 'action_required')
+      .map((job) => ({
+        project: job.id,
+        action_required: job.action_required,
+        pending_jobs: job.pending_jobs,
+        resume: `batch --input ${manifestPath} --action run`,
+      })),
+  });
+  if (state.status === 'partial_failure') process.exitCode = 1;
+};
+
+const audit = () => {
+  const report = auditPortfolio({
+    repoRoot,
+    projectsRoot: projectsRoot || resolve(repoRoot, 'projects'),
+    publicDir,
+  });
+  print(report);
+  if (args.strict === true && !report.ok) process.exitCode = 1;
+};
+
 const regress = () => {
   const fixtureRoot = resolve(repoRoot, 'tests', 'fixtures', 'regression-cases');
   const names = [
@@ -1412,6 +1575,8 @@ try {
   else if (command === 'snapshot') snapshot();
   else if (command === 'rollback') rollback();
   else if (command === 'resume') await resume();
+  else if (command === 'batch') await batch();
+  else if (command === 'audit') audit();
   else if (command === 'regress') regress();
   else if (command === 'doctor') doctor();
   else throw new Error(`Unknown command: ${command}`);

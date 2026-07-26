@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-07-26
+
+### Added
+
+- Resumable sequential batch production for up to 100 story or ordered-image jobs, with per-project targets, audio, immutable manifest fingerprints, persisted progress, retries, and truthful image/style action boundaries.
+- Batch snapshots that allow status, resume, and retry by ID after the original manifest moves.
+- Read-only portfolio auditing for project readability, preserved sources, lifecycle states, active or stale locks, claimed preview/final artifacts, final QA evidence, pending actions, and storage usage.
+- Batch manifest example, dedicated Skill routing reference, CLI integration coverage, and release acceptance auditing.
+
+### Changed
+
+- Automatic `plan` targets now stop correctly for ordered-image projects instead of continuing into preview rendering.
+- The cold-install release gate now requires a healthy whole-portfolio audit after its complete audio-enabled render.
+
 ## [1.2.0] - 2026-07-25
 
 ### Added
