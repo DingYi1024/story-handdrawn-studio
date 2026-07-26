@@ -111,6 +111,26 @@ const actionFor = {
   disk: 'Free at least 2 GiB on the data volume before rendering a final video.',
 };
 
+const browserCheck = (repoRoot) => {
+  const bundled = resolve(repoRoot, 'node_modules', '.remotion', 'chrome-headless-shell');
+  if (existsSync(bundled)) {
+    return {ok: true, detail: bundled};
+  }
+  const marker = resolve(repoRoot, 'node_modules', '.story-handdrawn-dependencies.json');
+  try {
+    const recorded = JSON.parse(readFileSync(marker, 'utf8')).browser_path;
+    if (typeof recorded === 'string' && existsSync(recorded)) {
+      return {ok: true, detail: recorded};
+    }
+  } catch {
+    // A missing or malformed marker is handled as an unavailable browser below.
+  }
+  return {
+    ok: false,
+    detail: `${bundled} or a browser_path recorded in ${marker}`,
+  };
+};
+
 export const buildDoctorReport = ({
   repoRoot,
   dataRoot,
@@ -138,10 +158,7 @@ export const buildDoctorReport = ({
       ok: existsSync(resolve(repoRoot, 'node_modules', '@remotion', 'cli')),
       detail: resolve(repoRoot, 'node_modules', '@remotion', 'cli'),
     },
-    browser: {
-      ok: existsSync(resolve(repoRoot, 'node_modules', '.remotion', 'chrome-headless-shell')),
-      detail: resolve(repoRoot, 'node_modules', '.remotion', 'chrome-headless-shell'),
-    },
+    browser: browserCheck(repoRoot),
     references: {
       ok: ['style-bw.png', 'style-color.png'].every((name) =>
         existsSync(resolve(repoRoot, 'references', name))),

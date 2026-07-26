@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -108,6 +109,14 @@ def dependency_fingerprint(renderer: Path) -> str:
     return hashlib.sha256(lock_path.read_bytes()).hexdigest()
 
 
+def recorded_browser_path(marker_data: dict[str, object]) -> Path | None:
+    value = marker_data.get("browser_path")
+    if not isinstance(value, str) or not value:
+        return None
+    path = Path(value).expanduser()
+    return path if path.exists() else None
+
+
 def runtime_health(renderer: Path, fingerprint: str | None = None) -> dict[str, object]:
     expected_fingerprint = fingerprint or dependency_fingerprint(renderer)
     marker = renderer / "node_modules" / ".story-handdrawn-dependencies.json"
@@ -119,11 +128,12 @@ def runtime_health(renderer: Path, fingerprint: str | None = None) -> dict[str, 
             marker_data = json.loads(marker.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             marker_data = {}
+    installed_browser = browser if browser.exists() else recorded_browser_path(marker_data)
     checks = {
         "marker": marker.exists(),
         "lock_match": marker_data.get("lock_sha256") == expected_fingerprint,
         "remotion_cli": cli.exists(),
-        "browser": browser.exists(),
+        "browser": installed_browser is not None,
     }
     return {
         "ready": all(checks.values()),
@@ -173,21 +183,43 @@ def install_dependencies(renderer: Path, home: Path, force: bool = False) -> Non
         )
 
     browser = renderer / "node_modules" / ".remotion" / "chrome-headless-shell"
+    browser_path: Path | None = browser if browser.exists() else None
     if not browser.exists():
         node = executable("node.exe", "node") if os.name == "nt" else executable("node")
         print("Preparing the locked Remotion browser...", flush=True)
         try:
-            subprocess.run(
+            browser_result = subprocess.run(
                 [node, str(remotion_cli), "browser", "ensure"],
                 cwd=renderer,
                 check=True,
+                capture_output=True,
+                text=True,
             )
+            if browser_result.stdout:
+                print(browser_result.stdout, end="")
+            if browser_result.stderr:
+                print(browser_result.stderr, end="", file=sys.stderr)
+            match = re.search(
+                r"Has browser at (.+)",
+                f"{browser_result.stdout}\n{browser_result.stderr}",
+            )
+            if match:
+                candidate = Path(match.group(1).strip()).expanduser()
+                if candidate.exists():
+                    browser_path = candidate.resolve()
+            if browser.exists():
+                browser_path = browser.resolve()
         except subprocess.CalledProcessError as error:
             raise SystemExit(
                 "Remotion browser setup failed. Check network/proxy access and free disk "
                 "space, then run `setup --force`. "
                 f"Browser setup exited with status {error.returncode}."
             ) from error
+    if browser_path is None:
+        raise SystemExit(
+            "Remotion reported successful browser setup but no usable browser was found. "
+            "Run `setup --force`; set a supported Chrome executable if needed."
+        )
 
     marker.write_text(
         json.dumps(
@@ -200,6 +232,7 @@ def install_dependencies(renderer: Path, home: Path, force: bool = False) -> Non
                     capture_output=True,
                     text=True,
                 ).stdout.strip(),
+                "browser_path": str(browser_path),
             },
             ensure_ascii=False,
         )

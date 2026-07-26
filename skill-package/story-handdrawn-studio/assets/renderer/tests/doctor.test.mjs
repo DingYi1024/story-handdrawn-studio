@@ -46,6 +46,26 @@ test('doctor reports a release-ready renderer and writable persistent data root'
   }
 });
 
+test('doctor accepts a system browser recorded by Remotion setup', () => {
+  const root = makeHealthyRenderer();
+  try {
+    rmSync(resolve(root, 'node_modules', '.remotion'), {recursive: true, force: true});
+    const browser = resolve(root, 'system-browser');
+    writeFileSync(browser, 'browser');
+    writeJson(
+      resolve(root, 'node_modules', '.story-handdrawn-dependencies.json'),
+      {browser_path: browser},
+    );
+
+    const report = reportFor(root);
+    assert.equal(report.ok, true);
+    assert.equal(report.checks.browser.ok, true);
+    assert.equal(report.checks.browser.detail, browser);
+  } finally {
+    rmSync(root, {recursive: true, force: true});
+  }
+});
+
 test('doctor emits exact recovery actions for broken packages and future projects', () => {
   const root = makeHealthyRenderer();
   try {
