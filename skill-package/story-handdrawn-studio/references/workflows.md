@@ -25,6 +25,8 @@ python <SKILL_DIR>/scripts/run_story_video.py COMMAND [OPTIONS]
 | `providers` / `assets` | Select, estimate, run, and recover image jobs | persisted provider state |
 | `templates` / `migrate` / `snapshot` / `rollback` | Reuse genres and protect project state | versioned recoverability |
 | `resume` | Continue the saved production target | next truthful state |
+| `batch` | Run or resume up to 100 independently recoverable productions | completed queue or per-project actions |
+| `audit` | Read-only portfolio integrity and delivery evidence check | health report |
 | `regress` | Compile all ten continuity regression cases | pass/fail summary |
 | `status` / `list` / `validate` / `doctor` | Inspect project or environment | no unintended content mutation |
 
@@ -110,3 +112,4 @@ Default data locations:
 - Revisions: `projects/ID/revisions/rN/`
 - Audio sidecars: `projects/ID/audio-options.json` and `audio-manifest.json`
 - Render assets: `~/.story-handdrawn-studio/public/projects/ID/assets/`
+- Batch state: `~/.story-handdrawn-studio/batches/BATCH_ID/`

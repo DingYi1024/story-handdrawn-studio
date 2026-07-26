@@ -103,6 +103,13 @@ try {
   ) {
     throw new Error(`Acceptance final is not complete: state=${state.status}; qa=${qa.status}`);
   }
+  const portfolio = JSON.parse(run(
+    ['audit', '--json', '--strict'],
+    'read-only portfolio integrity audit',
+  ));
+  if (!portfolio.ok || portfolio.summary?.healthy !== 1 || portfolio.summary?.failed !== 0) {
+    throw new Error(`Acceptance portfolio audit failed: ${portfolio.status}`);
+  }
 
   console.log(JSON.stringify({
     ok: true,
@@ -113,6 +120,7 @@ try {
     qa: qa.summary,
     final_bytes: statSync(finalVideo).size,
     audio: state.audio?.status || 'unknown',
+    portfolio_audit: portfolio.status,
   }, null, 2));
 } finally {
   rmSync(sandbox, {recursive: true, force: true});

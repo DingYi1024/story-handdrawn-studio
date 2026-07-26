@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "sample-weekly-stories",
+  "title": "每周手绘故事",
+  "defaults": {
+    "to": "preview",
+    "preset": "vertical",
+    "generator": "codex",
+    "text_mode": "font",
+    "audio": "auto"
+  },
+  "jobs": [
+    {
+      "id": "sample-rain-window",
+      "title": "雨落窗台",
+      "text": "傍晚的雨落在窗台上。女孩把一张皱皱的纸条压在玻璃杯下，等墨迹慢慢晾干。"
+    },
+    {
+      "id": "sample-morning-bird",
+      "title": "清晨的小鸟",
+      "text": "天刚亮，一只小鸟落在屋檐边。它歪着头，看见花盆里冒出了一点新绿。"
+    }
+  ]
+}

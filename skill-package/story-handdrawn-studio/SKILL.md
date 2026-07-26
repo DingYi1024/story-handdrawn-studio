@@ -28,6 +28,7 @@ The launcher keeps works under `~/.story-handdrawn-studio/`, outside the install
 - Visual approval or semantic checking: read [references/review-and-semantic-qa.md](references/review-and-semantic-qa.md).
 - Image provider selection, estimates, retries, or recovery: read [references/providers-and-recovery.md](references/providers-and-recovery.md).
 - Reusable genres, migrations, backup, or rollback: read [references/templates-and-rollback.md](references/templates-and-rollback.md).
+- Multiple works, resumable queues, or whole-library health: read [references/batch-and-audit.md](references/batch-and-audit.md).
 - Status questions: use `list` or `status` without mutating the work.
 - Renderer or reusable feature changes: read the customization route in [references/routing.md](references/routing.md).
 - Skill upgrades, packaging, release gates, or cold-install verification: read [references/release-readiness.md](references/release-readiness.md).
@@ -45,6 +46,7 @@ Read [references/workflows.md](references/workflows.md) whenever executing produ
 7. Rendering runs geometry/pixel/audio QA, samples both sides of page flips and multi-shot cuts, and emits semantic vision jobs without inventing observations. Use `review` when human approval is needed.
 8. If review requests changes, apply its JSON with `apply-review`, service only the returned retake jobs, and continue production.
 9. A final is complete only when state is `completed`, `output/final.mp4` exists, final QA has zero failures, and requested review gates are resolved.
+10. For multiple works, use one versioned batch manifest. Service per-project action boundaries, rerun the batch, and require its final status to be `completed`. Run `audit --strict` before bulk delivery.
 
 ## Visual contract
 

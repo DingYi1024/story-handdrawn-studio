@@ -13,7 +13,7 @@ npm run package:skill
 npm run verify:install
 ```
 
-`verify:install` copies the packaged Skill into an isolated temporary directory, proves that `version` is read-only, performs a cold dependency setup, requires a strict ready-state doctor report, renders a complete square video with automatic local audio, and requires final machine QA to pass. It deletes the temporary work afterward.
+`verify:install` copies the packaged Skill into an isolated temporary directory, proves that `version` is read-only, performs a cold dependency setup, requires a strict ready-state doctor report, renders a complete square video with automatic local audio, requires final machine QA to pass, and runs a strict read-only portfolio audit. It deletes the temporary work afterward.
 
 Do not publish when any gate fails. A valid release must also keep the root package, lockfile root package, `VERSION`, Skill `VERSION`, bundled renderer, and marketplace metadata on one semantic version.
 

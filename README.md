@@ -73,6 +73,8 @@ Claude Code 也支持通过插件市场安装：
 - 自然语言意图路由、首次引导、状态导航与预览/正式片机器质检
 - 项目锁、原子状态文件、严格素材校验、失败后恢复
 - Skill 外持久数据、版本化运行时与不覆盖作品的升级契约
+- 最多 100 个作品的可恢复批量队列，每个项目独立停在素材、审批、重试或交付状态
+- 全作品库只读审计：检查源文件、生命周期、锁、预览/成片、最终 QA 证据和占用空间
 - 10 类连续性回归案例，以及带原创音乐、环境音和翻页音效的完整有声示范片
 
 ## 完整案例：《会发芽的纸条》
@@ -144,6 +146,28 @@ node scripts/studio.mjs list
 ```
 
 `resume` 会根据状态继续下一步：故事规划、图片导入、等待生成素材、预览或正式渲染。素材未齐时只报告缺失任务，不伪造完成状态。
+
+### 批量生产与作品库审计
+
+仓库提供了[批量清单案例](examples/batch-production.json)。每个任务使用独立项目锁和恢复状态；某个作品等待图片或风格确认时，队列仍会检查其余作品：
+
+```bash
+node scripts/studio.mjs batch --input examples/batch-production.json --json
+node scripts/studio.mjs batch --id sample-weekly-stories --action status --json
+node scripts/studio.mjs batch --id sample-weekly-stories --action run --json
+node scripts/studio.mjs batch --id sample-weekly-stories --action retry --json
+```
+
+清单会保存到持久数据目录，原始 JSON 移动后仍能用批次 ID 恢复。修改任务定义时必须使用新的批次 ID，防止旧状态串入新任务。
+
+交付、迁移或备份前可执行只读审计：
+
+```bash
+node scripts/studio.mjs audit --json
+node scripts/studio.mjs audit --json --strict
+```
+
+审计会报告损坏项目、丢失源文件、陈旧项目锁、缺失的预览/正式 MP4、失败或缺失的最终 QA，以及仍需生成图片或选择风格的项目。它不会自动删除锁或修改作品。
 
 ### 局部重做
 
